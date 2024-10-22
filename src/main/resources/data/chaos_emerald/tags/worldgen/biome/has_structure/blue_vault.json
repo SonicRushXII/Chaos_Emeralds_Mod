@@ -1,5 +1,6 @@
 {
   "values": [
+    "#minecraft:is_taiga",
     "minecraft:frozen_river",
     "minecraft:frozen_ocean"
   ]

@@ -1,6 +1,6 @@
 {
   "values": [
-    "minecraft:frozen_river",
-    "minecraft:frozen_ocean"
+    "minecraft:plains",
+    "#minecraft:is_forest"
   ]
 }
