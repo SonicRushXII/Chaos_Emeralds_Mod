@@ -1,0 +1,39 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 19011220,
+    "separation": 8,
+    "spacing": 34,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "chaos_emerald:aqua_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:blue_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:green_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:grey_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:purple_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:red_vault",
+      "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:yellow_vault",
+      "weight": 1
+    }
+  ]
+}

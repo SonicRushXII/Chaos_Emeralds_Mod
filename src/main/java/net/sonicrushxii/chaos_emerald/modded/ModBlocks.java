@@ -24,7 +24,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> BLUE_EMERALD = registerBlock("blue_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -32,7 +32,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> GREEN_EMERALD = registerBlock("green_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -40,7 +40,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> GREY_EMERALD = registerBlock("grey_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -48,7 +48,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> PURPLE_EMERALD = registerBlock("purple_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -56,7 +56,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> RED_EMERALD = registerBlock("red_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -64,7 +64,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
     public static final RegistryObject<Block> YELLOW_EMERALD = registerBlock("yellow_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -72,7 +72,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 10;
+                        return 13;
                     })));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
