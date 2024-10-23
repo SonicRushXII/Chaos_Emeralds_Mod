@@ -2,11 +2,13 @@ package net.sonicrushxii.chaos_emerald.block;
 
 import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -18,8 +20,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.jarjar.selection.util.Constants;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.common.BreakBlock;
+import net.sonicrushxii.chaos_emerald.network.common.UpdateMainhandItem;
+import org.jetbrains.annotations.Nullable;
 
 public class ChaosEmeraldBlock extends Block {
 
@@ -30,15 +34,31 @@ public class ChaosEmeraldBlock extends Block {
     }
 
     @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+        if(pPlacer instanceof ServerPlayer player){
+            player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        }
+    }
+
+    @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pPlayer.getMainHandItem() == ItemStack.EMPTY && !pLevel.isClientSide) {
-            pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
+
+            //Playsound
             pLevel.playSound(pPlayer,pPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.5f,1.1f);
+
+            //Remove Block
+            pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
             pLevel.updateNeighborsAt(pPos, Blocks.AIR);
             pLevel.updateNeighborsAt(pPos.below(), Blocks.AIR);
+            PacketHandler.sendToServer(new BreakBlock(pPos));
 
+            //Update Player Item
             pPlayer.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(pState.getBlock().asItem()));
-            return InteractionResult.SUCCESS;
+            PacketHandler.sendToServer(new UpdateMainhandItem(new ItemStack(pState.getBlock().asItem())));
+
+            return InteractionResult.CONSUME;
         }
 
         return InteractionResult.FAIL;

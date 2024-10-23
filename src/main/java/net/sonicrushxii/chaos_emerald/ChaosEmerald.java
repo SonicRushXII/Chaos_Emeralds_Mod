@@ -2,7 +2,6 @@ package net.sonicrushxii.chaos_emerald;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -16,6 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
 import net.sonicrushxii.chaos_emerald.modded.ModItems;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -51,6 +51,7 @@ public class ChaosEmerald
     {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
+        event.enqueueWork(PacketHandler::register);
 
     }
 

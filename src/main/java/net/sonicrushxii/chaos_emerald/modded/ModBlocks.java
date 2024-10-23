@@ -1,6 +1,5 @@
 package net.sonicrushxii.chaos_emerald.modded;
 
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -10,6 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
+import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
 import net.sonicrushxii.chaos_emerald.block.ChaosEmeraldBlock;
 
 import java.util.function.Supplier;
@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, ChaosEmerald.MOD_ID);
-
     public static final RegistryObject<Block> AQUA_EMERALD = registerBlock("aqua_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
@@ -83,7 +82,7 @@ public class ModBlocks {
 
     private static <T extends Block>RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block)
     {
-        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(),new Item.Properties().stacksTo(1)));
+        return ModItems.ITEMS.register(name, () -> new ChaosBlockItem(block.get(),new Item.Properties().stacksTo(1)));
     }
 
     public static void register(IEventBus eventBus)
