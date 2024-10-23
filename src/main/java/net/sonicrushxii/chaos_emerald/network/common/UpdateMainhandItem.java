@@ -6,7 +6,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-import java.util.function.Supplier;
 
 public class UpdateMainhandItem {
 
