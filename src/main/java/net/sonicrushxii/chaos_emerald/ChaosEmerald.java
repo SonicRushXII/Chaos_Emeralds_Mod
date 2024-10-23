@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
 import net.sonicrushxii.chaos_emerald.modded.ModItems;
@@ -41,6 +42,7 @@ public class ChaosEmerald
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
