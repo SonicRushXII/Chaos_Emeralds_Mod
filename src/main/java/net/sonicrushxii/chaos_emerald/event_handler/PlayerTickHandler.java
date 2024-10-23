@@ -8,9 +8,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class PlayerTickHandler {
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    public void onPlayerTick(TickEvent.PlayerTickEvent.Pre event)
     {
-        if (event.phase == TickEvent.Phase.END || event.player == null) return;
+        if (event.player == null) return;
         if (event.player.level().isClientSide()) onLocalPlayerTick((LocalPlayer)event.player);
         else onServerPlayerTick((ServerPlayer)event.player);
     }

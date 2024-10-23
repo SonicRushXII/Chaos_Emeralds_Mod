@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.function.Supplier;
 
@@ -24,18 +24,18 @@ public class UpdateMainhandItem {
         buffer.writeItem(this.itemStack);
     }
 
-    public static void performUpdateItem(ServerPlayer pPlayer,ItemStack item)
+    public static void performUpdateItem(ServerPlayer pPlayer,ItemStack itemStack)
     {
-        pPlayer.setItemSlot(EquipmentSlot.MAINHAND, item);
+        pPlayer.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(
+    public void handle(CustomPayloadEvent.Context ctx){
+        ctx.enqueueWork(
                 ()->{
-                    ServerPlayer player = ctx.get().getSender();
+                    ServerPlayer player = ctx.getSender();
                     if(player != null)
                         performUpdateItem(player,this.itemStack);
                 });
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
     }
 }

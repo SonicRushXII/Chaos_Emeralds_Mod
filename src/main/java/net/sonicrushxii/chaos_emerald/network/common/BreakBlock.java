@@ -5,9 +5,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
-import java.util.function.Supplier;
 
 public class BreakBlock {
     BlockPos blockPos;
@@ -31,13 +30,13 @@ public class BreakBlock {
         pLevel.updateNeighborsAt(blockPos.below(), Blocks.AIR);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(
+    public void handle(CustomPayloadEvent.Context ctx){
+        ctx.enqueueWork(
                 ()->{
-                    ServerPlayer player = ctx.get().getSender();
+                    ServerPlayer player = ctx.getSender();
                     if(player != null)
                         performBreakBlock(player.level(),blockPos);
                 });
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
     }
 }
