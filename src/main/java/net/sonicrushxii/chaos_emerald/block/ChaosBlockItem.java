@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
-import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 
 public class ChaosBlockItem extends BlockItem {
 
