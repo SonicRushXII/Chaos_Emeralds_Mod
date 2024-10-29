@@ -1,5 +1,7 @@
 package net.sonicrushxii.chaos_emerald.block;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -9,8 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
+
+import javax.swing.text.AttributeSet;
 
 public class ChaosBlockItem extends BlockItem {
 
@@ -77,14 +83,25 @@ public class ChaosBlockItem extends BlockItem {
 
     public static void blueEmeraldUse(Level pLevel, Player pPlayer)
     {
-        IceSpike iceSpike = new IceSpike(ModEntityTypes.ICE_SPIKE.get(), pLevel);
-        iceSpike.setPos(pPlayer.getX()+pPlayer.getLookAngle().x,
-                        pPlayer.getY()+pPlayer.getLookAngle().y,
-                        pPlayer.getZ()+pPlayer.getLookAngle().z);
-        iceSpike.setMovementDirection(pPlayer.getLookAngle());
+        pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_COOLDOWN).ifPresent(chaosEmeraldCooldown -> {
+            if(chaosEmeraldCooldown.cooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
+                pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)),true);
+                return;
+            }
 
-        // Add the entity to the world
-        pLevel.addFreshEntity(iceSpike);
+            IceSpike iceSpike = new IceSpike(ModEntityTypes.ICE_SPIKE.get(), pLevel);
+            iceSpike.setPos(pPlayer.getX()+pPlayer.getLookAngle().x,
+                    pPlayer.getY()+pPlayer.getLookAngle().y+1.0,
+                    pPlayer.getZ()+pPlayer.getLookAngle().z);
+            iceSpike.setMovementDirection(pPlayer.getLookAngle());
+            iceSpike.setOwner(pPlayer.getUUID());
+
+            // Add the entity to the world
+            pLevel.addFreshEntity(iceSpike);
+
+            //Set Cooldown(in Seconds)
+            chaosEmeraldCooldown.cooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 25;
+        });
     }
 }
 
