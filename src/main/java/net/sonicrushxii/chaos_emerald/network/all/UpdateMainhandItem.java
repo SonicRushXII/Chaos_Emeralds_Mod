@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.network.common;
+package net.sonicrushxii.chaos_emerald.network.all;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

@@ -12,6 +12,7 @@ import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 public class PlayerTickHandler {
     private static final int TICKS_PER_SEC = 20;
     private static int serverTick=0;
+    public static int clientTickCounter = 0;
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
@@ -31,7 +32,7 @@ public class PlayerTickHandler {
 
     public void onLocalPlayerTick(LocalPlayer player)
     {
-
+        clientTickCounter = (clientTickCounter+1)%TICKS_PER_SEC;
     }
 
     public void onServerPlayerTick(ServerPlayer player)

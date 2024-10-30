@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -14,11 +15,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
+import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
+import net.sonicrushxii.chaos_emerald.event_handler.LoginHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
-import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
-import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
-import net.sonicrushxii.chaos_emerald.modded.ModItems;
+import net.sonicrushxii.chaos_emerald.modded.*;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 import org.slf4j.Logger;
@@ -32,46 +32,36 @@ public class ChaosEmerald
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ChaosEmerald(FMLJavaModLoadingContext context)
+    public static void initializeMod(ChaosEmerald thisMod,FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
 
         // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(thisMod::commonSetup);
 
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(thisMod);
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
+        MinecraftForge.EVENT_BUS.register(new LoginHandler());
         MinecraftForge.EVENT_BUS.register(new Scheduler());
 
         // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
+        modEventBus.addListener(thisMod::addCreative);
 
         //Mod Stuff
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModEntityTypes.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
+        ModEffects.register(modEventBus);
     }
 
-    public ChaosEmerald()
-    {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public ChaosEmerald(FMLJavaModLoadingContext context) {
+        initializeMod(this,context);
+    }
 
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
-
-        // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
-
-        //Mod Stuff
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
-        ModCreativeModeTabs.register(modEventBus);
+    public ChaosEmerald() {
+        initializeMod(this,FMLJavaModLoadingContext.get());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -107,6 +97,12 @@ public class ChaosEmerald
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+
+        @SubscribeEvent
+        public static void registerModelLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
+        {
+            event.registerLayerDefinition(ChaosBubbleModel.LAYER_LOCATION,ChaosBubbleModel::createBodyLayer);
         }
     }
 }

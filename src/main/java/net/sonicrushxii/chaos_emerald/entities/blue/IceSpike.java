@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.Utilities;
 
 import javax.annotation.Nullable;
@@ -129,17 +130,18 @@ public class IceSpike extends Entity {
             }
 
             // Only perform actions if duration is not zero
-            if (getDuration() > 0) {
+            if (getDuration() > 1) {
                 // Set entity movement
                 this.setDeltaMovement(movementDirection);
                 this.move(MoverType.SELF, this.getDeltaMovement());
 
                 // Place ice blocks and manage collisions
                 BlockPos icePlacePos = this.blockPosition().offset(0, -1, 0);
-                this.level().setBlock(icePlacePos, Blocks.BLUE_ICE.defaultBlockState(), 3);
-                xIcePositions[getDuration() - 1] = icePlacePos.getX();
-                yIcePositions[getDuration() - 1] = icePlacePos.getY();
-                zIcePositions[getDuration() - 1] = icePlacePos.getZ();
+                if(Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(this.level().getBlockState(icePlacePos).getBlock()) + ""))
+                    this.level().setBlock(icePlacePos, Blocks.BLUE_ICE.defaultBlockState(), 3);
+                xIcePositions[getDuration()-1] = icePlacePos.getX();
+                yIcePositions[getDuration()-1] = icePlacePos.getY();
+                zIcePositions[getDuration()-1] = icePlacePos.getZ();
 
                 // Handle collision checks
                 if (this.horizontalCollision || (this.verticalCollision && this.getDeltaMovement().y > 0)) {
@@ -156,8 +158,8 @@ public class IceSpike extends Entity {
                     this.setDuration(0);
                     try {// Synchronize on server only
                         for (LivingEntity enemy : enemies) {
-                            enemy.hurt(this.damageSources().playerAttack(this.level().getPlayerByUUID(this.getOwnerUUID())), (enemy.isInWater()) ? 8.0f : 4.0f);
-                            enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,40,3,false,false));
+                            enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()), (enemy.isInWater()) ? 8.0f : 4.0f);
+                            enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,3,false,false));
                         }
                     }catch(NullPointerException ignored){}
                 }
@@ -179,7 +181,7 @@ public class IceSpike extends Entity {
             }
 
             // Final cleanup to discard entity
-            if (getDuration() < -250) {
+            if (getDuration() < -270) {
                 this.discard();
             }
 

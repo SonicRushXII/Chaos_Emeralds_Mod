@@ -7,8 +7,9 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
-import net.sonicrushxii.chaos_emerald.network.common.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.common.UpdateMainhandItem;
+import net.sonicrushxii.chaos_emerald.network.all.BreakBlock;
+import net.sonicrushxii.chaos_emerald.network.all.UpdateMainhandItem;
+import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
 
 public class PacketHandler {
     static int id = 0;
@@ -24,6 +25,9 @@ public class PacketHandler {
     public static void register() {
         INSTANCE.messageBuilder(BreakBlock.class, id++).encoder(BreakBlock::encode).decoder(BreakBlock::new).consumerMainThread(BreakBlock::handle).add();
         INSTANCE.messageBuilder(UpdateMainhandItem.class, id++).encoder(UpdateMainhandItem::encode).decoder(UpdateMainhandItem::new).consumerMainThread(UpdateMainhandItem::handle).add();
+
+        //AQUA EMERALD
+        INSTANCE.messageBuilder(BindEffectSyncPacketS2C.class, id++).encoder(BindEffectSyncPacketS2C::encode).decoder(BindEffectSyncPacketS2C::new).consumerMainThread(BindEffectSyncPacketS2C::handle).add();
     }
 
     public static void sendToServer(Object msg) {
