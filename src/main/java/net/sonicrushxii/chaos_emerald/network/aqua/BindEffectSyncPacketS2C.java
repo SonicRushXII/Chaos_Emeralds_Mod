@@ -40,10 +40,10 @@ public class BindEffectSyncPacketS2C {
                 ()->{
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                         try {
+                            LivingEntity livingEntity = (LivingEntity) Minecraft.getInstance().level.getEntity(entityId);
+
                             if (effectDur > 0)
                             {
-                                LivingEntity livingEntity = (LivingEntity) Minecraft.getInstance().level.getEntity(entityId);
-                                System.out.println(livingEntity);
                                 if(livingEntity.hasEffect(ModEffects.CHAOS_BIND.get()))
                                     livingEntity.getEffect(ModEffects.CHAOS_BIND.get()).
                                         update(new MobEffectInstance(ModEffects.CHAOS_BIND.get(), effectDur,
@@ -51,6 +51,10 @@ public class BindEffectSyncPacketS2C {
                                 else
                                     livingEntity.addEffect(new MobEffectInstance(ModEffects.CHAOS_BIND.get(), effectDur,
                                             0, false, false,false));
+                            }
+                            else if(livingEntity.hasEffect(ModEffects.CHAOS_BIND.get()))
+                            {
+                                livingEntity.removeEffect(ModEffects.CHAOS_BIND.get());
                             }
                         }catch (NullPointerException|ClassCastException ignored) {}
                     });
