@@ -59,7 +59,7 @@ public class ChaosEmeraldHandler {
             )
             {
                 target.addEffect(new MobEffectInstance(ModEffects.CHAOS_BIND.get(), 200, 0, false, false, false));
-                target.addDeltaMovement(new Vec3(lookAngle.x,0.1,lookAngle.z));
+                target.addDeltaMovement(new Vec3(lookAngle.x,0.15,lookAngle.z));
             }
 
             //Set Cooldown(in Seconds)
