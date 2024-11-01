@@ -17,6 +17,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
 import net.sonicrushxii.chaos_emerald.event_handler.DamageHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.FallDamageHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.LoginHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
 import net.sonicrushxii.chaos_emerald.modded.*;
@@ -45,6 +46,7 @@ public class ChaosEmerald
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
         MinecraftForge.EVENT_BUS.register(new DamageHandler());
         MinecraftForge.EVENT_BUS.register(new LoginHandler());
+        MinecraftForge.EVENT_BUS.register(new FallDamageHandler());
         MinecraftForge.EVENT_BUS.register(new Scheduler());
 
         // Register the item to a creative tab

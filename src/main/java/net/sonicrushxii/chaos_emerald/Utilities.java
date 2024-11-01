@@ -169,6 +169,13 @@ public class Utilities {
                     "minecraft:large_fern")
             );
 
+    public static final HashSet<String> unbreakableBlocks =
+            new HashSet<>(Arrays.asList(
+                    "minecraft:bedrock",
+                    "minecraft:obsidian",
+                    "minecraft:end_portal_frame")
+            );
+
     /** Method to summon an entity in a given world at specified coordinates
      * Mob specifies the mob to be summon, Eg: EntityType.ZOMBIE
      * ServerLevel determines the world in which the entity is summoned

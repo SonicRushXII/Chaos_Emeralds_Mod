@@ -17,7 +17,7 @@ public class ModEventHandler {
     {
         if(event.getObject() instanceof Player){
             //Add Other Capabilities from here
-            if(!event.getObject().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_COOLDOWN).isPresent()){
+            if(!event.getObject().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).isPresent()){
                 event.addCapability(new ResourceLocation(ChaosEmerald.MOD_ID, "properties"), new ChaosEmeraldProvider());
             }
         }
@@ -27,8 +27,8 @@ public class ModEventHandler {
     public static void onPlayerCloned(PlayerEvent.Clone event){
         if(event.isWasDeath()){
             //Add Other Capabilities from here
-            event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_COOLDOWN).ifPresent(oldStore->{
-                event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_COOLDOWN).ifPresent(newStore->{
+            event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(oldStore->{
+                event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
                     newStore.copyFrom(oldStore);
                 });
             });

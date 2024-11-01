@@ -54,9 +54,11 @@ public class ChaosBlockItem extends BlockItem {
                                     ChaosEmeraldHandler.blueEmeraldUse(world,player);
                                     break;
                 case "green_emerald": System.out.println("Used Green Emerald");
-                    break;
+                                    ChaosEmeraldHandler.greenEmeraldUse(world,player);
+                                    break;
                 case "grey_emerald": System.out.println("Used Grey Emerald");
-                    break;
+                                    ChaosEmeraldHandler.greyEmeraldUse(world,player);
+                                    break;
                 case "purple_emerald": System.out.println("Used Purple Emerald");
                     break;
                 case "red_emerald": System.out.println("Used Red Emerald");
@@ -83,9 +85,11 @@ public class ChaosBlockItem extends BlockItem {
                                 ChaosEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
                                 break;
             case "green_emerald": System.out.println("Used Green Emerald");
-                break;
+                                ChaosEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
+                                break;
             case "grey_emerald": System.out.println("Used Grey Emerald");
-                break;
+                                ChaosEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
+                                break;
             case "purple_emerald": System.out.println("Used Purple Emerald");
                 break;
             case "red_emerald": System.out.println("Used Red Emerald");

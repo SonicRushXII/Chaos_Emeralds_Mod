@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 
@@ -21,6 +22,31 @@ public class RenderHandler {
     @SubscribeEvent
     public static void onPreRenderLiving(RenderLivingEvent.Pre<?, ?> event)
     {
+        PoseStack poseStack = event.getPoseStack();
+        LivingEntity entity = event.getEntity();
+
+        //Grey Emerald
+        if(entity instanceof Player player)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.greyEmeraldUse > 1)
+                {
+                    float yaw = player.getYRot();
+                    float pitch = player.getXRot();
+
+                    //Rotate Player
+                    poseStack.pushPose();
+                    // Translate the model to the player's position
+                    poseStack.translate(0.0D, 1.0D, 0.0D); // Adjust as needed to center rotation at the player's position
+                    // First, rotate the model horizontally based on the yaw
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-yaw+45F*(chaosEmeraldCap.greyEmeraldUse%8)));
+                    // Then, rotate the model so it lies horizontally in the direction of the pitch
+                    poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90F));
+                    // Translate back to original position
+                    poseStack.translate(0.0D, -1.0D, 0.0D); // Undo the initial translation
+                }
+            });
+        }
 
     }
 
@@ -56,5 +82,17 @@ public class RenderHandler {
                 poseStack.popPose();
             }
         }
+
+        //Grey Emerald
+        if(targetEntity instanceof Player player)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //Rotate Player
+                if(chaosEmeraldCap.greyEmeraldUse > 1) {
+                    poseStack.popPose();
+                }
+            });
+        }
+
     }
 }

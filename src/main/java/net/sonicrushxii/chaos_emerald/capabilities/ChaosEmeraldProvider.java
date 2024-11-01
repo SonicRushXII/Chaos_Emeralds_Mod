@@ -12,21 +12,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ChaosEmeraldProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-    public static Capability<ChaosEmeraldCooldown> CHAOS_EMERALD_COOLDOWN = CapabilityManager.get(new CapabilityToken<ChaosEmeraldCooldown>() {});
+    public static Capability<ChaosEmeraldCap> CHAOS_EMERALD_CAP = CapabilityManager.get(new CapabilityToken<ChaosEmeraldCap>() {});
 
-    private ChaosEmeraldCooldown chaosEmeraldCooldown = null;
-    private final LazyOptional<ChaosEmeraldCooldown> optional = LazyOptional.of(this::createChaosEmeraldCooldown);
+    private ChaosEmeraldCap chaosEmeraldCap = null;
+    private final LazyOptional<ChaosEmeraldCap> optional = LazyOptional.of(this::createChaosEmeraldCap);
 
-    private ChaosEmeraldCooldown createChaosEmeraldCooldown() {
-        if(this.chaosEmeraldCooldown == null)
-            this.chaosEmeraldCooldown = new ChaosEmeraldCooldown();
+    private ChaosEmeraldCap createChaosEmeraldCap() {
+        if(this.chaosEmeraldCap == null)
+            this.chaosEmeraldCap = new ChaosEmeraldCap();
 
-        return this.chaosEmeraldCooldown;
+        return this.chaosEmeraldCap;
     }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
-        if(capability == CHAOS_EMERALD_COOLDOWN)
+        if(capability == CHAOS_EMERALD_CAP)
         {
             return optional.cast();
         }
@@ -36,12 +36,12 @@ public class ChaosEmeraldProvider implements ICapabilityProvider, INBTSerializab
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        createChaosEmeraldCooldown().saveNBTData(nbt);
+        createChaosEmeraldCap().saveNBTData(nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        createChaosEmeraldCooldown().loadNBTData(nbt);
+        createChaosEmeraldCap().loadNBTData(nbt);
     }
 }
