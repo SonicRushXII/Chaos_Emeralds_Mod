@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -200,6 +201,26 @@ public class ChaosEmeraldHandler {
 
                 //Activate Grey Emerald
                 if(chaosEmeraldCap.greyEmeraldUse == 0) chaosEmeraldCap.greyEmeraldUse = 1;
+            });
+    }
+
+    public static void purpleEmeraldUse(Level pLevel ,Player pPlayer)
+    {
+        if(!pLevel.isClientSide)
+            pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.cooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] > 0) {
+                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xCC00FF)),true);
+                    return;
+                }
+
+                //Launch up
+                pPlayer.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                pPlayer.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
+                pPlayer.setDeltaMovement(0,0.17,0);
+                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),pPlayer.getDeltaMovement()));
+
+                //Activate Purple Emerald
+                if(chaosEmeraldCap.purpleEmeraldUse == 0) chaosEmeraldCap.purpleEmeraldUse = 1;
             });
     }
 }

@@ -3,13 +3,21 @@ package net.sonicrushxii.chaos_emerald.event_handler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,8 +25,12 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import org.joml.Vector3f;
+
+import java.lang.reflect.Field;
 
 public class PlayerTickHandler {
     private static final int TICKS_PER_SEC = 20;
@@ -49,12 +61,19 @@ public class PlayerTickHandler {
 
         //Particle
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            //Checks to See if On Ground Before Starting
+            //Grey Emerald Digging Particle
             if(chaosEmeraldCap.greyEmeraldUse > 0)
                 Utilities.displayParticle(player.level(), new DustParticleOptions(new Vector3f(0.9f, 0.9f, 0.9f), 2),
                             player.getX(), player.getY() + 1, player.getZ(),
                             1.5f, 1.5f, 1.5f,
                             0.01, 50, false);
+
+            //Blast Particle
+            if(chaosEmeraldCap.purpleEmeraldUse > 0)
+                Utilities.displayParticle(player.level(), new DustParticleOptions(new Vector3f(0.8f, 0.0f, 1f), 1),
+                        player.getX(), player.getY() + 1, player.getZ(),
+                        1f, 1.5f, 1f,
+                        0.01, 30, false);
         });
     }
 
@@ -62,6 +81,8 @@ public class PlayerTickHandler {
     {
         //Handles Tick
         serverTick = (serverTick+1)%TICKS_PER_SEC;
+
+        Level world = player.level();
 
         //Grey Emerald
         {
@@ -82,7 +103,6 @@ public class PlayerTickHandler {
                 if (chaosEmeraldCap.greyEmeraldUse > 1) {
                     chaosEmeraldCap.greyEmeraldUse += 1;
 
-                    Level world = player.level();
                     Vec3 lookAngle = player.getLookAngle();
                     BlockPos playerPos = new BlockPos(
                             (int)(player.getX()+lookAngle.x()*1),
@@ -123,11 +143,102 @@ public class PlayerTickHandler {
                 {
                     //Set Cooldown(in Seconds)
                     chaosEmeraldCap.greyEmeraldUse = -1;
-                    chaosEmeraldCap.cooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 15;
+                    chaosEmeraldCap.cooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 30;
 
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
                 }
             });
+        }
+
+        //Purple Emerald
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //Negate Fall Damage
+                if(chaosEmeraldCap.purpleEmeraldUse == -1 && player.onGround())
+                {
+                    chaosEmeraldCap.purpleEmeraldUse = 0;
+                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleEmeraldUse));
+                }
+
+                //Increase The Purple Emerald Use
+                if(chaosEmeraldCap.purpleEmeraldUse > 0)
+                {
+                    if(chaosEmeraldCap.purpleEmeraldUse == 1)
+                        PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(), chaosEmeraldCap.purpleEmeraldUse));
+
+                    chaosEmeraldCap.purpleEmeraldUse += 1;
+                }
+
+                //Perform Blast
+                if(chaosEmeraldCap.purpleEmeraldUse == 20)
+                {
+                    //Perform Blast
+                    {
+                        // Create the ItemStack for the firework rocket
+                        ItemStack fireworkStack = new ItemStack(Items.FIREWORK_ROCKET, 1);
+
+                        // Create the NBT data for the firework rocket
+                        CompoundTag fireworkTag = new CompoundTag();
+                        ListTag explosions = new ListTag();
+
+                        CompoundTag explosion = new CompoundTag();
+                        explosion.putByte("Type", (byte) 1); // Large
+                        explosion.put("Colors", new IntArrayTag(new int[]{12779775, 16777215}));
+                        explosion.put("FadeColors", new IntArrayTag(new int[]{16711680, 0}));
+                        explosions.add(explosion);
+
+                        CompoundTag fireworks = new CompoundTag();
+                        fireworks.put("Explosions", explosions);
+                        fireworkTag.put("Fireworks", fireworks);
+
+                        // Add the NBT data to the ItemStack
+                        fireworkStack.setTag(fireworkTag);
+
+                        // Create an ItemEntity to represent the firework rocket in the world
+                        FireworkRocketEntity fireworkEntity = new FireworkRocketEntity(world,
+                                player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), fireworkStack);
+
+                        try {
+                            Field privateField = FireworkRocketEntity.class.getDeclaredField("lifetime");
+                            privateField.setAccessible(true);
+                            privateField.set(fireworkEntity, 0);
+                            privateField.setAccessible(false);
+                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                        // Add the Firework to the world
+                        world.addFreshEntity(fireworkEntity);
+                    }
+
+                    //Damage
+                    AABB boundingBox = new AABB(player.getX()+6,player.getY()+6,player.getZ()+6,
+                            player.getX()-6,player.getY()-6,player.getZ()-6);
+                    for(LivingEntity enemy : world.getEntitiesOfClass(LivingEntity.class,boundingBox,(enemy)->!enemy.is(player)))
+                        enemy.hurt(world.damageSources().playerAttack(player),21);
+
+                    //Sync Set Motion to Zero
+                    player.setDeltaMovement(0,0,0);
+                    PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),player.getDeltaMovement()));
+                }
+
+                //End Blast
+                if(chaosEmeraldCap.purpleEmeraldUse > 30)
+                {
+                    //Reset Gravity
+                    player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                    player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0);
+
+                    //Blast Cooldowns
+                    chaosEmeraldCap.purpleEmeraldUse = -1;
+                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleEmeraldUse));
+                    chaosEmeraldCap.cooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
+                }
+            });
+        }
+
+        //Yellow Emerald
+        {
+
         }
     }
 }

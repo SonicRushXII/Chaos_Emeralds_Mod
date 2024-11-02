@@ -12,6 +12,7 @@ import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.all.UpdateMainhandItem;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 
 public class PacketHandler {
     static int id = 0;
@@ -34,6 +35,9 @@ public class PacketHandler {
 
         //GREY EMERALD
         INSTANCE.messageBuilder(SyncDigPacketS2C.class, id++).encoder(SyncDigPacketS2C::encode).decoder(SyncDigPacketS2C::new).consumerMainThread(SyncDigPacketS2C::handle).add();
+
+        //PURPLE EMERALD
+        INSTANCE.messageBuilder(SyncBlastPacketS2C.class, id++).encoder(SyncBlastPacketS2C::encode).decoder(SyncBlastPacketS2C::new).consumerMainThread(SyncBlastPacketS2C::handle).add();
     }
 
     public static void sendToServer(Object msg) {

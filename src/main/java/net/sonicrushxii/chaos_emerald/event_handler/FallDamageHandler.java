@@ -14,6 +14,9 @@ public class FallDamageHandler {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap->{
                 if(chaosEmeraldCap.greyEmeraldUse != 0)
                     event.setDistance(0.0f);
+
+                if(chaosEmeraldCap.purpleEmeraldUse != 0)
+                    event.setDistance(0.0f);
             });
         }
     }

@@ -38,6 +38,33 @@ public class ChaosBlockItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
+    private static void useEmerald(String itemString, Level pLevel, Player pPlayer)
+    {
+        switch(itemString)
+        {
+            case "aqua_emerald": System.out.println("Used Aqua Emerald");
+                ChaosEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
+                break;
+            case "blue_emerald":System.out.println("Used Blue Emerald");
+                ChaosEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
+                break;
+            case "green_emerald": System.out.println("Used Green Emerald");
+                ChaosEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
+                break;
+            case "grey_emerald": System.out.println("Used Grey Emerald");
+                ChaosEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
+                break;
+            case "purple_emerald": System.out.println("Used Purple Emerald");
+                ChaosEmeraldHandler.purpleEmeraldUse(pLevel,pPlayer);
+                break;
+            case "red_emerald": System.out.println("Used Red Emerald");
+                break;
+            case "yellow_emerald": System.out.println("Used Yellow Emerald");
+                break;
+        }
+        System.out.println("Client Side:"+pLevel.isClientSide+", Use Item:"+itemString);
+    }
+
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
         Level world = pContext.getLevel();
@@ -45,28 +72,8 @@ public class ChaosBlockItem extends BlockItem {
 
         assert player != null;
         if(!player.isShiftKeyDown()){
-            switch(player.getMainHandItem().getItem().toString())
-            {
-                case "aqua_emerald": System.out.println("Used Aqua Emerald");
-                                    ChaosEmeraldHandler.aquaEmeraldUse(world,player);
-                                    break;
-                case "blue_emerald":System.out.println("Used Blue Emerald");
-                                    ChaosEmeraldHandler.blueEmeraldUse(world,player);
-                                    break;
-                case "green_emerald": System.out.println("Used Green Emerald");
-                                    ChaosEmeraldHandler.greenEmeraldUse(world,player);
-                                    break;
-                case "grey_emerald": System.out.println("Used Grey Emerald");
-                                    ChaosEmeraldHandler.greyEmeraldUse(world,player);
-                                    break;
-                case "purple_emerald": System.out.println("Used Purple Emerald");
-                    break;
-                case "red_emerald": System.out.println("Used Red Emerald");
-                    break;
-                case "yellow_emerald": System.out.println("Used Yellow Emerald");
-                    break;
-            }
-            System.out.println("Client Side:"+world.isClientSide+", Use Item:"+player.getMainHandItem().getDisplayName().getString());
+            useEmerald(player.getMainHandItem().getItem().toString(), world, player);
+            useEmerald(player.getOffhandItem().getItem().toString(), world, player);
             return InteractionResult.FAIL;
         }
 
@@ -76,27 +83,9 @@ public class ChaosBlockItem extends BlockItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
-        switch(pPlayer.getMainHandItem().getItem().toString())
-        {
-            case "aqua_emerald": System.out.println("Used Aqua Emerald");
-                                ChaosEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
-                                break;
-            case "blue_emerald":System.out.println("Used Blue Emerald");
-                                ChaosEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
-                                break;
-            case "green_emerald": System.out.println("Used Green Emerald");
-                                ChaosEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
-                                break;
-            case "grey_emerald": System.out.println("Used Grey Emerald");
-                                ChaosEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
-                                break;
-            case "purple_emerald": System.out.println("Used Purple Emerald");
-                break;
-            case "red_emerald": System.out.println("Used Red Emerald");
-                break;
-            case "yellow_emerald": System.out.println("Used Yellow Emerald");
-                break;
-        }
+        useEmerald(pPlayer.getMainHandItem().getItem().toString(), pLevel, pPlayer);
+        useEmerald(pPlayer.getOffhandItem().getItem().toString(), pLevel, pPlayer);
+
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
@@ -26,7 +27,13 @@ public class DamageHandler {
         /** Player Attacked*/
         if(event.getEntity() instanceof ServerPlayer player)
         {
-
+            //Heavily Reduce Damage if using Chaos Blast
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.purpleEmeraldUse > 1 && !(event.getSource().getEntity() instanceof LivingEntity))
+                {
+                    event.setCanceled(true);
+                }
+            });
         }
 
         /** Player: Attacker*/
