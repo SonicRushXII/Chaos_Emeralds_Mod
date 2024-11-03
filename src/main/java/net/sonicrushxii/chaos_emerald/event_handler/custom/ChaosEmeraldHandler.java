@@ -23,6 +23,7 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
+import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
@@ -307,5 +308,31 @@ public class ChaosEmeraldHandler {
     public static void yellowEmeraldUse(Level pLevel, Player pPlayer)
     {
         //Throw Chaos Spear
+        if(!pLevel.isClientSide())
+            pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.cooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
+                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFFFF00)),true);
+                    return;
+                }
+
+                Vec3 spawnPos = new Vec3(pPlayer.getX()+pPlayer.getLookAngle().x,
+                        pPlayer.getY()+pPlayer.getLookAngle().y+1.0,
+                        pPlayer.getZ()+pPlayer.getLookAngle().z);
+                pLevel.playSound(null,pPlayer.getX(),pPlayer.getY(),pPlayer.getZ(),
+                        SoundEvents.EGG_THROW, SoundSource.MASTER, 1.0f, 1.0f);
+                ChaosSpear chaosSpear = new ChaosSpear(ModEntityTypes.CHAOS_SPEAR.get(), pLevel);
+
+                chaosSpear.setPos(spawnPos);
+                chaosSpear.setDuration(120);
+                chaosSpear.setMovementDirection(pPlayer.getLookAngle());
+                chaosSpear.setDestroyBlocks(!pPlayer.isShiftKeyDown());
+                chaosSpear.setOwner(pPlayer.getUUID());
+
+                // Add the entity to the world
+                pLevel.addFreshEntity(chaosSpear);
+
+                //Set Cooldown(in Seconds)
+                chaosEmeraldCap.cooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 10;
+            });
     }
 }

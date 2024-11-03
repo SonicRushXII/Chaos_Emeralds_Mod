@@ -97,6 +97,7 @@ public class ChaosEmerald
         {
             //Entity Setup
             EntityRenderers.register(ModEntityTypes.ICE_SPIKE.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");

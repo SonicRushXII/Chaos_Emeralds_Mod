@@ -1,18 +1,14 @@
 package net.sonicrushxii.chaos_emerald.event_handler;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntArrayTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.FireworkRocketEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -29,8 +25,6 @@ import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import org.joml.Vector3f;
-
-import java.lang.reflect.Field;
 
 public class PlayerTickHandler {
     private static final int TICKS_PER_SEC = 20;
@@ -93,14 +87,8 @@ public class PlayerTickHandler {
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
                 }
 
-
-                if (chaosEmeraldCap.greyEmeraldUse == 1 && player.onGround()) {
-                    chaosEmeraldCap.greyEmeraldUse = 2;
-                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
-                }
-
                 //Grey Emerald Use
-                if (chaosEmeraldCap.greyEmeraldUse > 1) {
+                if (chaosEmeraldCap.greyEmeraldUse > 0) {
                     chaosEmeraldCap.greyEmeraldUse += 1;
 
                     Vec3 lookAngle = player.getLookAngle();
@@ -127,7 +115,7 @@ public class PlayerTickHandler {
                     for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
                         BlockState blockState = player.level().getBlockState(pos);
                         if(!Utilities.unbreakableBlocks.contains(ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+""))
-                            player.level().destroyBlock(pos, true);
+                            player.level().destroyBlock(pos, player.isShiftKeyDown());
                     }
                     player.setDeltaMovement(lookAngle.scale(1));
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
@@ -169,40 +157,12 @@ public class PlayerTickHandler {
                 {
                     //Perform Blast
                     {
-                        // Create the ItemStack for the firework rocket
-                        ItemStack fireworkStack = new ItemStack(Items.FIREWORK_ROCKET, 1);
-
-                        // Create the NBT data for the firework rocket
-                        CompoundTag fireworkTag = new CompoundTag();
-                        ListTag explosions = new ListTag();
-
-                        CompoundTag explosion = new CompoundTag();
-                        explosion.putByte("Type", (byte) 1); // Large
-                        explosion.put("Colors", new IntArrayTag(new int[]{12779775, 16777215}));
-                        explosion.put("FadeColors", new IntArrayTag(new int[]{16711680, 0}));
-                        explosions.add(explosion);
-
-                        CompoundTag fireworks = new CompoundTag();
-                        fireworks.put("Explosions", explosions);
-                        fireworkTag.put("Fireworks", fireworks);
-
-                        // Add the NBT data to the ItemStack
-                        fireworkStack.setTag(fireworkTag);
-
-                        // Create an ItemEntity to represent the firework rocket in the world
-                        FireworkRocketEntity fireworkEntity = new FireworkRocketEntity(world,
-                                player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), fireworkStack);
-
-                        try {
-                            Field privateField = FireworkRocketEntity.class.getDeclaredField("lifetime");
-                            privateField.setAccessible(true);
-                            privateField.set(fireworkEntity, 0);
-                            privateField.setAccessible(false);
-                        } catch (NoSuchFieldException | IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        }
-                        // Add the Firework to the world
-                        world.addFreshEntity(fireworkEntity);
+                        //Commands
+                        CommandSourceStack commandSourceStack = player.createCommandSourceStack().withPermission(4).withSuppressedOutput();
+                        MinecraftServer server = player.serverLevel().getServer();
+                        server.
+                                getCommands().
+                                performPrefixedCommand(commandSourceStack,"summon firework_rocket ~ ~ ~ {Life:0,LifeTime:0,FireworksItem:{id:\"firework_rocket\",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Flicker:1b,Colors:[I;12779775,16777215],FadeColors:[I;16711680,0]}]}}}}");
                     }
 
                     //Damage
@@ -229,14 +189,6 @@ public class PlayerTickHandler {
                     chaosEmeraldCap.cooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
                 }
             });
-        }
-
-        //Red Emerald
-        {}
-
-        //Yellow Emerald
-        {
-
         }
     }
 }

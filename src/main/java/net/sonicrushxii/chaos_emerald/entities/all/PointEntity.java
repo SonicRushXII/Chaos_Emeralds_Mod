@@ -37,6 +37,9 @@ public class PointEntity extends Entity {
         tag.putInt("Duration", this.entityData.get(DURATION));
     }
 
+    public int getDuration() {return this.entityData.get(DURATION);}
+    public void setDuration(int duration) {this.entityData.set(DURATION,duration);}
+
     @Override
     public void tick() {
         super.tick();
