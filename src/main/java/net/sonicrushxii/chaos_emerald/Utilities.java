@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 public class Utilities {
 
-    static Random random = new Random();
+    public static Random random = new Random();
 
     public static final HashSet<String> passableBlocks =
             new HashSet<>(Arrays.asList(

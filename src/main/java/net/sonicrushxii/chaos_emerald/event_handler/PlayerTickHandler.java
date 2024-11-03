@@ -124,18 +124,13 @@ public class PlayerTickHandler {
                     BlockPos end = playerPos.offset(radius, radius+2, radius);
 
                     // Use BlockPos.betweenClosed to iterate over all positions in the cube
-                    boolean broken = false;
                     for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
                         BlockState blockState = player.level().getBlockState(pos);
                         if(!Utilities.unbreakableBlocks.contains(ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+""))
-                        {
                             player.level().destroyBlock(pos, true);
-                            broken = true;
-                        }
                     }
-                    if(broken)   player.setDeltaMovement(lookAngle.scale(1));
+                    player.setDeltaMovement(lookAngle.scale(1));
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
-
                 }
 
                 //End Ability Also can be ended by pressing R-Click with Emerald Again
@@ -214,7 +209,7 @@ public class PlayerTickHandler {
                     AABB boundingBox = new AABB(player.getX()+6,player.getY()+6,player.getZ()+6,
                             player.getX()-6,player.getY()-6,player.getZ()-6);
                     for(LivingEntity enemy : world.getEntitiesOfClass(LivingEntity.class,boundingBox,(enemy)->!enemy.is(player)))
-                        enemy.hurt(world.damageSources().playerAttack(player),21);
+                        enemy.hurt(world.damageSources().playerAttack(player),7);
 
                     //Sync Set Motion to Zero
                     player.setDeltaMovement(0,0,0);
@@ -235,6 +230,9 @@ public class PlayerTickHandler {
                 }
             });
         }
+
+        //Red Emerald
+        {}
 
         //Yellow Emerald
         {

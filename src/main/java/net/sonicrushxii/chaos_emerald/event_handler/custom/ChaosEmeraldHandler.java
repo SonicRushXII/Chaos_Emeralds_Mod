@@ -1,5 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -13,9 +14,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
@@ -23,7 +26,9 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
+import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
 import org.joml.Vector3f;
 
 import java.util.Collections;
@@ -184,6 +189,9 @@ public class ChaosEmeraldHandler {
             pLevel.playSound(null,newPlayerPos.x(),newPlayerPos.y(),newPlayerPos.z(),
                     SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 0.75f, 0.75f);
 
+            //Grant Immunity
+            if(pPlayer.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get())) pPlayer.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).update(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false));
+            else pPlayer.addEffect(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false),pPlayer);
 
             //Set Cooldown(in Seconds)
             chaosEmeraldCap.cooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 7;
@@ -222,5 +230,82 @@ public class ChaosEmeraldHandler {
                 //Activate Purple Emerald
                 if(chaosEmeraldCap.purpleEmeraldUse == 0) chaosEmeraldCap.purpleEmeraldUse = 1;
             });
+    }
+
+    public static void redEmeraldUse(Level pLevel ,Player pPlayer)
+    {
+        //Vec3 playerPos = new Vec3(pPlayer.getX(),pPlayer.getY(),pPlayer.getZ());
+        BlockPos playerPos = pPlayer.blockPosition();
+
+        if(!pLevel.isClientSide)
+            pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.cooldownKey[EmeraldType.RED_EMERALD.ordinal()] > 0) {
+                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xCC00FF)),true);
+                    return;
+                }
+
+                //Launch up
+                pPlayer.setDeltaMovement(0,1.0,0);
+                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),pPlayer.getDeltaMovement()));
+
+                //Particle
+                PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                        ParticleTypes.FLAME,
+                        pPlayer.getX()+0.00, pPlayer.getY()+0.35, pPlayer.getZ()+0.00,
+                        0.001, 5f, 0.25f, 5f, 500,
+                        true)
+                );
+
+                //Play Sound
+                pLevel.playSound(null,playerPos.getX(),playerPos.getY(),playerPos.getZ(),
+                        SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 0.75f, 0.75f);
+
+                //Set Blocks on Fire
+                final int fireBlocks = 24, radius = 6;
+
+                // Use BlockPos.betweenClosed to iterate over all positions in the cube
+                for(int i=0;i<fireBlocks;++i)
+                {
+                    //Spawns Fire
+                    BlockPos pos = new BlockPos(
+                            playerPos.getX()+Utilities.random.nextInt(-radius,radius),
+                            playerPos.getY()+Utilities.random.nextInt(-radius,radius),
+                            playerPos.getZ()+Utilities.random.nextInt(-radius,radius)
+                            );
+                    for(byte h=-3;h<=3;++h)
+                    {
+                        if(Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLevel.getBlockState(pos.offset(0,h,0)).getBlock())+"")
+                                && !Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLevel.getBlockState(pos.offset(0,h-1,0)).getBlock())+"")) {
+                            pLevel.setBlock(pos.offset(0, h, 0), Blocks.FIRE.defaultBlockState(), 3);
+                            PacketHandler.sendToALLPlayers(new FireSyncPacketS2C(pos.offset(0,h,0)));
+                            break;
+                        }
+                    }
+                }
+
+                //Damage and Set on Fire
+                AABB boundingBox = new AABB(pPlayer.getX()+radius,pPlayer.getY()+1,pPlayer.getZ()+radius,
+                        pPlayer.getX()-radius,pPlayer.getY()-2,pPlayer.getZ()-radius);
+                for(LivingEntity enemy : pLevel.getEntitiesOfClass(LivingEntity.class,boundingBox,(enemy)->!enemy.is(pPlayer))) {
+                    enemy.hurt(pLevel.damageSources().playerAttack(pPlayer), 10);
+                    enemy.setSecondsOnFire(10);
+                }
+
+                //Prevent Fall Damage
+                if(pPlayer.hasEffect(ModEffects.CHAOS_FLAME_JUMP.get())) pPlayer.getEffect(ModEffects.CHAOS_FLAME_JUMP.get()).update(new MobEffectInstance(ModEffects.CHAOS_FLAME_JUMP.get(),40,0,false,false,false));
+                else pPlayer.addEffect(new MobEffectInstance(ModEffects.CHAOS_FLAME_JUMP.get(),40,0,false,false,false),pPlayer);
+
+                //Grant Fire Resistance
+                if(pPlayer.hasEffect(MobEffects.FIRE_RESISTANCE)) pPlayer.getEffect(MobEffects.FIRE_RESISTANCE).update(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false));
+                else pPlayer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false),pPlayer);
+
+                //Set Cooldown(in Seconds)
+                chaosEmeraldCap.cooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 15;
+            });
+    }
+
+    public static void yellowEmeraldUse(Level pLevel, Player pPlayer)
+    {
+        //Throw Chaos Spear
     }
 }

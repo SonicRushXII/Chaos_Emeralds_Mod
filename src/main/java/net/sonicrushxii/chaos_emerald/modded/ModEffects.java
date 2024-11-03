@@ -13,6 +13,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.potion_effects.ChaosBindEffect;
+import net.sonicrushxii.chaos_emerald.potion_effects.ChaosDashEffect;
+import net.sonicrushxii.chaos_emerald.potion_effects.ChaosFlameEffect;
 
 public class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS
@@ -24,6 +26,10 @@ public class ModEffects {
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, "22653B89-116E-49DC-9B6B-9877489B5BE5", -10.0, AttributeModifier.Operation.ADDITION)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "12AEAA34-359B-1198-935C-987861020334", -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL)
     ));
+    public static final RegistryObject<MobEffect> CHAOS_DASH_ATTACK = MOB_EFFECTS.register(
+            "chaos_dash",()->((new ChaosDashEffect(MobEffectCategory.BENEFICIAL,0x00FF00))));
+    public static final RegistryObject<MobEffect> CHAOS_FLAME_JUMP = MOB_EFFECTS.register(
+            "chaos_flame_jump",()->((new ChaosFlameEffect(MobEffectCategory.BENEFICIAL,0xFF0000))));
 
     public static void register(IEventBus eventBus)
     {

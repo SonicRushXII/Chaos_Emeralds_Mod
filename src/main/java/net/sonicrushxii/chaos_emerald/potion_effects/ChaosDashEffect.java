@@ -4,8 +4,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
-public class ChaosBindEffect extends MobEffect {
-    public ChaosBindEffect(MobEffectCategory mobEffectCategory, int color) {
+public class ChaosDashEffect extends MobEffect {
+    public ChaosDashEffect(MobEffectCategory mobEffectCategory, int color) {
         super(mobEffectCategory,color);
     }
 

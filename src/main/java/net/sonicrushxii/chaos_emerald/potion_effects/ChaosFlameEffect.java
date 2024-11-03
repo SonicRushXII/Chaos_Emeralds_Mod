@@ -2,10 +2,11 @@ package net.sonicrushxii.chaos_emerald.potion_effects;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
-public class ChaosBindEffect extends MobEffect {
-    public ChaosBindEffect(MobEffectCategory mobEffectCategory, int color) {
+public class ChaosFlameEffect extends MobEffect {
+    public ChaosFlameEffect(MobEffectCategory mobEffectCategory, int color) {
         super(mobEffectCategory,color);
     }
 

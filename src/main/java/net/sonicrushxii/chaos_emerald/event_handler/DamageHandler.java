@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
@@ -33,6 +34,9 @@ public class DamageHandler {
                 {
                     event.setCanceled(true);
                 }
+                if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get()) && player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).getDuration() > 0
+                && !(event.getSource().getEntity() instanceof Player) && !event.getSource().isIndirect())
+                    event.setCanceled(true);
             });
         }
 
