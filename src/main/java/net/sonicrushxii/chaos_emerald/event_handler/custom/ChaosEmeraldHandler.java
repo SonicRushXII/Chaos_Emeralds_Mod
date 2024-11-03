@@ -325,7 +325,7 @@ public class ChaosEmeraldHandler {
                 chaosSpear.setPos(spawnPos);
                 chaosSpear.setDuration(120);
                 chaosSpear.setMovementDirection(pPlayer.getLookAngle());
-                chaosSpear.setDestroyBlocks(!pPlayer.isShiftKeyDown());
+                chaosSpear.setDestroyBlocks(pPlayer.isShiftKeyDown());
                 chaosSpear.setOwner(pPlayer.getUUID());
 
                 // Add the entity to the world
