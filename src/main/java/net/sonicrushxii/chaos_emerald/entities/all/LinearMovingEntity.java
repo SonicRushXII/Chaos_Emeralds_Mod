@@ -1,6 +1,5 @@
 package net.sonicrushxii.chaos_emerald.entities.all;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +24,5 @@ public class LinearMovingEntity extends PointEntity {
     public void tick() {
         super.tick();
         this.setDeltaMovement(movementDirection);
-        if(this.level().isClientSide)
-            this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5, this.getZ(), 0, 0, 0);
     }
 }
