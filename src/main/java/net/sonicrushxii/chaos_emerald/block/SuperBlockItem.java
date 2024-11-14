@@ -9,10 +9,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
 
-public class ChaosBlockItem extends BlockItem {
-    public ChaosBlockItem(Block pBlock, Properties pProperties) {
+public class SuperBlockItem extends BlockItem {
+    public SuperBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
 
@@ -21,25 +21,25 @@ public class ChaosBlockItem extends BlockItem {
         switch(itemString)
         {
             case "aqua_emerald": System.out.println("Used Aqua Emerald");
-                ChaosEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
                 break;
             case "blue_emerald":System.out.println("Used Blue Emerald");
-                ChaosEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
                 break;
             case "green_emerald": System.out.println("Used Green Emerald");
-                ChaosEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
                 break;
             case "grey_emerald": System.out.println("Used Grey Emerald");
-                ChaosEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
                 break;
             case "purple_emerald": System.out.println("Used Purple Emerald");
-                ChaosEmeraldHandler.purpleEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.purpleEmeraldUse(pLevel,pPlayer);
                 break;
             case "red_emerald": System.out.println("Used Red Emerald");
-                ChaosEmeraldHandler.redEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.redEmeraldUse(pLevel,pPlayer);
                 break;
             case "yellow_emerald": System.out.println("Used Yellow Emerald");
-                ChaosEmeraldHandler.yellowEmeraldUse(pLevel,pPlayer);
+                SuperEmeraldHandler.yellowEmeraldUse(pLevel,pPlayer);
                 break;
             default: return false;
         }
