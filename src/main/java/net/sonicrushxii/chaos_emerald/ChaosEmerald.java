@@ -57,6 +57,7 @@ public class ChaosEmerald
         ModBlocks.register(modEventBus);
         ModEntityTypes.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
+        ModLootModifiers.register(modEventBus);
         ModEffects.register(modEventBus);
     }
 

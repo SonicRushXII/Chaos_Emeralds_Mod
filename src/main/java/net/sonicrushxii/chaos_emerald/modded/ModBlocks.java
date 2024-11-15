@@ -145,7 +145,6 @@ public class ModBlocks {
         StringTokenizer sg = new StringTokenizer(name,"/");
 
         String token = sg.nextToken();
-        System.err.println(token);
         switch(token)
         {
             case "chaos_emerald": registerChaosBlockItem(name,toReturn); break;

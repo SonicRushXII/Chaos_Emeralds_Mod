@@ -3,7 +3,6 @@ package net.sonicrushxii.chaos_emerald.network;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -27,7 +26,7 @@ public class PacketHandler {
 
     public static void register() {
         INSTANCE.messageBuilder(BreakBlock.class, id++).encoder(BreakBlock::encode).decoder(BreakBlock::new).consumerMainThread(BreakBlock::handle).add();
-        INSTANCE.messageBuilder(UpdateMainhandItem.class, id++).encoder(UpdateMainhandItem::encode).decoder(UpdateMainhandItem::new).consumerMainThread(UpdateMainhandItem::handle).add();
+        INSTANCE.messageBuilder(UpdateHandItem.class, id++).encoder(UpdateHandItem::encode).decoder(UpdateHandItem::new).consumerMainThread(UpdateHandItem::handle).add();
         INSTANCE.messageBuilder(SyncEntityMotionS2C.class, id++).encoder(SyncEntityMotionS2C::encode).decoder(SyncEntityMotionS2C::new).consumerMainThread(SyncEntityMotionS2C::handle).add();
         INSTANCE.messageBuilder(ParticleAuraPacketS2C.class, id++).encoder(ParticleAuraPacketS2C::encode).decoder(ParticleAuraPacketS2C::new).consumerMainThread(ParticleAuraPacketS2C::handle).add();
         INSTANCE.messageBuilder(ParticleDirPacketS2C.class, id++).encoder(ParticleDirPacketS2C::encode).decoder(ParticleDirPacketS2C::new).consumerMainThread(ParticleDirPacketS2C::handle).add();

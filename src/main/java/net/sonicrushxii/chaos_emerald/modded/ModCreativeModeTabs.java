@@ -26,6 +26,8 @@ public class ModCreativeModeTabs
                         pOutput.accept(ModBlocks.RED_CHAOS_EMERALD.get());
                         pOutput.accept(ModBlocks.YELLOW_CHAOS_EMERALD.get());
 
+                        pOutput.accept(ModItems.MANUSCRIPT_SCROLL.get());
+
                         pOutput.accept(ModBlocks.AQUA_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.BLUE_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.GREEN_SUPER_EMERALD.get());

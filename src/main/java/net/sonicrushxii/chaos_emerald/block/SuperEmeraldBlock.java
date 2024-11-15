@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.all.UpdateMainhandItem;
+import net.sonicrushxii.chaos_emerald.network.all.UpdateHandItem;
 import org.jetbrains.annotations.Nullable;
 
 public class SuperEmeraldBlock extends Block implements SimpleWaterloggedBlock {
@@ -102,7 +102,7 @@ public class SuperEmeraldBlock extends Block implements SimpleWaterloggedBlock {
 
             //Update Player Item
             pPlayer.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(pState.getBlock().asItem()));
-            PacketHandler.sendToServer(new UpdateMainhandItem(new ItemStack(pState.getBlock().asItem())));
+            PacketHandler.sendToServer(new UpdateHandItem(new ItemStack(pState.getBlock().asItem()),InteractionHand.MAIN_HAND));
 
             return InteractionResult.CONSUME;
         }

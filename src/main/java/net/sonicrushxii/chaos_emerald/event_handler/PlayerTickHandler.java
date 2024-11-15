@@ -42,8 +42,8 @@ public class PlayerTickHandler {
 
         //Handle cooldowns for all players
         if(serverTick == 0)
-            event.player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCooldown -> {
-                byte[] cooldownKey = chaosEmeraldCooldown.cooldownKey;
+            event.player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                byte[] cooldownKey = chaosEmeraldCap.cooldownKey;
                 for(byte i=0;i<cooldownKey.length;++i)
                     cooldownKey[i] = (byte) Math.max(0,cooldownKey[i]-1);
             });
