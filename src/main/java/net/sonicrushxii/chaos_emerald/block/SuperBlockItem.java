@@ -71,10 +71,5 @@ public class SuperBlockItem extends BlockItem {
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-
-    @Override
-    public boolean isFireResistant() {
-        return super.isFireResistant();
-    }
 }
 

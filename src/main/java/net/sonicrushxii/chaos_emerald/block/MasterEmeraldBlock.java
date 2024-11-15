@@ -34,11 +34,11 @@ import net.sonicrushxii.chaos_emerald.network.all.BreakBlock;
 import net.sonicrushxii.chaos_emerald.network.all.UpdateMainhandItem;
 import org.jetbrains.annotations.Nullable;
 
-public class SuperEmeraldBlock extends Block implements SimpleWaterloggedBlock {
+public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock {
 
-    public static final VoxelShape SHAPE = Block.box(0,1,0,16,12,16);
+    public static final VoxelShape SHAPE = Block.box(0,0,0,16,18,16);
 
-    public SuperEmeraldBlock(Properties pProperties) {
+    public MasterEmeraldBlock(Properties pProperties) {
 
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -86,28 +86,6 @@ public class SuperEmeraldBlock extends Block implements SimpleWaterloggedBlock {
             return false;
         }
         return super.canEntityDestroy(state, level, pos, entity);
-    }
-
-    @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pPlayer.getMainHandItem() == ItemStack.EMPTY && !pLevel.isClientSide) {
-            //Playsound
-            pLevel.playSound(pPlayer,pPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.5f,1.1f);
-
-            //Remove Block
-            pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
-            pLevel.updateNeighborsAt(pPos, Blocks.AIR);
-            pLevel.updateNeighborsAt(pPos.below(), Blocks.AIR);
-            PacketHandler.sendToServer(new BreakBlock(pPos));
-
-            //Update Player Item
-            pPlayer.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(pState.getBlock().asItem()));
-            PacketHandler.sendToServer(new UpdateMainhandItem(new ItemStack(pState.getBlock().asItem())));
-
-            return InteractionResult.CONSUME;
-        }
-
-        return InteractionResult.FAIL;
     }
 
     @Override

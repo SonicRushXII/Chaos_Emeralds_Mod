@@ -71,10 +71,5 @@ public class ChaosBlockItem extends BlockItem {
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-
-    @Override
-    public boolean isFireResistant() {
-        return super.isFireResistant();
-    }
 }
 

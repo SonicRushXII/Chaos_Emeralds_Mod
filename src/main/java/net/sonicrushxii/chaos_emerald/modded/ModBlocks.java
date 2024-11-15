@@ -9,10 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
-import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
-import net.sonicrushxii.chaos_emerald.block.ChaosEmeraldBlock;
-import net.sonicrushxii.chaos_emerald.block.SuperBlockItem;
-import net.sonicrushxii.chaos_emerald.block.SuperEmeraldBlock;
+import net.sonicrushxii.chaos_emerald.block.*;
 
 import java.util.StringTokenizer;
 import java.util.function.Supplier;
@@ -82,7 +79,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> BLUE_SUPER_EMERALD = registerBlock("super_emerald/blue_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -90,7 +87,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> GREEN_SUPER_EMERALD = registerBlock("super_emerald/green_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -98,7 +95,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> GREY_SUPER_EMERALD = registerBlock("super_emerald/grey_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -106,7 +103,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> PURPLE_SUPER_EMERALD = registerBlock("super_emerald/purple_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -114,7 +111,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> RED_SUPER_EMERALD = registerBlock("super_emerald/red_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -122,7 +119,7 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
                     })));
     public static final RegistryObject<Block> YELLOW_SUPER_EMERALD = registerBlock("super_emerald/yellow_emerald",
             ()->new SuperEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
@@ -130,7 +127,16 @@ public class ModBlocks {
                     .noLootTable()
                     .noOcclusion()
                     .lightLevel((pProperites) -> {
-                        return 13;
+                        return 14;
+                    })));
+
+    public static final RegistryObject<Block> MASTER_EMERALD = registerBlock("master_emerald",
+            ()->new MasterEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .strength(-1.0F, 3600000.0F)
+                    .noLootTable()
+                    .noOcclusion()
+                    .lightLevel((pProperites) -> {
+                        return 15;
                     })));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block)
@@ -144,6 +150,7 @@ public class ModBlocks {
         {
             case "chaos_emerald": registerChaosBlockItem(name,toReturn); break;
             case "super_emerald": registerSuperBlockItem(name,toReturn); break;
+            case "master_emerald": registerMasterBlockItem(name,toReturn); break;
             default:
         }
 
@@ -155,6 +162,9 @@ public class ModBlocks {
 
     private static <T extends Block>RegistryObject<Item> registerSuperBlockItem(String name, RegistryObject<T> block)
     {return ModItems.ITEMS.register(name, () -> new SuperBlockItem(block.get(),new Item.Properties().stacksTo(1).fireResistant()));}
+
+    private static <T extends Block>RegistryObject<Item> registerMasterBlockItem(String name, RegistryObject<T> block)
+    {return ModItems.ITEMS.register(name, () -> new MasterBlockItem(block.get(),new Item.Properties().stacksTo(1).fireResistant()));}
 
     public static void register(IEventBus eventBus)
     {

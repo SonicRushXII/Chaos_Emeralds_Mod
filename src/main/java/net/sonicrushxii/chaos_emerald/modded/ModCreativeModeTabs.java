@@ -33,6 +33,8 @@ public class ModCreativeModeTabs
                         pOutput.accept(ModBlocks.PURPLE_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.RED_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.YELLOW_SUPER_EMERALD.get());
+
+                        pOutput.accept(ModBlocks.MASTER_EMERALD.get());
                     })
                     .build());
 

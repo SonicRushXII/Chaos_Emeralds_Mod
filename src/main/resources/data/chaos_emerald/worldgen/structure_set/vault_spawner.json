@@ -34,6 +34,10 @@
     {
       "structure": "chaos_emerald:yellow_vault",
       "weight": 1
+    },
+    {
+      "structure": "chaos_emerald:master_emerald_island",
+      "weight": 1
     }
   ]
 }

@@ -7,5 +7,15 @@
   "block.chaos_emerald.chaos_emerald.red_emerald": "Chaos Emerald",
   "block.chaos_emerald.chaos_emerald.yellow_emerald": "Chaos Emerald",
 
+  "block.chaos_emerald.super_emerald.aqua_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.blue_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.green_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.grey_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.purple_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.red_emerald": "Super Emerald",
+  "block.chaos_emerald.super_emerald.yellow_emerald": "Super Emerald",
+
+  "block.chaos_emerald.master_emerald": "Master Emerald",
+
   "creativetab.chaos_emerald": "Chaos Emerald Tab"
 }
