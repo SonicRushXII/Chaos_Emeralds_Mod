@@ -12,9 +12,11 @@ public class ChaosEmeraldCap {
     public void foundManuscript(byte index)
     {
         assert index < 7;
-        //If they've already found all scrolls, reset the Manuscript key to zero
-        if(manuscriptKey == Byte.MAX_VALUE) manuscriptKey = 0;
         this.manuscriptKey = (byte) (manuscriptKey|1<<index);
+
+        //If they've already found all scrolls, Activate Sign bit.
+        if(manuscriptKey == Byte.MAX_VALUE || manuscriptKey == -1) manuscriptKey = -128;
+
     }
 
     public boolean hasManuscript(byte index)
