@@ -25,7 +25,9 @@ public class ChaosEmeraldCap {
     }
 
     public void copyFrom(ChaosEmeraldCap source){
-        this.cooldownKey = source.cooldownKey;
+        if(source.cooldownKey.length == 0) this.cooldownKey = new byte[EmeraldType.values().length];
+        else this.cooldownKey = source.cooldownKey;
+
         this.greyEmeraldUse = source.greyEmeraldUse;
         this.purpleEmeraldUse = source.purpleEmeraldUse;
         this.manuscriptKey = source.manuscriptKey;
@@ -33,6 +35,7 @@ public class ChaosEmeraldCap {
 
     public void saveNBTData(CompoundTag nbt){
         //Copy Current Form
+        if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
         nbt.putByteArray("ChaosCooldown", cooldownKey);
         nbt.putByte("DigTimer",this.greyEmeraldUse);
         nbt.putByte("BlastTimer",this.purpleEmeraldUse);
@@ -42,6 +45,7 @@ public class ChaosEmeraldCap {
     public void loadNBTData(CompoundTag nbt){
         //Copy Current Form
         cooldownKey = nbt.getByteArray("ChaosCooldown");
+        if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
         greyEmeraldUse = nbt.getByte("DigTimer");
         purpleEmeraldUse = nbt.getByte("BlastTimer");
         manuscriptKey = nbt.getByte("ManuscriptKey");

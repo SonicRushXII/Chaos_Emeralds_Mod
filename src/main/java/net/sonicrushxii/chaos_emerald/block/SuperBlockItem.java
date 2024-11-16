@@ -11,6 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
 
+import java.util.StringTokenizer;
+
 public class SuperBlockItem extends BlockItem {
     public SuperBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
@@ -18,7 +20,13 @@ public class SuperBlockItem extends BlockItem {
 
     private static boolean useEmerald(String itemString, Level pLevel, Player pPlayer)
     {
-        switch(itemString)
+        //Make String Tokenizer
+        StringTokenizer sg = new StringTokenizer(itemString,"/");
+        //Ignore First Token
+        sg.nextToken();
+
+        //Get Last Token
+        switch(sg.nextToken())
         {
             case "aqua_emerald": System.out.println("Used Aqua Emerald");
                 SuperEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
