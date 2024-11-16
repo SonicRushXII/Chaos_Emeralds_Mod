@@ -31,9 +31,8 @@ public class DamageHandler {
             //Heavily Reduce Damage if using Chaos Blast
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 if(chaosEmeraldCap.purpleEmeraldUse > 1 && !(event.getSource().getEntity() instanceof LivingEntity))
-                {
                     event.setCanceled(true);
-                }
+
                 if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get()) && player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).getDuration() > 0
                 && !(event.getSource().getEntity() instanceof Player) && !event.getSource().isIndirect())
                     event.setCanceled(true);

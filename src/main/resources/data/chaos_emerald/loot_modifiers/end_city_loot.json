@@ -4,6 +4,10 @@
     {
       "condition": "forge:loot_table_id",
       "loot_table_id": "minecraft:chests/end_city_treasure"
+    },
+    {
+      "chance": 0.20,
+      "condition": "minecraft:random_chance"
     }
   ],
   "item": "chaos_emerald:manuscript_scroll"
