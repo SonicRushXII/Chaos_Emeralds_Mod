@@ -37,10 +37,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"Soldiers Report\\n\\nDuring a routine expedition of the nearby islands, Me and my brother, Mika discovered a giant stone structure engraved with ancient symbols. He tried to investigate, although against my better judgement.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"Suddenly, the fool touched the cursed circular symbol on the throne-like structure. I looked for him for hours, but he disappeared without a trace...\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"During my search however, I did discover a sky blue gem encased in a strange pillar. Out of pure instinct, I grabbed it from its containment, and escaped that cursed land.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"We can’t go back, it’s too dangerous. Even if it holds secrets, it’s not worth exchanging our blood for its knowledge.\\n\\n      (-)\\n X         X\\nX    0     X\\n X         X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"Soldiers Report\\n\\nDuring a routine expedition to the surrounding islands, me and Mika found something very....odd. A stone, throne like structure with demonic engravings. I will admit, I was scared. But my stupid brother approached the damned thing and...\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"He vanished. I searched for hours, I couldn’t find him. It was getting dark, so I made my way back. Although on my way, I found another one of those gems the chief keeps talking about in some kind of container. With some difficulty I managed to take it. Its cyan glow is alluring, almost as if it’s...\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   §bo§0   <\\n x     x   \\nx   O   x   \\n x     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -63,9 +62,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"Dear diary, today I met a friend while gathering berries. A little creature approached me and began leading me towards a small clearing deeper in the woods.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"Inside, I found what appeared to be its nest. Plenty of shiny things strewn about, including some kind of blue, shiny rock. I’ll have to tell the tribe about this!\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"It’s so cute, I think I’ll name him Chao after the noise he makes!\\n\\n       X\\n X         X\\nX    0    (-)\\n X         X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"Dear Diary\\n\\nToday, I met a friend. I was out gathering berries, you know the usual routine. But today was different! I found a cute little guy floating around near the river fishing around in the stream for something. I approached him as anyone would do, and\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"he gave me the biggest smile! After a bit of gesturing, he showed me to his den. A small clearing in a cave full of shiny things! Rings, Crystals from the reef, even a weird blue gem I’ve never seen before. I’ve gotta tell the others about this little guy! I think I’ll name him chao, after his noises.\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     x \\nx   O  §0§9o §9   \\n §0x     x     \"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -88,11 +87,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe the chief executed an entire family out of nowhere! And we are expected to just, accept that?! All for some stupid rock too!\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"Apparently anyone who harbors one of these weird things ends up either missing or dead! These things are cursed! They have six of them in possession, according to a friend.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"I decided to swipe the green rock when they weren’t looking. I don’t have a family, so I’m going to run and never look back.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"I know about a bright green ancient palace, completely closed off to the outside world. I think if I can make it there, I can foil whatever the higher ups are planning.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"I’m sorry Tikal, forgive me for abandoning you. I hope you understand.....I love you.\\n~Gisten\\n\\n       X\\n X         X\\nX    0     X\\n(-)        X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe father executed another family. Just because they held some ancient artifact doesn’t justify murder! He got ahold of another one today, this time a green one. This madness can’t continue, tomorrow I’m going to try convincing him to stop killing without good\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"reason! This makes the 5th family killed in the name of some stupid god that doesn’t even exist! If my efforts are in vein, I’m leaving this documentation for someone who can stop my father. Kill him if you have to....he’s not my dad anymore. Just don’t let him hurt anyone else. -Tikal\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     x\\nx   O   x\\n §2o§0     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -115,9 +112,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"Elders log:\\n\\nToday became quite interesting. I was tending to my garden when suddenly, a small silver rock fell from the heavens, nearly caving my skull in!\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"It was almost like it was escaping desperately from something. I’ve never quite seen anything like it. So beautiful and smooth.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"I think I’m going to keep it as a decoration. Maybe its beauty will influence people to elect me as the next lore keeper! Hohoho!\\n\\n       X\\n(-)        X\\nX    0     X\\n X         X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"Well, this is a surprise.\\nOne of those chaos emeralds our \\\"lord\\\" is searching for was found in my garden this morning. There’s talk of me being some kind of traitor for it. Blasphemy! I’ve been this village’s loremaster for years! Have these children never been taught to show respect to their\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"elders? That power-hungry fool is going to get us all killed. From my porch I see some guards approaching my property. I have a very bad feeling this might be it for me. If you’re reading this friend, please....\\nStop this tyrant.\\nSave our people.\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   §0x   <\\n x     x\\n§ §8o  §0 O   x\\n x     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -140,8 +137,8 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"Hi mommy! I was picking flowers today. I found a weird purple thing. I want you to have it. I love you mommy!\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"\\n\\n       X\\n X         X\\n(-)  0     X\\n X         X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"Hey mom! I was picking lavender for you and dad this morning. I found this purple thing and I want you to have it. It glows pretty like you.\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n §5o§0     x\\nx   O   x\\n x     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -164,9 +161,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"The echidnas once worshipped the red emerald, believing it was the source of all known power in this world.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"This belief started a small civil war that unfortunately ended in tragedy. During this age, the master emerald was discovered during an expedition into uncharted lands.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"\\n       X\\n X         X\\nX    0     X\\n X        (-)\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe I did it! I snatched that stupid yellow rock off the podium when the guards weren’t looking!!! I’ve heard this thing grants unimaginable power to its wielder. But on closer inspection, it looks neat but it’s nothing special. Maybe it’s worth a lot on the\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"black market though. With the money I can finally buy my family out the slums for good! Wait... what was that sound?§k§4 §hoh no. §I§kits too late for me now, I’m sorry mother, forgive me.\\n\\n§0\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     §eo\\n§0x   O   x\\n x     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
@@ -189,10 +186,9 @@ public class ManuscriptItem extends Item {
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe I did it. I stole the yellow gem! It’s all mine! I don’t care about that hokey religion stuff either!\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"I’m going to hide it in my den. I love the way it sparkles....it’s so, enchanting. Almost dangerously so.\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"Holding it makes me feel....powerful. Even if the guards find out, I think I can take them! I can......(Illegible text)\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"\\n\\n \\n       X\\n X        (-)\\nX    0     X\\n X         X\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"The Echidnas once worshipped the red emerald, believing that it was the source of all known power. This belief started a great civil war that ended with massive casualties, and a ruthless government that abused the power of the emeralds for selfish gain. Shortly after this age, the\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"master emerald was discovered, drawn towards the power exulted during the war. It soon became the center of a grand religion that unfortunately led to the tribe’s end.\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     x\\nx   O   x \\n x     §co\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);
