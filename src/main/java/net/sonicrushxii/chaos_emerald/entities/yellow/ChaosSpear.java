@@ -146,6 +146,4 @@ public class ChaosSpear extends LinearMovingEntity {
             );
         }
     }
-
-
 }

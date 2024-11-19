@@ -1,18 +1,26 @@
 package net.sonicrushxii.chaos_emerald;
 
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -173,8 +181,59 @@ public class Utilities {
             new HashSet<>(Arrays.asList(
                     "minecraft:bedrock",
                     "minecraft:obsidian",
-                    "minecraft:end_portal_frame")
+                    "minecraft:end_portal_frame",
+                    "chaos_emerald:master_emerald",
+                    "chaos_emerald:chaos_emerald/aqua_emerald",
+                    "chaos_emerald:chaos_emerald/blue_emerald",
+                    "chaos_emerald:chaos_emerald/green_emerald",
+                    "chaos_emerald:chaos_emerald/grey_emerald",
+                    "chaos_emerald:chaos_emerald/purple_emerald",
+                    "chaos_emerald:chaos_emerald/red_emerald",
+                    "chaos_emerald:chaos_emerald/yellow_emerald",
+                    "chaos_emerald:super_emerald/aqua_emerald",
+                    "chaos_emerald:super_emerald/blue_emerald",
+                    "chaos_emerald:super_emerald/green_emerald",
+                    "chaos_emerald:super_emerald/grey_emerald",
+                    "chaos_emerald:super_emerald/purple_emerald",
+                    "chaos_emerald:super_emerald/red_emerald",
+                    "chaos_emerald:super_emerald/yellow_emerald"
+            )
             );
+    //Server Side Find Block
+    public static boolean isPlayerLookingAtBlockType(ServerPlayer player, Level world, String targetBlock, double maxDistance) {
+        // Get player's eye position
+        Vec3 eyePosition = player.getEyePosition(1.0F); // 1.0F for current tick
+
+        // Get the player's view vector
+        Vec3 lookVector = player.getLookAngle();
+
+        // Calculate the end position of the ray
+        Vec3 rayEnd = eyePosition.add(lookVector.scale(maxDistance));
+
+        // Perform the ray trace
+        HitResult hitResult = world.clip(new ClipContext(
+                eyePosition,       // Start of the ray
+                rayEnd,            // End of the ray
+                ClipContext.Block.OUTLINE, // Target only blocks
+                ClipContext.Fluid.NONE,    // Ignore fluids
+                player             // Entity performing the ray trace
+        ));
+
+        // Check if the ray trace hit a block
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+
+            // Get the BlockState at the hit position
+            BlockState hitBlockState = world.getBlockState(blockHitResult.getBlockPos());
+
+            // Check if the block matches the target block type
+            return targetBlock.equals(
+                    ""+ForgeRegistries.BLOCKS.getKey(hitBlockState.getBlock())
+            );
+        }
+
+        return false; // No block was hit
+    }
 
     /** Method to summon an entity in a given world at specified coordinates
      * Mob specifies the mob to be summon, Eg: EntityType.ZOMBIE
@@ -182,7 +241,6 @@ public class Utilities {
      * Vec3 tells us where to spawn the entity
      * entityConsumer allows the user to perform some actions on the entity
      * **/
-
     public static <T extends Entity> void summonEntity(EntityType<T> entityType, ServerLevel world, Vec3 pos, @Nullable Consumer<T> entityConsumer)
     {
         // Create an instance of the entity

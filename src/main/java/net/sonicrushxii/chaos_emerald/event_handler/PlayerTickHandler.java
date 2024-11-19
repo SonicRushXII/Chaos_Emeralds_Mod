@@ -17,12 +17,14 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.master.ActivateFalseSuper;
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import org.joml.Vector3f;
 
@@ -69,6 +71,13 @@ public class PlayerTickHandler {
                         1f, 1.5f, 1f,
                         0.01, 30, false);
         });
+
+        //Master Emerald
+        if(KeyBindings.INSTANCE.transformButton.consumeClick())
+        {
+            PacketHandler.sendToServer(new ActivateFalseSuper());
+            while(KeyBindings.INSTANCE.transformButton.consumeClick());
+        }
     }
 
     public void onServerPlayerTick(ServerPlayer player)
