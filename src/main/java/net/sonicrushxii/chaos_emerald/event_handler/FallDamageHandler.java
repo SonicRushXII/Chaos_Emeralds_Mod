@@ -24,6 +24,9 @@ public class FallDamageHandler {
 
                 if(player.hasEffect(ModEffects.CHAOS_FLAME_JUMP.get()) && player.getEffect(ModEffects.CHAOS_FLAME_JUMP.get()).getDuration() > 0)
                     event.setDistance(0.0f);
+
+                if(chaosEmeraldCap.falseSuperTimer > 0)
+                    event.setDistance(0.0f);
             });
         }
     }

@@ -9,6 +9,10 @@ public class ChaosEmeraldCap {
     public byte greyEmeraldUse = 0;
     public byte purpleEmeraldUse = 0;
 
+    public int falseSuperTimer = 0;
+    public int superFormTimer = 0;
+    public int hyperFormTimer = 0;
+
     public void foundManuscript(byte index)
     {
         assert index < 7;
@@ -34,20 +38,34 @@ public class ChaosEmeraldCap {
     }
 
     public void saveNBTData(CompoundTag nbt){
-        //Copy Current Form
+        //Copy Chaos Cooldown
         if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
         nbt.putByteArray("ChaosCooldown", cooldownKey);
+
+        //Chaos Emerald Times
         nbt.putByte("DigTimer",this.greyEmeraldUse);
         nbt.putByte("BlastTimer",this.purpleEmeraldUse);
         nbt.putByte("ManuscriptKey",this.manuscriptKey);
+
+        //Transformation Times
+        nbt.putInt("FalseSuperDur",falseSuperTimer);
+        nbt.putInt("SuperDur",superFormTimer);
+        nbt.putInt("HyperDur",hyperFormTimer);
     }
 
     public void loadNBTData(CompoundTag nbt){
-        //Copy Current Form
+        //Load Chaos Cooldown
         cooldownKey = nbt.getByteArray("ChaosCooldown");
         if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
+
+        //Chaos Emerald Times
         greyEmeraldUse = nbt.getByte("DigTimer");
         purpleEmeraldUse = nbt.getByte("BlastTimer");
         manuscriptKey = nbt.getByte("ManuscriptKey");
+
+        //Transformation Times
+        falseSuperTimer = nbt.getInt("FalseSuperDur");
+        superFormTimer = nbt.getInt("SuperDur");
+        hyperFormTimer = nbt.getInt("HyperDur");
     }
 }

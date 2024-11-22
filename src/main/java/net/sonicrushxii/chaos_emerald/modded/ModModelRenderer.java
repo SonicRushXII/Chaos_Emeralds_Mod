@@ -31,7 +31,7 @@ public class ModModelRenderer {
         if(animationLength > 20 || 20%animationLength != 0)
             throw new RuntimeException("Incorrect Animation Length, Must be a divisor of 20");
 
-        byte frame = (byte)(PlayerTickHandler.clientTickCounter%animationLength);
+        byte frame = (byte)(PlayerTickHandler.clientTick%animationLength);
         while(true)
         {
             for(int i=0;i<textures.length;++i)

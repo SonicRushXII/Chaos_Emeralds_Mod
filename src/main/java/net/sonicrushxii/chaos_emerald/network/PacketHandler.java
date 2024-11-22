@@ -10,7 +10,7 @@ import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.network.all.*;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
-import net.sonicrushxii.chaos_emerald.network.master.ActivateFalseSuper;
+import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ActivateFalseSuper;
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
 

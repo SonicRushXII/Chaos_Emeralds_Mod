@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
@@ -44,5 +45,19 @@ public class DamageHandler {
 
             }
         }catch(NullPointerException ignored){}
+    }
+
+    @SubscribeEvent
+    public void onPlayerDeath(LivingDeathEvent event)
+    {
+        //Reset all form Timers
+        if(event.getEntity() instanceof ServerPlayer player)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                chaosEmeraldCap.falseSuperTimer = 0;
+                chaosEmeraldCap.superFormTimer = 0;
+                chaosEmeraldCap.hyperFormTimer = 0;
+            });
+        }
     }
 }
