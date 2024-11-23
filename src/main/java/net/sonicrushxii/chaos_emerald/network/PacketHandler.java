@@ -13,6 +13,7 @@ import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ActivateFalseSuper;
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ChaosSpaz;
 
 public class PacketHandler {
     static int id = 0;
@@ -25,12 +26,14 @@ public class PacketHandler {
             PROTOCOL_VERSION::equals
     );
 
-    public static void register() {
+    public static void register()
+    {
         INSTANCE.messageBuilder(BreakBlock.class, id++).encoder(BreakBlock::encode).decoder(BreakBlock::new).consumerMainThread(BreakBlock::handle).add();
         INSTANCE.messageBuilder(UpdateHandItem.class, id++).encoder(UpdateHandItem::encode).decoder(UpdateHandItem::new).consumerMainThread(UpdateHandItem::handle).add();
         INSTANCE.messageBuilder(SyncEntityMotionS2C.class, id++).encoder(SyncEntityMotionS2C::encode).decoder(SyncEntityMotionS2C::new).consumerMainThread(SyncEntityMotionS2C::handle).add();
         INSTANCE.messageBuilder(ParticleAuraPacketS2C.class, id++).encoder(ParticleAuraPacketS2C::encode).decoder(ParticleAuraPacketS2C::new).consumerMainThread(ParticleAuraPacketS2C::handle).add();
         INSTANCE.messageBuilder(ParticleDirPacketS2C.class, id++).encoder(ParticleDirPacketS2C::encode).decoder(ParticleDirPacketS2C::new).consumerMainThread(ParticleDirPacketS2C::handle).add();
+        INSTANCE.messageBuilder(PlayerStopSoundPacketS2C.class, id++).encoder(PlayerStopSoundPacketS2C::encode).decoder(PlayerStopSoundPacketS2C::new).consumerMainThread(PlayerStopSoundPacketS2C::handle).add();
         INSTANCE.messageBuilder(ParticleRaycastPacketS2C.class, id++).encoder(ParticleRaycastPacketS2C::encode).decoder(ParticleRaycastPacketS2C::new).consumerMainThread(ParticleRaycastPacketS2C::handle).add();
 
         //AQUA EMERALD
@@ -45,8 +48,9 @@ public class PacketHandler {
         //RED EMERALD
         INSTANCE.messageBuilder(FireSyncPacketS2C.class, id++).encoder(FireSyncPacketS2C::encode).decoder(FireSyncPacketS2C::new).consumerMainThread(FireSyncPacketS2C::handle).add();
 
-        //MASTER EMERALD
+        //ACTIVATE FALSE SUPER
         INSTANCE.messageBuilder(ActivateFalseSuper.class, id++).encoder(ActivateFalseSuper::encode).decoder(ActivateFalseSuper::new).consumerMainThread(ActivateFalseSuper::handle).add();
+        INSTANCE.messageBuilder(ChaosSpaz.class, id++).encoder(ChaosSpaz::encode).decoder(ChaosSpaz::new).consumerMainThread(ChaosSpaz::handle).add();
     }
 
     public static void sendToServer(Object msg) {

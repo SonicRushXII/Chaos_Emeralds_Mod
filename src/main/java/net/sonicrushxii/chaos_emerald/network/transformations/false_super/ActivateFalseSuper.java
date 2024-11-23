@@ -2,11 +2,13 @@ package net.sonicrushxii.chaos_emerald.network.transformations.false_super;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.sounds.SoundSource;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkEvent;
-import net.sonicrushxii.chaos_emerald.Utilities;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
+import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 
 import java.util.function.Supplier;
 
@@ -22,37 +24,27 @@ public class ActivateFalseSuper
         ctx.get().enqueueWork(
                 ()->{
                     ServerPlayer player = ctx.get().getSender();
-                    //Check if Looking at the Master Emerald
-                    if(player != null && Utilities.isPlayerLookingAtBlockType(player,player.level(),"chaos_emerald:master_emerald",7.5D))
+                    //Check if Standing on the Master Emerald
+                    if(player != null && "chaos_emerald:master_emerald"
+                            .equals(ForgeRegistries.BLOCKS.getKey(
+                                    player.level()
+                                            .getBlockState(player.blockPosition()
+                                                    .offset(0,-1,0))
+                                            .getBlock())+""
+                            ))
                     {
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                             //Give False Super Time
-                            chaosEmeraldCap.falseSuperTimer = 1;
+                            chaosEmeraldCap.falseSuperTimer = -80;
 
-                            //player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.DOUBLE_JUMP.get(), SoundSource.MASTER, 1.0f, 1.0f);
+                            //Remove Gravity
+                            player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                            //Add Step Height
+                            if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
 
-                            //Give Effects
-                            {
-                                //Speed
-                                if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-                                else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-
-                                //Jump
-                                if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-                                else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-
-                                //Haste
-                                if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-                                else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-
-                                //Strength
-                                if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-                                else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-
-                                //Resistance
-                                if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-                                else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-                            }
+                            //Play the Sound
+                            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.ACTIVATE_FALSE_SUPER.get(), SoundSource.MASTER, 1.0f, 1.0f);
                         });
                     }
                 });

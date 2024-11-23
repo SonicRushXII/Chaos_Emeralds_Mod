@@ -17,10 +17,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
-import net.sonicrushxii.chaos_emerald.event_handler.DamageHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.FallDamageHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.LoginHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
+import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazModel;
+import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazRenderer;
+import net.sonicrushxii.chaos_emerald.event_handler.*;
 import net.sonicrushxii.chaos_emerald.modded.*;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
@@ -47,6 +46,7 @@ public class ChaosEmerald
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
         MinecraftForge.EVENT_BUS.register(new DamageHandler());
         MinecraftForge.EVENT_BUS.register(new LoginHandler());
+        MinecraftForge.EVENT_BUS.register(new InteractionHandler());
         MinecraftForge.EVENT_BUS.register(new FallDamageHandler());
         MinecraftForge.EVENT_BUS.register(new Scheduler());
 
@@ -60,6 +60,7 @@ public class ChaosEmerald
         ModCreativeModeTabs.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
     }
 
     public ChaosEmerald(FMLJavaModLoadingContext context) {
@@ -100,6 +101,7 @@ public class ChaosEmerald
             //Entity Setup
             EntityRenderers.register(ModEntityTypes.ICE_SPIKE.get(), PointRenderer::new);
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.FALSE_SUPER_CHAOS_SPAZ.get(), ChaosSpazRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
@@ -114,7 +116,11 @@ public class ChaosEmerald
         @SubscribeEvent
         public static void registerModelLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
         {
+            //Chaos Bubble
             event.registerLayerDefinition(ChaosBubbleModel.LAYER_LOCATION,ChaosBubbleModel::createBodyLayer);
+
+            //Chaos Spaz
+            event.registerLayerDefinition(ChaosSpazModel.LAYER_LOCATION,ChaosSpazModel::createBodyLayer);
         }
     }
 }

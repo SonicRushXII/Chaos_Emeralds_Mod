@@ -1,0 +1,14 @@
+{
+  "activate_false_super": {
+    "subtitles": "sounds.master_emerald.false_super.activate",
+    "sounds": [
+      "chaos_emerald:false_super/activate_form"
+    ]
+  },
+  "false_chaos_spaz": {
+    "subtitles": "sounds.master_emerald.false_super.chaos_spaz",
+    "sounds": [
+      "chaos_emerald:false_super/chaos_spaz"
+    ]
+  }
+}

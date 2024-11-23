@@ -13,7 +13,9 @@ public class ModSounds {
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChaosEmerald.MOD_ID);
 
     public static final RegistryObject<SoundEvent> ACTIVATE_FALSE_SUPER =
-            registerSoundEvents("false_super_activate");
+            registerSoundEvents("activate_false_super");
+    public static final RegistryObject<SoundEvent> FALSE_CHAOS_SPAZ =
+            registerSoundEvents("false_chaos_spaz");
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String soundName){
         return SOUND_EVENTS.register(soundName,

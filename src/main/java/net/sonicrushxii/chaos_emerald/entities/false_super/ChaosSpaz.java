@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.entities.yellow;
+package net.sonicrushxii.chaos_emerald.entities.false_super;
 
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ChaosSpear extends LinearMovingEntity {
-    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.OPTIONAL_UUID);
+public class ChaosSpaz extends LinearMovingEntity {
+    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpaz.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpaz.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
-    private static float STRENGTH = 1.5f;
-    private static float DAMAGE = 4.0F;
+    private static float STRENGTH = 3.0f;
+    private static float DAMAGE = 6.0F;
 
-    public ChaosSpear(EntityType<? extends PointEntity> type, Level world) {
+    public ChaosSpaz(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
     }
 
@@ -95,7 +95,7 @@ public class ChaosSpear extends LinearMovingEntity {
     public void tick() {
         super.tick();
         if(this.level().isClientSide) {
-            Utilities.displayParticle(this.level(), new DustParticleOptions(new Vector3f(1f, 1f, 0f), 1f),
+            Utilities.displayParticle(this.level(), new DustParticleOptions(new Vector3f(0.1137F, 0.9490F, 0.4471F), 1f),
                     this.getX(), this.getY(), this.getZ(), 0.3f, 0.3f, 0.3f, 0, 15, false);
             Utilities.displayParticle(this.level(),ParticleTypes.END_ROD,
                     this.getX(),this.getY(),this.getZ(),0.3f,0.3f,0.3f,0,1,false);

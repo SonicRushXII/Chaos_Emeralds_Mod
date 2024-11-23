@@ -10,8 +10,12 @@ public class ChaosEmeraldCap {
     public byte purpleEmeraldUse = 0;
 
     public int falseSuperTimer = 0;
+    public byte falseChaosSpaz = 0;
+
     public int superFormTimer = 0;
     public int hyperFormTimer = 0;
+
+
 
     public void foundManuscript(byte index)
     {
@@ -47,8 +51,10 @@ public class ChaosEmeraldCap {
         nbt.putByte("BlastTimer",this.purpleEmeraldUse);
         nbt.putByte("ManuscriptKey",this.manuscriptKey);
 
-        //Transformation Times
+        //Transformations
         nbt.putInt("FalseSuperDur",falseSuperTimer);
+        nbt.putByte("FalseChaosSpaz",falseChaosSpaz);
+
         nbt.putInt("SuperDur",superFormTimer);
         nbt.putInt("HyperDur",hyperFormTimer);
     }
@@ -65,6 +71,8 @@ public class ChaosEmeraldCap {
 
         //Transformation Times
         falseSuperTimer = nbt.getInt("FalseSuperDur");
+        falseChaosSpaz = nbt.getByte("FalseChaosSpaz");
+
         superFormTimer = nbt.getInt("SuperDur");
         hyperFormTimer = nbt.getInt("HyperDur");
     }
