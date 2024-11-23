@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,8 +27,8 @@ public class ChaosSpear extends LinearMovingEntity {
     public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
-    private static float STRENGTH = 1.5f;
-    private static float DAMAGE = 4.0F;
+    private static final float STRENGTH = 1.5f;
+    private static final float DAMAGE = 4.0F;
 
     public ChaosSpear(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
@@ -105,15 +106,16 @@ public class ChaosSpear extends LinearMovingEntity {
             if(this.onGround() || this.horizontalCollision || this.verticalCollision && this.getDeltaMovement().y > 0)  explode();
 
             // Check for entity collisions and apply damage
-            List<LivingEntity> enemies = this.level().getEntitiesOfClass(LivingEntity.class,
+            List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
                     new AABB(this.getX() - 1.0, this.getY() - 1.0, this.getZ() - 1.0,
                             this.getX() + 1.0, this.getY() + 1.0, this.getZ() + 1.0),
                     enemy -> !(enemy.is(this))
             );
             if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4) {
                 try {// Synchronize on server only
-                    for (LivingEntity enemy : enemies) {
-                        enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);
+                    for (Entity enemy : enemies) {
+                        if(enemy instanceof LivingEntity)
+                            enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);
                     }
                 }catch(NullPointerException ignored){}
                 explode();

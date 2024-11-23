@@ -39,9 +39,6 @@ public class ActivateFalseSuper
 
                             //Remove Gravity
                             player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
-                            //Add Step Height
-                            if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
-                                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
 
                             //Play the Sound
                             player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.ACTIVATE_FALSE_SUPER.get(), SoundSource.MASTER, 1.0f, 1.0f);

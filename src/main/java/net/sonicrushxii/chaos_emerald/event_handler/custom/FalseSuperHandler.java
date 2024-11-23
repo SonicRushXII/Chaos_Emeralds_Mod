@@ -36,13 +36,21 @@ public class FalseSuperHandler
                 chaosEmeraldCap.falseSuperTimer += 1;
 
                 //False Super Activation
-                if(chaosEmeraldCap.falseSuperTimer < -20)
+                if(chaosEmeraldCap.falseSuperTimer <= -40)
+                {
+                    //Add Hover
+                    Vec3 motionDir = new Vec3(0,0,0);
+                    player.setDeltaMovement(motionDir);
+                    PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionDir));
+                }
+                if(chaosEmeraldCap.falseSuperTimer > -40 && chaosEmeraldCap.falseSuperTimer < -20)
                 {
                     //Add Hover
                     Vec3 motionDir = new Vec3(0,0.05,0);
                     player.setDeltaMovement(motionDir);
                     PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionDir));
                 }
+
                 if(chaosEmeraldCap.falseSuperTimer < 0)
                 {
                     //Display Particle Every Tick
@@ -63,7 +71,6 @@ public class FalseSuperHandler
                     Vec3 motionDir = new Vec3(0,0.0,0);
                     player.setDeltaMovement(motionDir);
                     PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionDir));
-
 
                     //Particle
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
@@ -92,6 +99,10 @@ public class FalseSuperHandler
                         //Resistance
                         if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
                         else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+
+                        //Add Step Height
+                        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
                     }
                 }
                 //Return Gravity After a Sec
@@ -141,6 +152,10 @@ public class FalseSuperHandler
                         //Resistance
                         if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
                         else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+
+                        //Add Step Height
+                        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
                     }
 
                     //Chaos Spaz

@@ -3,11 +3,9 @@ package net.sonicrushxii.chaos_emerald.event_handler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
@@ -37,8 +35,6 @@ public class LoginHandler
 
     private void onServerLogin(ServerPlayer player)
     {
-        System.out.println("Logged In");
-
         //Update the Effects on Server Side
         ServerLevel world = player.serverLevel();
         for(Entity entity : world.getAllEntities())

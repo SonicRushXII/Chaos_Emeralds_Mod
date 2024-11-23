@@ -29,12 +29,19 @@ public class DamageHandler {
         {
             //Heavily Reduce Damage if using Chaos Blast
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //Green Emerald
+                if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get()) && player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).getDuration() > 0
+                        && !(event.getSource().getEntity() instanceof Player) && !event.getSource().isIndirect())
+                    event.setCanceled(true);
+
+                //Purple Emerald
                 if(chaosEmeraldCap.purpleEmeraldUse > 1 && !(event.getSource().getEntity() instanceof LivingEntity))
                     event.setCanceled(true);
 
-                if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get()) && player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).getDuration() > 0
-                && !(event.getSource().getEntity() instanceof Player) && !event.getSource().isIndirect())
+                //False Super Form - (Turn Invulnerable while transforming)
+                if(chaosEmeraldCap.falseChaosSpaz < 0)
                     event.setCanceled(true);
+
             });
         }
 
