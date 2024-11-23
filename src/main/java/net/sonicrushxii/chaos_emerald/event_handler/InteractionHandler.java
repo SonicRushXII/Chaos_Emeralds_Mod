@@ -15,6 +15,7 @@ public class InteractionHandler {
         Level world = event.getLevel();
 
         //If Main Hand
-        if(event.getHand() == InteractionHand.MAIN_HAND) PacketHandler.sendToServer(new ChaosSpaz());
+        if(event.getHand() == InteractionHand.MAIN_HAND && player.isShiftKeyDown())
+            PacketHandler.sendToServer(new ChaosSpaz());
     }
 }
