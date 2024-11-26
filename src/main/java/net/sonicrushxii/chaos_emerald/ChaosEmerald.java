@@ -99,9 +99,17 @@ public class ChaosEmerald
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             //Entity Setup
+
+            //Aqua Emerald
             EntityRenderers.register(ModEntityTypes.ICE_SPIKE.get(), PointRenderer::new);
+            //Yellow Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
+
+            //False Super Form
             EntityRenderers.register(ModEntityTypes.FALSE_SUPER_CHAOS_SPAZ.get(), ChaosSpazRenderer::new);
+
+            //Super Emerald
+            EntityRenderers.register(ModEntityTypes.EMERALD_TRANSFORMER.get(), PointRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");

@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.UpdateHandItem;
 import org.jetbrains.annotations.NotNull;
@@ -155,9 +156,8 @@ public class ManuscriptItem extends Item {
         bookTag.putInt("CustomModelData",221984);
 
         // Set author, title, and pages
-        bookTag.putString("author", "Historian");
-        bookTag.putString("title", "Echidna History");
-
+        bookTag.putString("author", "Thief");
+        bookTag.putString("title", "Yellow Gem Theft");
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
         // Add the JSON text to the pages
@@ -180,8 +180,8 @@ public class ManuscriptItem extends Item {
         bookTag.putInt("CustomModelData",221984);
 
         // Set author, title, and pages
-        bookTag.putString("author", "Thief");
-        bookTag.putString("title", "Yellow Gem Theft");
+        bookTag.putString("author", "Historian");
+        bookTag.putString("title", "Echidna History");
 
         // Create a ListTag for the pages
         ListTag pages = new ListTag();
@@ -221,15 +221,15 @@ public class ManuscriptItem extends Item {
             //Mark as Found(so a Player won't receive the same one twice)
             chaosEmeraldCap.foundManuscript(manuScriptType);
 
-            switch(manuScriptType)
+            switch(EmeraldType.values()[manuScriptType])
             {
-                case 0: writtenManuscript.setTag(generateAquaManuscript()); break;
-                case 1: writtenManuscript.setTag(generateBlueManuscript()); break;
-                case 2: writtenManuscript.setTag(generateGreenManuscript()); break;
-                case 3: writtenManuscript.setTag(generateGreyManuscript()); break;
-                case 4: writtenManuscript.setTag(generatePurpleManuscript()); break;
-                case 5: writtenManuscript.setTag(generateRedManuscript()); break;
-                case 6: writtenManuscript.setTag(generateYellowManuscript()); break;
+                case AQUA_EMERALD: writtenManuscript.setTag(generateAquaManuscript()); break;
+                case BLUE_EMERALD: writtenManuscript.setTag(generateBlueManuscript()); break;
+                case GREEN_EMERALD: writtenManuscript.setTag(generateGreenManuscript()); break;
+                case GREY_EMERALD: writtenManuscript.setTag(generateGreyManuscript()); break;
+                case PURPLE_EMERALD: writtenManuscript.setTag(generatePurpleManuscript()); break;
+                case RED_EMERALD: writtenManuscript.setTag(generateRedManuscript()); break;
+                case YELLOW_EMERALD: writtenManuscript.setTag(generateYellowManuscript()); break;
             }
 
         });

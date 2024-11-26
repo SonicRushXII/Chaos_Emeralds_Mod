@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
+import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 
 @Mod.EventBusSubscriber(modid = ChaosEmerald.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -29,6 +30,10 @@ public class ModEntityTypes {
             () -> EntityType.Builder.<ChaosSpaz>of(ChaosSpaz::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("false_super_chaos_spaz"));
+    public static final RegistryObject<EntityType<EmeraldTransformer>> EMERALD_TRANSFORMER = ENTITY_TYPES.register("emerald_transformer",
+            () -> EntityType.Builder.<EmeraldTransformer>of(EmeraldTransformer::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("emerald_transformer"));
 
     public static void register(IEventBus eventBus){ ENTITY_TYPES.register(eventBus);}
 }

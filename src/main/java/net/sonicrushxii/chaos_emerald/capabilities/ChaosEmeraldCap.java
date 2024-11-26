@@ -32,6 +32,11 @@ public class ChaosEmeraldCap {
         return (manuscriptKey&1<<index) != 0;
     }
 
+    public boolean hasAllManuscripts()
+    {
+        return manuscriptKey<0;
+    }
+
     public void copyFrom(ChaosEmeraldCap source){
         if(source.cooldownKey.length == 0) this.cooldownKey = new byte[EmeraldType.values().length];
         else this.cooldownKey = source.cooldownKey;
