@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,10 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.all.PointEntity;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.PlayerStopSoundPacketS2C;
+import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 
 public class EmeraldTransformer extends PointEntity {
     public static final EntityDataAccessor<Byte> TRANSFORM_TYPE = SynchedEntityData.defineId(EmeraldTransformer.class, EntityDataSerializers.BYTE);
@@ -136,7 +141,21 @@ public class EmeraldTransformer extends PointEntity {
                                         String.format("summon firework_rocket ~ ~ ~ {Life:0,LifeTime:0,FireworksItem:{id:\"firework_rocket\",Count:1,tag:{Fireworks:{Explosions:[{Type:0,Flicker:1b,Colors:[I;%d,%d],FadeColors:[I;%d,%d]}]}}}}",
                                                 fireworkColors[0],fireworkColors[1],fireworkColors[2],fireworkColors[3]));
 
-                //Transform Block
+                //Cancel Firework Sounds
+                Scheduler.scheduleTask(()->{
+                    PacketHandler.sendToALLPlayers(new PlayerStopSoundPacketS2C(
+                            SoundEvents.FIREWORK_ROCKET_BLAST.getLocation()
+                    ));
+                    PacketHandler.sendToALLPlayers(new PlayerStopSoundPacketS2C(
+                            SoundEvents.FIREWORK_ROCKET_TWINKLE.getLocation()
+                    ));
+                    PacketHandler.sendToALLPlayers(new PlayerStopSoundPacketS2C(
+                            SoundEvents.FIREWORK_ROCKET_LAUNCH.getLocation()
+                    ));
+
+                },2);
+
+                //Transform Block if it is a Chaos Emerald of the Specified Type
                 BlockPos blockPos     =     new BlockPos((int)(this.getX()-0.5),(int)(this.getY()-0.5),(int)(this.getZ()-0.5));
                 BlockState blockState =     world.getBlockState(blockPos);
                 String blockString    =     ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+"";

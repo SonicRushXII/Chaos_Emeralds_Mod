@@ -156,30 +156,6 @@ public class ManuscriptItem extends Item {
         bookTag.putInt("CustomModelData",221984);
 
         // Set author, title, and pages
-        bookTag.putString("author", "Thief");
-        bookTag.putString("title", "Yellow Gem Theft");
-        // Create a ListTag for the pages
-        ListTag pages = new ListTag();
-        // Add the JSON text to the pages
-        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe I did it! I snatched that stupid yellow rock off the podium when the guards weren’t looking!!! I’ve heard this thing grants unimaginable power to its wielder. But on closer inspection, it looks neat but it’s nothing special. Maybe it’s worth a lot on the\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\"black market though. With the money I can finally buy my family out the slums for good! Wait... what was that sound?§k§4 §hoh no. §I§kits too late for me now, I’m sorry mother, forgive me.\\n\\n§0\"}"));
-        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     §eo\\n§0x   O   x\\n x     x\"}"));
-
-        // Attach the pages to the book tag
-        bookTag.put("pages", pages);
-
-        // Apply the NBT data to the ItemStack
-        return bookTag;
-    }
-    private CompoundTag generateYellowManuscript()
-    {
-        //Generate Text Tag for the Manuscript
-        CompoundTag bookTag = new CompoundTag();
-
-        //Custom Model Data, for Aesthetics
-        bookTag.putInt("CustomModelData",221984);
-
-        // Set author, title, and pages
         bookTag.putString("author", "Historian");
         bookTag.putString("title", "Echidna History");
 
@@ -189,6 +165,31 @@ public class ManuscriptItem extends Item {
         pages.add(StringTag.valueOf("{\"text\":\"The Echidnas once worshipped the red emerald, believing that it was the source of all known power. This belief started a great civil war that ended with massive casualties, and a ruthless government that abused the power of the emeralds for selfish gain. Shortly after this age, the\"}"));
         pages.add(StringTag.valueOf("{\"text\":\"master emerald was discovered, drawn towards the power exulted during the war. It soon became the center of a grand religion that unfortunately led to the tribe’s end.\"}"));
         pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     x\\nx   O   x \\n x     §co\"}"));
+
+        // Attach the pages to the book tag
+        bookTag.put("pages", pages);
+
+        // Apply the NBT data to the ItemStack
+        return bookTag;
+    }
+    private CompoundTag generateYellowManuscript()
+    {
+
+        //Generate Text Tag for the Manuscript
+        CompoundTag bookTag = new CompoundTag();
+
+        //Custom Model Data, for Aesthetics
+        bookTag.putInt("CustomModelData",221984);
+
+        // Set author, title, and pages
+        bookTag.putString("author", "Thief");
+        bookTag.putString("title", "Yellow Gem Theft");
+        // Create a ListTag for the pages
+        ListTag pages = new ListTag();
+        // Add the JSON text to the pages
+        pages.add(StringTag.valueOf("{\"text\":\"I can’t believe I did it! I snatched that stupid yellow rock off the podium when the guards weren’t looking!!! I’ve heard this thing grants unimaginable power to its wielder. But on closer inspection, it looks neat but it’s nothing special. Maybe it’s worth a lot on the\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\"black market though. With the money I can finally buy my family out the slums for good! Wait... what was that sound?§k§4 §hoh no. §I§kits too late for me now, I’m sorry mother, forgive me.\\n\\n§0\"}"));
+        pages.add(StringTag.valueOf("{\"text\":\">   x   <\\n x     §eo\\n§0x   O   x\\n x     x\"}"));
 
         // Attach the pages to the book tag
         bookTag.put("pages", pages);

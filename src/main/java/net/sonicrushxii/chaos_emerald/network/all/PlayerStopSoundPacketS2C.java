@@ -36,7 +36,8 @@ public class PlayerStopSoundPacketS2C {
                     LocalPlayer player = mc.player;
 
                     if(player != null && world != null) {
-                        mc.getSoundManager().stop(this.soundLocation, SoundSource.MASTER);
+                        for(SoundSource soundSource : SoundSource.values())
+                            mc.getSoundManager().stop(this.soundLocation, soundSource);
                     }
                 }));
         ctx.get().setPacketHandled(true);

@@ -16,6 +16,8 @@ public class ModSounds {
             registerSoundEvents("activate_false_super");
     public static final RegistryObject<SoundEvent> FALSE_CHAOS_SPAZ =
             registerSoundEvents("false_chaos_spaz");
+    public static final RegistryObject<SoundEvent> SUPER_EMERALD_TRANSFORM =
+            registerSoundEvents("super_emerald_transform");
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String soundName){
         return SOUND_EVENTS.register(soundName,
