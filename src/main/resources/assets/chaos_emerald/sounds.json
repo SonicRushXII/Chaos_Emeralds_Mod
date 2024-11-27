@@ -10,5 +10,11 @@
     "sounds": [
       "chaos_emerald:false_super/chaos_spaz"
     ]
+  },
+  "super_emerald_transform": {
+    "subtitles": "sounds.super_emerald.chaos_emerald.transform",
+    "sounds": [
+      "chaos_emerald:super_emerald/chaos_emerald_transform"
+    ]
   }
 }

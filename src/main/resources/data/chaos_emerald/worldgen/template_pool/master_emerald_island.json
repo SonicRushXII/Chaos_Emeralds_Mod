@@ -1,7 +1,8 @@
 {
   "name": "chaos_emerald:island",
   "fallback": "minecraft:empty",
-  "elements": [{
+  "elements": [
+    {
       "weight": 1,
       "element": {
         "location":"chaos_emerald:master_emerald_island",

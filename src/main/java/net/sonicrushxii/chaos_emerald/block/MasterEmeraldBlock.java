@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -33,6 +34,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import org.jetbrains.annotations.Nullable;
 
 public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock {
@@ -50,7 +52,7 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                 emeraldPos.getY()+0.5,
                 emeraldPos.getZ()+0.5
         );                                                                   // Set position
-        entity.setDuration(100);                                             // Set duration
+        entity.setDuration(72);                                              // Set duration
         entity.setTransformType((byte) emeraldType.ordinal());               // Set transformType
 
         // Add the entity to the world
@@ -69,16 +71,44 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
             //Playsound
             pLevel.playSound(pPlayer,pPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.5f,1.1f);
 
-            //Chaos Emerald
-            BlockPos aquaEmeraldPos = pPos.offset(-6,0,0);
-            BlockPos blueEmeraldPos = pPos.offset(0,0,-6);
-            BlockPos greenEmeraldPos = pPos.offset(3,0,5);
-            BlockPos greyEmeraldPos = pPos.offset(0,0,6);
-            BlockPos purpleEmeraldPos = pPos.offset(-3,0,5);
-            BlockPos redEmeraldPos = pPos.offset(3,0,-5);
-            BlockPos yellowEmeraldPos = pPos.offset(-3,0,-5);
+            //Find Correct Rotation
+            Rotation correctRot = null;
+            BlockPos stoneBrickOffset = new BlockPos(0,-1,-1);
+            for(Rotation pRotation : Rotation.values())
+            {
+                BlockPos stoneBrickPos = pPos.offset(stoneBrickOffset.rotate(pRotation));
+                BlockState retrievedBlockState = pLevel.getBlockState(stoneBrickPos);
+
+                //If a Brick is found, or Is facing North, Select that as the desired Rotation
+                if("minecraft:stone_bricks".equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+"")) {
+                    correctRot = pRotation;
+                    break;
+                }
+            }
+            if(correctRot == null) correctRot = Rotation.COUNTERCLOCKWISE_90;
+
+            //Calculate the Offset based on the Rotation
+            BlockPos aquaEmeraldOffset      =    new BlockPos(-6,0,0).rotate(correctRot);
+            BlockPos blueEmeraldOffset      =    new BlockPos(0,0,-6).rotate(correctRot);
+            BlockPos greenEmeraldOffset     =   new BlockPos(3,0,5).rotate(correctRot);
+            BlockPos greyEmeraldOffset      =    new BlockPos(0,0,6).rotate(correctRot);
+            BlockPos purpleEmeraldOffset    =  new BlockPos(-3,0,5).rotate(correctRot);
+            BlockPos redEmeraldOffset       =     new BlockPos(3,0,-5).rotate(correctRot);
+            BlockPos yellowEmeraldOffset    =  new BlockPos(-3,0,-5).rotate(correctRot);
+
+            //Apply Offset to the Current Pos
+            BlockPos aquaEmeraldPos     =   pPos.offset(aquaEmeraldOffset);
+            BlockPos blueEmeraldPos     =   pPos.offset(blueEmeraldOffset);
+            BlockPos greenEmeraldPos    =   pPos.offset(greenEmeraldOffset);
+            BlockPos greyEmeraldPos     =   pPos.offset(greyEmeraldOffset);
+            BlockPos purpleEmeraldPos   =   pPos.offset(purpleEmeraldOffset);
+            BlockPos redEmeraldPos      =   pPos.offset(redEmeraldOffset);
+            BlockPos yellowEmeraldPos   =   pPos.offset(yellowEmeraldOffset);
 
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+
+                //Trips if even a single Emerald is transforming
+                byte transformCount = 0;
 
                 //Aqua Emerald
                 if(chaosEmeraldCap.hasAllManuscripts() || chaosEmeraldCap.hasManuscript((byte)EmeraldType.AQUA_EMERALD.ordinal()))
@@ -87,7 +117,10 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/aqua_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
-                        spawnEmeraldTransformer(aquaEmeraldPos,pLevel,EmeraldType.AQUA_EMERALD);
+                    {
+                        transformCount++;
+                        spawnEmeraldTransformer(aquaEmeraldPos, pLevel, EmeraldType.AQUA_EMERALD);
+                    }
                 }
 
                 //Blue Emerald
@@ -97,7 +130,10 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/blue_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
+                    {
+                        transformCount++;
                         spawnEmeraldTransformer(blueEmeraldPos,pLevel,EmeraldType.BLUE_EMERALD);
+                    }
                 }
 
                 //Green Emerald
@@ -107,7 +143,11 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/green_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
+                    {
+                        transformCount++;
                         spawnEmeraldTransformer(greenEmeraldPos,pLevel,EmeraldType.GREEN_EMERALD);
+                    }
+
                 }
 
                 //Grey Emerald
@@ -117,7 +157,10 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/grey_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
-                        spawnEmeraldTransformer(greyEmeraldPos,pLevel,EmeraldType.GREY_EMERALD);
+                    {
+                        transformCount++;
+                        spawnEmeraldTransformer(greyEmeraldPos, pLevel, EmeraldType.GREY_EMERALD);
+                    }
                 }
 
                 //Purple Emerald
@@ -127,7 +170,10 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/purple_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
-                        spawnEmeraldTransformer(purpleEmeraldPos,pLevel,EmeraldType.PURPLE_EMERALD);
+                    {
+                        transformCount++;
+                        spawnEmeraldTransformer(purpleEmeraldPos, pLevel, EmeraldType.PURPLE_EMERALD);
+                    }
                 }
 
                 //Red Emerald
@@ -137,7 +183,11 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/red_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
+                    {
+                        transformCount++;
                         spawnEmeraldTransformer(redEmeraldPos,pLevel,EmeraldType.RED_EMERALD);
+                    }
+
                 }
 
                 //Yellow Emerald
@@ -147,7 +197,19 @@ public class MasterEmeraldBlock extends Block implements SimpleWaterloggedBlock 
                     if("chaos_emerald:chaos_emerald/yellow_emerald"
                             .equals(ForgeRegistries.BLOCKS.getKey(retrievedBlockState.getBlock())+""))
                     //Transformer
-                        spawnEmeraldTransformer(yellowEmeraldPos,pLevel,EmeraldType.YELLOW_EMERALD);
+                    {
+                        transformCount++;
+                        spawnEmeraldTransformer(yellowEmeraldPos, pLevel, EmeraldType.YELLOW_EMERALD);
+                    }
+                }
+
+                //Play Sound
+                if(transformCount > 0)
+                {
+                    pLevel.playSound(null,
+                            pPos.getX()+0.5,pPos.getY()+0.5,pPos.getZ()+0.5,
+                            ModSounds.SUPER_EMERALD_TRANSFORM.get(),
+                            SoundSource.MASTER, 0.75f, 1.0f);
                 }
             });
         }
