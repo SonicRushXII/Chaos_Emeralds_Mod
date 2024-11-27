@@ -23,7 +23,7 @@ import java.util.Random;
 
 public class ManuscriptItem extends Item {
 
-    private CompoundTag generateAquaManuscript()
+    private static CompoundTag generateAquaManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -48,7 +48,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generateBlueManuscript()
+    private static CompoundTag generateBlueManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -73,7 +73,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generateGreenManuscript()
+    private static CompoundTag generateGreenManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -98,7 +98,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generateGreyManuscript()
+    private static CompoundTag generateGreyManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -123,7 +123,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generatePurpleManuscript()
+    private static CompoundTag generatePurpleManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -147,7 +147,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generateRedManuscript()
+    private static CompoundTag generateRedManuscript()
     {
         //Generate Text Tag for the Manuscript
         CompoundTag bookTag = new CompoundTag();
@@ -172,7 +172,7 @@ public class ManuscriptItem extends Item {
         // Apply the NBT data to the ItemStack
         return bookTag;
     }
-    private CompoundTag generateYellowManuscript()
+    private static CompoundTag generateYellowManuscript()
     {
 
         //Generate Text Tag for the Manuscript
@@ -198,7 +198,7 @@ public class ManuscriptItem extends Item {
         return bookTag;
     }
 
-    private ItemStack getWrittenManuscript(Player pPlayer)
+    private static ItemStack getWrittenManuscript(Player pPlayer)
     {
         //Create Item Stack
         ItemStack writtenManuscript = new ItemStack(Items.WRITTEN_BOOK);

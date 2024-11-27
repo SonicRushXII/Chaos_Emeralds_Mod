@@ -18,6 +18,8 @@ public class ModCreativeModeTabs
             ()-> CreativeModeTab.builder().icon(()->new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get()))
                     .title(Component.translatable("creativetab.chaos_emerald"))
                     .displayItems((pParameters,pOutput)->{
+                        pOutput.accept(ModItems.CHAOS_LOCATOR.get());
+
                         pOutput.accept(ModBlocks.AQUA_CHAOS_EMERALD.get());
                         pOutput.accept(ModBlocks.BLUE_CHAOS_EMERALD.get());
                         pOutput.accept(ModBlocks.GREEN_CHAOS_EMERALD.get());
