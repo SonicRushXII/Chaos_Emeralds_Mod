@@ -469,7 +469,7 @@ public class ChaosEmeraldHandler {
                 Utilities.displayParticle(player.level(), new DustParticleOptions(new Vector3f(0.9f, 0.9f, 0.9f), 2),
                         player.getX(), player.getY() + 1, player.getZ(),
                         1.5f, 1.5f, 1.5f,
-                        0.01, 50, false);
+                        0.01, 20, false);
 
             //Blast Particle
             if(chaosEmeraldCap.purpleEmeraldUse > 0)

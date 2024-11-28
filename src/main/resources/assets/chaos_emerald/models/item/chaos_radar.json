@@ -1,0 +1,16 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "chaos_emerald:item/chaos_radar/base"
+  },
+
+  "overrides": [
+    { "predicate": {"custom_model_data": 732110}, "model": "chaos_emerald:item/chaos_radar/aqua"},
+    { "predicate": {"custom_model_data": 732111}, "model": "chaos_emerald:item/chaos_radar/blue"},
+    { "predicate": {"custom_model_data": 732112}, "model": "chaos_emerald:item/chaos_radar/green"},
+    { "predicate": {"custom_model_data": 732113}, "model": "chaos_emerald:item/chaos_radar/grey"},
+    { "predicate": {"custom_model_data": 732114}, "model": "chaos_emerald:item/chaos_radar/purple"},
+    { "predicate": {"custom_model_data": 732115}, "model": "chaos_emerald:item/chaos_radar/red"},
+    { "predicate": {"custom_model_data": 732116}, "model": "chaos_emerald:item/chaos_radar/yellow"}
+  ]
+}

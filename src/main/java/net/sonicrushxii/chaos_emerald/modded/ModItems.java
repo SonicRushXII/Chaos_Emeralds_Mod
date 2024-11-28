@@ -15,7 +15,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> MANUSCRIPT_SCROLL = ITEMS.register("manuscript_scroll",
             ()-> new ManuscriptItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> CHAOS_LOCATOR = ITEMS.register("chaos_emerald_locator",
+    public static final RegistryObject<Item> CHAOS_RADAR = ITEMS.register("chaos_radar",
+            ()-> new ChaosLocatorItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SUPER_RADAR = ITEMS.register("super_radar",
             ()-> new ChaosLocatorItem(new Item.Properties().stacksTo(1)));
 
     public static void register(IEventBus eventBus){

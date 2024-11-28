@@ -18,7 +18,7 @@ public class ModCreativeModeTabs
             ()-> CreativeModeTab.builder().icon(()->new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get()))
                     .title(Component.translatable("creativetab.chaos_emerald"))
                     .displayItems((pParameters,pOutput)->{
-                        pOutput.accept(ModItems.CHAOS_LOCATOR.get());
+                        pOutput.accept(ModItems.CHAOS_RADAR.get());
 
                         pOutput.accept(ModBlocks.AQUA_CHAOS_EMERALD.get());
                         pOutput.accept(ModBlocks.BLUE_CHAOS_EMERALD.get());
@@ -37,6 +37,8 @@ public class ModCreativeModeTabs
                         pOutput.accept(ModBlocks.PURPLE_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.RED_SUPER_EMERALD.get());
                         pOutput.accept(ModBlocks.YELLOW_SUPER_EMERALD.get());
+
+                        pOutput.accept(ModItems.SUPER_RADAR.get());
 
                         pOutput.accept(ModBlocks.MASTER_EMERALD.get());
                     })
