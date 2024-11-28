@@ -247,7 +247,7 @@ public class ChaosEmeraldHandler {
         if(!pLevel.isClientSide)
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 if(chaosEmeraldCap.cooldownKey[EmeraldType.RED_EMERALD.ordinal()] > 0) {
-                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xCC00FF)),true);
+                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)),true);
                     return;
                 }
 

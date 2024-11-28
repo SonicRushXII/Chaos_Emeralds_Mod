@@ -73,9 +73,12 @@ public class ChaosBlockItem extends BlockItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        //If MainHand Fails check Offhand
-        if(!useEmerald(pPlayer.getMainHandItem().getItem().toString(), pLevel, pPlayer))
-            useEmerald(pPlayer.getOffhandItem().getItem().toString(), pLevel, pPlayer);
+        //Use corresponding hand
+        switch(pUsedHand)
+        {
+            case MAIN_HAND: useEmerald(pPlayer.getMainHandItem().getItem().toString(), pLevel, pPlayer); break;
+            case OFF_HAND: useEmerald(pPlayer.getOffhandItem().getItem().toString(), pLevel, pPlayer); break;
+        }
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
