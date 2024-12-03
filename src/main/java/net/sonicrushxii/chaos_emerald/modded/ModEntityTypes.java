@@ -9,7 +9,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
-import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
+import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
+import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
@@ -18,10 +19,14 @@ import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ChaosEmerald.MOD_ID);
 
-    public static final RegistryObject<EntityType<IceSpike>> ICE_SPIKE = ENTITY_TYPES.register("ice_spike",
-            () -> EntityType.Builder.<IceSpike>of(IceSpike::new, MobCategory.MISC)
+    public static final RegistryObject<EntityType<IceHorizontalSpike>> ICE_CHAOS_SPIKE = ENTITY_TYPES.register("ice_chaos_spike",
+            () -> EntityType.Builder.<IceHorizontalSpike>of(IceHorizontalSpike::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
-                    .build("ice_spike"));
+                    .build("ice_chaos_spike"));
+    public static final RegistryObject<EntityType<IceVerticalSpike>> ICE_SUPER_SPIKE = ENTITY_TYPES.register("ice_super_spike",
+            () -> EntityType.Builder.<IceVerticalSpike>of(IceVerticalSpike::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("ice_super_spike"));
     public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
             () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity

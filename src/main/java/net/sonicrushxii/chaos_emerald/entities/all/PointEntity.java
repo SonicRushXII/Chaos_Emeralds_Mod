@@ -11,7 +11,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
 
 public class PointEntity extends Entity {
     public static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(PointEntity.class, EntityDataSerializers.INT);

@@ -26,7 +26,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
-import net.sonicrushxii.chaos_emerald.entities.blue.IceSpike;
+import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
@@ -103,13 +103,13 @@ public class ChaosEmeraldHandler {
                     pPlayer.getZ()+pPlayer.getLookAngle().z);
             pLevel.playSound(null,pPlayer.getX(),pPlayer.getY(),pPlayer.getZ(),
                     SoundEvents.EGG_THROW, SoundSource.MASTER, 1.0f, 1.0f);
-            IceSpike iceSpike = new IceSpike(ModEntityTypes.ICE_SPIKE.get(), pLevel);
-            iceSpike.setPos(spawnPos);
-            iceSpike.setMovementDirection(pPlayer.getLookAngle());
-            iceSpike.setOwner(pPlayer.getUUID());
+            IceHorizontalSpike iceHorizontalSpike = new IceHorizontalSpike(ModEntityTypes.ICE_CHAOS_SPIKE.get(), pLevel);
+            iceHorizontalSpike.setPos(spawnPos);
+            iceHorizontalSpike.setMovementDirection(pPlayer.getLookAngle());
+            iceHorizontalSpike.setOwner(pPlayer.getUUID());
 
             // Add the entity to the world
-            pLevel.addFreshEntity(iceSpike);
+            pLevel.addFreshEntity(iceHorizontalSpike);
 
             //Set Cooldown(in Seconds)
             chaosEmeraldCap.cooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 25;
@@ -196,7 +196,7 @@ public class ChaosEmeraldHandler {
             pLevel.playSound(null,newPlayerPos.x(),newPlayerPos.y(),newPlayerPos.z(),
                     SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 0.75f, 0.75f);
 
-            //Grant Immunity
+            //Grant Immunity to Fall
             if(pPlayer.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get())) pPlayer.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).update(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false));
             else pPlayer.addEffect(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false),pPlayer);
 

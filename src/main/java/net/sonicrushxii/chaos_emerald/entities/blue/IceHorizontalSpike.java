@@ -8,7 +8,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -27,9 +26,9 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class IceSpike extends Entity {
-    public static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(IceSpike.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(IceSpike.class, EntityDataSerializers.OPTIONAL_UUID);
+public class IceHorizontalSpike extends Entity {
+    public static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(IceHorizontalSpike.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(IceHorizontalSpike.class, EntityDataSerializers.OPTIONAL_UUID);
 
     int[] xIcePositions;
     int[] yIcePositions;
@@ -44,7 +43,7 @@ public class IceSpike extends Entity {
         this.movementDirection = movementDirection;
     }
 
-    public IceSpike(EntityType<? extends Entity> type, Level world) {
+    public IceHorizontalSpike(EntityType<? extends Entity> type, Level world) {
         super(type, world);
         this.movementDirection = new Vec3(0,0,0);
         this.xIcePositions = new int[getDuration()];
@@ -151,7 +150,7 @@ public class IceSpike extends Entity {
                 // Check for entity collisions and apply damage
                 List<LivingEntity> enemies = this.level().getEntitiesOfClass(LivingEntity.class,
                         new AABB(this.getX() - 1, this.getY() - 0.5, this.getZ() - 1, this.getX() + 0.5, this.getY() + 2.5, this.getZ() + 1),
-                        enemy -> !(enemy.is(this) || (enemy instanceof Player player && player.getMainHandItem().getDisplayName().equals("[Chaos Emerald]")))
+                        enemy -> !(enemy.is(this))
                 );
 
                 if (!enemies.isEmpty()) {

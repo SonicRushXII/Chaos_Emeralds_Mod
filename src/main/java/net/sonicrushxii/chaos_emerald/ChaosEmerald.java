@@ -101,7 +101,8 @@ public class ChaosEmerald
             //Entity Setup
 
             //Aqua Emerald
-            EntityRenderers.register(ModEntityTypes.ICE_SPIKE.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.ICE_CHAOS_SPIKE.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.ICE_SUPER_SPIKE.get(), PointRenderer::new);
             //Yellow Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
 

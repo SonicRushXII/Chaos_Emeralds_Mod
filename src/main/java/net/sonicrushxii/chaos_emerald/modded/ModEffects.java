@@ -15,6 +15,7 @@ import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.potion_effects.ChaosBindEffect;
 import net.sonicrushxii.chaos_emerald.potion_effects.ChaosDashEffect;
 import net.sonicrushxii.chaos_emerald.potion_effects.ChaosFlameEffect;
+import net.sonicrushxii.chaos_emerald.potion_effects.SuperIcePadEffect;
 
 public class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS
@@ -30,6 +31,8 @@ public class ModEffects {
             "chaos_dash",()->((new ChaosDashEffect(MobEffectCategory.BENEFICIAL,0x00FF00))));
     public static final RegistryObject<MobEffect> CHAOS_FLAME_JUMP = MOB_EFFECTS.register(
             "chaos_flame_jump",()->((new ChaosFlameEffect(MobEffectCategory.BENEFICIAL,0xFF0000))));
+    public static final RegistryObject<MobEffect> SUPER_ICE_LAUNCH = MOB_EFFECTS.register(
+            "super_ice_launch",()->((new SuperIcePadEffect(MobEffectCategory.BENEFICIAL,0x0000FF))));
 
     public static void register(IEventBus eventBus)
     {
