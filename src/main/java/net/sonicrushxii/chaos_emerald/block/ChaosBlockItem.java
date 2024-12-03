@@ -63,8 +63,7 @@ public class ChaosBlockItem extends BlockItem {
         assert player != null;
         if(!player.isShiftKeyDown()){
             //If MainHand Fails check Offhand
-            if(!useEmerald(player.getMainHandItem().getItem().toString(), world, player))
-                useEmerald(player.getOffhandItem().getItem().toString(), world, player);
+            useEmerald(pContext.getItemInHand().getItem().toString(), world, player);
             return InteractionResult.FAIL;
         }
 

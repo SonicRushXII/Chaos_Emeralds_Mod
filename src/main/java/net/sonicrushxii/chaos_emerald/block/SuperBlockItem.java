@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
 
 import java.util.StringTokenizer;
@@ -29,25 +30,32 @@ public class SuperBlockItem extends BlockItem {
         switch(sg.nextToken())
         {
             case "aqua_emerald": System.out.println("Used Aqua Emerald");
-                SuperEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
                 break;
             case "blue_emerald":System.out.println("Used Blue Emerald");
-                SuperEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
                 break;
             case "green_emerald": System.out.println("Used Green Emerald");
-                SuperEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
                 break;
             case "grey_emerald": System.out.println("Used Grey Emerald");
-                SuperEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
                 break;
             case "purple_emerald": System.out.println("Used Purple Emerald");
-                SuperEmeraldHandler.purpleEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
                 break;
             case "red_emerald": System.out.println("Used Red Emerald");
-                SuperEmeraldHandler.redEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
                 break;
             case "yellow_emerald": System.out.println("Used Yellow Emerald");
-                SuperEmeraldHandler.yellowEmeraldUse(pLevel,pPlayer);
+                if ((pPlayer.isShiftKeyDown())) ChaosEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
                 break;
             default: return false;
         }
@@ -62,9 +70,7 @@ public class SuperBlockItem extends BlockItem {
 
         assert player != null;
         if(!player.isShiftKeyDown()){
-            //If MainHand Fails check Offhand
-            if(!useEmerald(player.getMainHandItem().getItem().toString(), world, player))
-                useEmerald(player.getOffhandItem().getItem().toString(), world, player);
+            useEmerald(pContext.getItemInHand().getItem().toString(), world, player);
             return InteractionResult.FAIL;
         }
 
@@ -74,8 +80,12 @@ public class SuperBlockItem extends BlockItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         //If MainHand Fails check Offhand
-        if(!useEmerald(pPlayer.getMainHandItem().getItem().toString(), pLevel, pPlayer))
-            useEmerald(pPlayer.getOffhandItem().getItem().toString(), pLevel, pPlayer);
+        //Use corresponding hand
+        switch(pUsedHand)
+        {
+            case MAIN_HAND: useEmerald(pPlayer.getMainHandItem().getItem().toString(), pLevel, pPlayer); break;
+            case OFF_HAND: useEmerald(pPlayer.getOffhandItem().getItem().toString(), pLevel, pPlayer); break;
+        }
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }

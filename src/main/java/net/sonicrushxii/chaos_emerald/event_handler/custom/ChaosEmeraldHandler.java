@@ -390,7 +390,7 @@ public class ChaosEmeraldHandler {
                 }
 
                 //End Ability Also can be ended by pressing R-Click with Emerald Again
-                if(chaosEmeraldCap.greyEmeraldUse == 60)
+                if(chaosEmeraldCap.greyEmeraldUse == 40)
                 {
                     //Set Cooldown(in Seconds)
                     chaosEmeraldCap.greyEmeraldUse = -1;
