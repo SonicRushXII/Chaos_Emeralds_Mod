@@ -45,7 +45,7 @@ public class ChaosEmeraldHandler {
     public static void aquaEmeraldUse(Level pLevel, Player pPlayer)
     {
         pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            if(chaosEmeraldCap.cooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] > 0) {
+            if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] > 0) {
                 pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)),true);
                 return;
             }
@@ -86,14 +86,14 @@ public class ChaosEmeraldHandler {
             }
 
             //Set Cooldown(in Seconds)
-            chaosEmeraldCap.cooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = 40;
+            chaosEmeraldCap.chaosCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = 40;
         });
     }
 
     public static void blueEmeraldUse(Level pLevel, Player pPlayer)
     {
         pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            if(chaosEmeraldCap.cooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
+            if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
                 pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)),true);
                 return;
             }
@@ -112,14 +112,14 @@ public class ChaosEmeraldHandler {
             pLevel.addFreshEntity(iceHorizontalSpike);
 
             //Set Cooldown(in Seconds)
-            chaosEmeraldCap.cooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 25;
+            chaosEmeraldCap.chaosCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 25;
         });
     }
 
     public static void greenEmeraldUse(Level pLevel, Player pPlayer)
     {
         pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            if(chaosEmeraldCap.cooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] > 0) {
+            if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] > 0) {
                 pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FF00)),true);
                 return;
             }
@@ -201,7 +201,7 @@ public class ChaosEmeraldHandler {
             else pPlayer.addEffect(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false),pPlayer);
 
             //Set Cooldown(in Seconds)
-            chaosEmeraldCap.cooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 7;
+            chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 7;
         });
     }
 
@@ -209,7 +209,7 @@ public class ChaosEmeraldHandler {
     {
         if(!pLevel.isClientSide)
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if(chaosEmeraldCap.cooldownKey[EmeraldType.GREY_EMERALD.ordinal()] > 0) {
+                if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREY_EMERALD.ordinal()] > 0) {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xEEEEEE)),true);
                     return;
                 }
@@ -223,7 +223,7 @@ public class ChaosEmeraldHandler {
     {
         if(!pLevel.isClientSide)
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if(chaosEmeraldCap.cooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] > 0) {
+                if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] > 0) {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xCC00FF)),true);
                     return;
                 }
@@ -246,7 +246,7 @@ public class ChaosEmeraldHandler {
 
         if(!pLevel.isClientSide)
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if(chaosEmeraldCap.cooldownKey[EmeraldType.RED_EMERALD.ordinal()] > 0) {
+                if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.RED_EMERALD.ordinal()] > 0) {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)),true);
                     return;
                 }
@@ -307,7 +307,7 @@ public class ChaosEmeraldHandler {
                 else pPlayer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false),pPlayer);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.cooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 15;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 15;
             });
     }
 
@@ -316,7 +316,7 @@ public class ChaosEmeraldHandler {
         //Throw Chaos Spear
         if(!pLevel.isClientSide())
             pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if(chaosEmeraldCap.cooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
+                if(chaosEmeraldCap.chaosCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFFFF00)),true);
                     return;
                 }
@@ -338,7 +338,7 @@ public class ChaosEmeraldHandler {
                 pLevel.addFreshEntity(chaosSpear);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.cooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 10;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 10;
             });
     }
 
@@ -394,7 +394,7 @@ public class ChaosEmeraldHandler {
                 {
                     //Set Cooldown(in Seconds)
                     chaosEmeraldCap.greyEmeraldUse = -1;
-                    chaosEmeraldCap.cooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 30;
+                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 30;
 
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
                 }
@@ -454,7 +454,7 @@ public class ChaosEmeraldHandler {
                     //Blast Cooldowns
                     chaosEmeraldCap.purpleEmeraldUse = -1;
                     PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleEmeraldUse));
-                    chaosEmeraldCap.cooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
+                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
                 }
             });
         }

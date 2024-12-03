@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.FalseSuperHandler;
 
@@ -26,9 +27,10 @@ public class PlayerTickHandler {
         //Handle cooldowns for all players
         if(serverTick == 0)
             event.player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                byte[] cooldownKey = chaosEmeraldCap.cooldownKey;
-                for(byte i=0;i<cooldownKey.length;++i)
-                    cooldownKey[i] = (byte) Math.max(0,cooldownKey[i]-1);
+                for(byte i = 0; i< EmeraldType.values().length; ++i) {
+                    chaosEmeraldCap.chaosCooldownKey[i] = (byte) Math.max(0, chaosEmeraldCap.chaosCooldownKey[i] - 1);
+                    chaosEmeraldCap.superCooldownKey[i] = (byte) Math.max(0, chaosEmeraldCap.superCooldownKey[i] - 1);
+                }
             });
     }
 

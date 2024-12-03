@@ -4,7 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 
 public class ChaosEmeraldCap {
 
-    public byte[] cooldownKey = new byte[EmeraldType.values().length];
+    public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
+    public byte[] superCooldownKey = new byte[EmeraldType.values().length];
     public byte manuscriptKey = 0;
     public byte greyEmeraldUse = 0;
     public byte purpleEmeraldUse = 0;
@@ -38,8 +39,11 @@ public class ChaosEmeraldCap {
     }
 
     public void copyFrom(ChaosEmeraldCap source){
-        if(source.cooldownKey.length == 0) this.cooldownKey = new byte[EmeraldType.values().length];
-        else this.cooldownKey = source.cooldownKey;
+        if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldType.values().length];
+        else this.chaosCooldownKey = source.chaosCooldownKey;
+
+        if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
+        else this.superCooldownKey = source.superCooldownKey;
 
         this.greyEmeraldUse = source.greyEmeraldUse;
         this.purpleEmeraldUse = source.purpleEmeraldUse;
@@ -48,8 +52,12 @@ public class ChaosEmeraldCap {
 
     public void saveNBTData(CompoundTag nbt){
         //Copy Chaos Cooldown
-        if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
-        nbt.putByteArray("ChaosCooldown", cooldownKey);
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
+        nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
+
+        //Copy Super Cooldown
+        if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
+        nbt.putByteArray("SuperEmeraldCooldown", superCooldownKey);
 
         //Chaos Emerald Times
         nbt.putByte("DigTimer",this.greyEmeraldUse);
@@ -65,9 +73,13 @@ public class ChaosEmeraldCap {
     }
 
     public void loadNBTData(CompoundTag nbt){
-        //Load Chaos Cooldown
-        cooldownKey = nbt.getByteArray("ChaosCooldown");
-        if(cooldownKey.length == 0) cooldownKey = new byte[EmeraldType.values().length];
+        //Load Chaos Emerald Cooldown
+        chaosCooldownKey = nbt.getByteArray("ChaosEmeraldCooldown");
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
+
+        //Load Super Emerald Cooldown
+        superCooldownKey = nbt.getByteArray("SuperEmeraldCooldown");
+        if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
 
         //Chaos Emerald Times
         greyEmeraldUse = nbt.getByte("DigTimer");

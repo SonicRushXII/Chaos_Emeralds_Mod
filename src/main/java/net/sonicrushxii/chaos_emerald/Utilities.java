@@ -1,5 +1,6 @@
 package net.sonicrushxii.chaos_emerald;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -312,6 +313,17 @@ public class Utilities {
 
     public static float[] calculateFacing(Vec3 playerPos, Vec3 targetPos) {
         return getYawPitchFromVec(targetPos.subtract(playerPos));
+    }
+
+    public static BlockPos convertToBlockPos(Vec3 vec3)
+    {
+        // Convert the Vec3 coordinates to integer coordinates for the BlockPos
+        int x = (int)vec3.x;
+        int y = (int)vec3.y;
+        int z = (int)vec3.z;
+
+        // Create and return the new BlockPos object with these coordinates
+        return new BlockPos(x, y, z);
     }
 
     public static void displayParticle(Level world , ParticleOptions particleType,
