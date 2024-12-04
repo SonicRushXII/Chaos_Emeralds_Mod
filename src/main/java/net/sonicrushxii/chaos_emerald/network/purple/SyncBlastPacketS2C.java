@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -40,7 +39,7 @@ public class SyncBlastPacketS2C {
                             Player player = (Player) world.getEntity(entityId);
 
                             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                               chaosEmeraldCap.purpleEmeraldUse = this.blastTime;
+                               chaosEmeraldCap.purpleChaosUse = this.blastTime;
                             });
 
                         }catch (NullPointerException|ClassCastException ignored) {}

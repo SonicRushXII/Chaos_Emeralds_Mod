@@ -2,8 +2,6 @@ package net.sonicrushxii.chaos_emerald.network.grey;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -11,8 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.modded.ModEffects;
-import org.joml.Vector3f;
 
 import java.util.function.Supplier;
 
@@ -51,7 +47,7 @@ public class SyncDigPacketS2C {
 
                             player.setDeltaMovement(this.entityMotion);
                             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                               chaosEmeraldCap.greyEmeraldUse = this.digTime;
+                               chaosEmeraldCap.greyChaosUse = this.digTime;
                             });
 
                         }catch (NullPointerException|ClassCastException ignored) {}

@@ -134,7 +134,7 @@ public class IceVerticalSpike extends Entity {
             }
 
             // Only perform actions if duration is not zero
-            if (getDuration() > 1)
+            if (getDuration() > 0)
             {
                 // Set entity movement
                 this.setDeltaMovement(movementDirection);
@@ -150,13 +150,24 @@ public class IceVerticalSpike extends Entity {
             }
 
             //If At 1, sync the positions
-            if(getDuration()==1)
+            if(getDuration()==0)
             {
+                // Teleport
                 for (LivingEntity enemy : this.level().getEntitiesOfClass(LivingEntity.class,
                         new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5, this.getX() + 0.5, this.getY() + 2.5, this.getZ() + 0.5),
                         enemy -> !(enemy.is(this))))
                 {
                     enemy.teleportTo(this.getX(),this.getY()+1.0,this.getZ());
+                }
+
+                // And also place 9 ice blocks
+                for(BlockPos icePlacePos : BlockPos.betweenClosed(this.blockPosition().offset(1,-1,1),this.blockPosition().offset(-1,-1,-1)))
+                {
+                    if(Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(this.level().getBlockState(icePlacePos).getBlock()) + ""))
+                        this.level().setBlock(icePlacePos, Blocks.BLUE_ICE.defaultBlockState(), 3);
+                    xIcePositions[getDuration()-1] = icePlacePos.getX();
+                    yIcePositions[getDuration()-1] = icePlacePos.getY();
+                    zIcePositions[getDuration()-1] = icePlacePos.getZ();
                 }
             }
 

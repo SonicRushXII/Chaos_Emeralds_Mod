@@ -215,7 +215,7 @@ public class ChaosEmeraldHandler {
                 }
 
                 //Activate Grey Emerald
-                if(chaosEmeraldCap.greyEmeraldUse == 0) chaosEmeraldCap.greyEmeraldUse = 1;
+                if(chaosEmeraldCap.greyChaosUse == 0) chaosEmeraldCap.greyChaosUse = 1;
             });
     }
 
@@ -235,7 +235,7 @@ public class ChaosEmeraldHandler {
                 PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),pPlayer.getDeltaMovement()));
 
                 //Activate Purple Emerald
-                if(chaosEmeraldCap.purpleEmeraldUse == 0) chaosEmeraldCap.purpleEmeraldUse = 1;
+                if(chaosEmeraldCap.purpleChaosUse == 0) chaosEmeraldCap.purpleChaosUse = 1;
             });
     }
 
@@ -350,14 +350,14 @@ public class ChaosEmeraldHandler {
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 //Checks to See if On Ground Before Starting
-                if(chaosEmeraldCap.greyEmeraldUse == -1 && player.onGround()) {
-                    chaosEmeraldCap.greyEmeraldUse = 0;
-                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
+                if(chaosEmeraldCap.greyChaosUse == -1 && player.onGround()) {
+                    chaosEmeraldCap.greyChaosUse = 0;
+                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyChaosUse,player.getDeltaMovement()));
                 }
 
                 //Grey Emerald Use
-                if (chaosEmeraldCap.greyEmeraldUse > 0) {
-                    chaosEmeraldCap.greyEmeraldUse += 1;
+                if (chaosEmeraldCap.greyChaosUse > 0) {
+                    chaosEmeraldCap.greyChaosUse += 1;
 
                     Vec3 lookAngle = player.getLookAngle();
                     BlockPos playerPos = new BlockPos(
@@ -386,17 +386,17 @@ public class ChaosEmeraldHandler {
                             player.level().destroyBlock(pos, player.isShiftKeyDown());
                     }
                     player.setDeltaMovement(lookAngle.scale(1));
-                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
+                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyChaosUse,player.getDeltaMovement()));
                 }
 
                 //End Ability Also can be ended by pressing R-Click with Emerald Again
-                if(chaosEmeraldCap.greyEmeraldUse == 40)
+                if(chaosEmeraldCap.greyChaosUse == 40)
                 {
                     //Set Cooldown(in Seconds)
-                    chaosEmeraldCap.greyEmeraldUse = -1;
+                    chaosEmeraldCap.greyChaosUse = -1;
                     chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 30;
 
-                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyEmeraldUse,player.getDeltaMovement()));
+                    PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyChaosUse,player.getDeltaMovement()));
                 }
             });
         }
@@ -405,23 +405,23 @@ public class ChaosEmeraldHandler {
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 //Negate Fall Damage
-                if(chaosEmeraldCap.purpleEmeraldUse == -1 && player.onGround())
+                if(chaosEmeraldCap.purpleChaosUse == -1 && player.onGround())
                 {
-                    chaosEmeraldCap.purpleEmeraldUse = 0;
-                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleEmeraldUse));
+                    chaosEmeraldCap.purpleChaosUse = 0;
+                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleChaosUse));
                 }
 
                 //Increase The Purple Emerald Use
-                if(chaosEmeraldCap.purpleEmeraldUse > 0)
+                if(chaosEmeraldCap.purpleChaosUse > 0)
                 {
-                    if(chaosEmeraldCap.purpleEmeraldUse == 1)
-                        PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(), chaosEmeraldCap.purpleEmeraldUse));
+                    if(chaosEmeraldCap.purpleChaosUse == 1)
+                        PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(), chaosEmeraldCap.purpleChaosUse));
 
-                    chaosEmeraldCap.purpleEmeraldUse += 1;
+                    chaosEmeraldCap.purpleChaosUse += 1;
                 }
 
                 //Perform Blast
-                if(chaosEmeraldCap.purpleEmeraldUse == 20)
+                if(chaosEmeraldCap.purpleChaosUse == 20)
                 {
                     //Perform Blast
                     {
@@ -445,15 +445,15 @@ public class ChaosEmeraldHandler {
                 }
 
                 //End Blast
-                if(chaosEmeraldCap.purpleEmeraldUse > 30)
+                if(chaosEmeraldCap.purpleChaosUse > 30)
                 {
                     //Reset Gravity
                     player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
                     player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0);
 
                     //Blast Cooldowns
-                    chaosEmeraldCap.purpleEmeraldUse = -1;
-                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleEmeraldUse));
+                    chaosEmeraldCap.purpleChaosUse = -1;
+                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleChaosUse));
                     chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
                 }
             });
@@ -465,14 +465,14 @@ public class ChaosEmeraldHandler {
         //Particle
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Grey Emerald Digging Particle
-            if(chaosEmeraldCap.greyEmeraldUse > 0)
+            if(chaosEmeraldCap.greyChaosUse > 0)
                 Utilities.displayParticle(player.level(), new DustParticleOptions(new Vector3f(0.9f, 0.9f, 0.9f), 2),
                         player.getX(), player.getY() + 1, player.getZ(),
                         1.5f, 1.5f, 1.5f,
                         0.01, 20, false);
 
             //Blast Particle
-            if(chaosEmeraldCap.purpleEmeraldUse > 0)
+            if(chaosEmeraldCap.purpleChaosUse > 0)
                 Utilities.displayParticle(player.level(), new DustParticleOptions(new Vector3f(0.8f, 0.0f, 1f), 1),
                         player.getX(), player.getY() + 1, player.getZ(),
                         1f, 1.5f, 1f,

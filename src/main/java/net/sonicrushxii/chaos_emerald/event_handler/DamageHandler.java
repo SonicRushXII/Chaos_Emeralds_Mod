@@ -35,7 +35,7 @@ public class DamageHandler {
                     event.setCanceled(true);
 
                 //Purple Emerald
-                if(chaosEmeraldCap.purpleEmeraldUse > 1 && !(event.getSource().getEntity() instanceof LivingEntity))
+                if(chaosEmeraldCap.purpleChaosUse > 1 && !(event.getSource().getEntity() instanceof LivingEntity))
                     event.setCanceled(true);
 
                 //False Super Form - (Turn Invulnerable while transforming)

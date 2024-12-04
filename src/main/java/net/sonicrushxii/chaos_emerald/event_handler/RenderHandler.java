@@ -2,9 +2,6 @@ package net.sonicrushxii.chaos_emerald.event_handler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -29,7 +26,7 @@ public class RenderHandler {
         if(entity instanceof Player player)
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if(chaosEmeraldCap.greyEmeraldUse > 1)
+                if(chaosEmeraldCap.greyChaosUse > 1)
                 {
                     float yaw = player.getYRot();
                     float pitch = player.getXRot();
@@ -39,7 +36,7 @@ public class RenderHandler {
                     // Translate the model to the player's position
                     poseStack.translate(0.0D, 1.0D, 0.0D); // Adjust as needed to center rotation at the player's position
                     // First, rotate the model horizontally based on the yaw
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-yaw+45F*(chaosEmeraldCap.greyEmeraldUse%8)));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-yaw+45F*(chaosEmeraldCap.greyChaosUse %8)));
                     // Then, rotate the model so it lies horizontally in the direction of the pitch
                     poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90F));
                     // Translate back to original position
@@ -88,7 +85,7 @@ public class RenderHandler {
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 //Rotate Player
-                if(chaosEmeraldCap.greyEmeraldUse > 1) {
+                if(chaosEmeraldCap.greyChaosUse > 1) {
                     poseStack.popPose();
                 }
             });

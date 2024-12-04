@@ -6,17 +6,26 @@ public class ChaosEmeraldCap {
 
     public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
     public byte[] superCooldownKey = new byte[EmeraldType.values().length];
-    public byte manuscriptKey = 0;
-    public byte greyEmeraldUse = 0;
-    public byte purpleEmeraldUse = 0;
 
+    //Manuscript Key
+    public byte manuscriptKey = 0;
+
+    //Chaos Usage
+    public byte greyChaosUse = 0;
+    public byte purpleChaosUse = 0;
+
+    //False Super Form
     public int falseSuperTimer = 0;
     public byte falseChaosSpaz = 0;
 
+    //Super Form
     public int superFormTimer = 0;
+
+    //Super Emerald Usage
+    public byte aquaSuperUse = 0;
+
+    //Hyper Form
     public int hyperFormTimer = 0;
-
-
 
     public void foundManuscript(byte index)
     {
@@ -39,15 +48,19 @@ public class ChaosEmeraldCap {
     }
 
     public void copyFrom(ChaosEmeraldCap source){
+        //Chaos Emerald Usage
         if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldType.values().length];
         else this.chaosCooldownKey = source.chaosCooldownKey;
+        this.greyChaosUse = source.greyChaosUse;
+        this.purpleChaosUse = source.purpleChaosUse;
 
+        //Manuscript
+        this.manuscriptKey = source.manuscriptKey;
+
+        //Super Emerald Usage
+        this.aquaSuperUse = source.aquaSuperUse;
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
-
-        this.greyEmeraldUse = source.greyEmeraldUse;
-        this.purpleEmeraldUse = source.purpleEmeraldUse;
-        this.manuscriptKey = source.manuscriptKey;
     }
 
     public void saveNBTData(CompoundTag nbt){
@@ -55,20 +68,26 @@ public class ChaosEmeraldCap {
         if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
         nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
 
+        //Chaos Emerald Times
+        nbt.putByte("DigTimer",this.greyChaosUse);
+        nbt.putByte("BlastTimer",this.purpleChaosUse);
+        nbt.putByte("ManuscriptKey",this.manuscriptKey);
+
+        //False Super
+        nbt.putInt("FalseSuperDur",falseSuperTimer);
+        nbt.putByte("FalseChaosSpaz",falseChaosSpaz);
+
+        //Super Form
+        nbt.putInt("SuperDur",superFormTimer);
+
         //Copy Super Cooldown
         if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
         nbt.putByteArray("SuperEmeraldCooldown", superCooldownKey);
 
-        //Chaos Emerald Times
-        nbt.putByte("DigTimer",this.greyEmeraldUse);
-        nbt.putByte("BlastTimer",this.purpleEmeraldUse);
-        nbt.putByte("ManuscriptKey",this.manuscriptKey);
+        //Super Emerald Times
+        nbt.putByte("BubbleBoost",this.aquaSuperUse);
 
-        //Transformations
-        nbt.putInt("FalseSuperDur",falseSuperTimer);
-        nbt.putByte("FalseChaosSpaz",falseChaosSpaz);
-
-        nbt.putInt("SuperDur",superFormTimer);
+        //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
     }
 
@@ -82,15 +101,21 @@ public class ChaosEmeraldCap {
         if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
 
         //Chaos Emerald Times
-        greyEmeraldUse = nbt.getByte("DigTimer");
-        purpleEmeraldUse = nbt.getByte("BlastTimer");
+        greyChaosUse = nbt.getByte("DigTimer");
+        purpleChaosUse = nbt.getByte("BlastTimer");
         manuscriptKey = nbt.getByte("ManuscriptKey");
 
         //Transformation Times
         falseSuperTimer = nbt.getInt("FalseSuperDur");
         falseChaosSpaz = nbt.getByte("FalseChaosSpaz");
 
+        //Super Form
         superFormTimer = nbt.getInt("SuperDur");
+
+        //Super Emerald Times
+        aquaSuperUse = nbt.getByte("BubbleBoost");
+
+        //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
     }
 }
