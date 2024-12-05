@@ -9,6 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
+import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
@@ -27,6 +28,13 @@ public class ModEntityTypes {
             () -> EntityType.Builder.<IceVerticalSpike>of(IceVerticalSpike::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("ice_super_spike"));
+
+    public static final RegistryObject<EntityType<SuperAquaBubbleEntity>> AQUA_BOOST_BUBBLE = ENTITY_TYPES.register("aqua_super_bubble",
+            () -> EntityType.Builder.<SuperAquaBubbleEntity>of(SuperAquaBubbleEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .setTrackingRange(32)
+                    .build("aqua_super_bubble"));
+
     public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
             () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity

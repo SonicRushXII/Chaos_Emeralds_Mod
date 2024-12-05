@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class ChaosEmeraldCap {
 
+    public float atkRotPhase = 0.0f;
     public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
     public byte[] superCooldownKey = new byte[EmeraldType.values().length];
 
@@ -23,6 +24,7 @@ public class ChaosEmeraldCap {
 
     //Super Emerald Usage
     public byte aquaSuperUse = 0;
+    public byte yellowSuperUse = 0;
 
     //Hyper Form
     public int hyperFormTimer = 0;
@@ -48,6 +50,9 @@ public class ChaosEmeraldCap {
     }
 
     public void copyFrom(ChaosEmeraldCap source){
+        //Attack Phase Rotation
+        this.atkRotPhase = source.atkRotPhase;
+
         //Chaos Emerald Usage
         if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldType.values().length];
         else this.chaosCooldownKey = source.chaosCooldownKey;
@@ -59,11 +64,15 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Usage
         this.aquaSuperUse = source.aquaSuperUse;
+        this.yellowSuperUse = source.yellowSuperUse;
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
     }
 
     public void saveNBTData(CompoundTag nbt){
+        //Attack Rotation Phase
+        nbt.putFloat("AtkRotPhase",this.atkRotPhase);
+
         //Copy Chaos Cooldown
         if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
         nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
@@ -86,12 +95,16 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         nbt.putByte("BubbleBoost",this.aquaSuperUse);
+        nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
 
         //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
     }
 
     public void loadNBTData(CompoundTag nbt){
+        //Attack Rotation Phase
+        this.atkRotPhase = nbt.getFloat("AtkRotPhase");
+
         //Load Chaos Emerald Cooldown
         chaosCooldownKey = nbt.getByteArray("ChaosEmeraldCooldown");
         if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
@@ -114,6 +127,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         aquaSuperUse = nbt.getByte("BubbleBoost");
+        yellowSuperUse = nbt.getByte("SuperChaosGambit");
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");

@@ -42,6 +42,11 @@ public class DamageHandler {
                 if(chaosEmeraldCap.falseChaosSpaz < 0)
                     event.setCanceled(true);
 
+                //Super Aqua Emerald
+                if ((chaosEmeraldCap.aquaSuperUse > 0 && player.isSprinting()) && !(event.getSource().getEntity() instanceof Player)
+                        && !event.getSource().isIndirect() )
+                    event.setCanceled(true);
+
             });
         }
 

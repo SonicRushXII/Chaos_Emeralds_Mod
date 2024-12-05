@@ -17,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
+import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaRenderer;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazModel;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazRenderer;
 import net.sonicrushxii.chaos_emerald.event_handler.*;
@@ -111,6 +112,7 @@ public class ChaosEmerald
 
             //Super Emerald
             EntityRenderers.register(ModEntityTypes.EMERALD_TRANSFORMER.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), SuperAquaRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");

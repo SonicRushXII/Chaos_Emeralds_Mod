@@ -51,9 +51,9 @@ public class IceVerticalSpike extends Entity {
     public IceVerticalSpike(EntityType<? extends Entity> type, Level world) {
         super(type, world);
         this.movementDirection = new Vec3(0,1,0);
-        this.xIcePositions = new int[getDuration()];
-        this.yIcePositions = new int[getDuration()];
-        this.zIcePositions = new int[getDuration()];
+        this.xIcePositions = new int[getDuration()+9];
+        this.yIcePositions = new int[getDuration()+9];
+        this.zIcePositions = new int[getDuration()+9];
     }
 
     public int getDuration() {
@@ -134,7 +134,7 @@ public class IceVerticalSpike extends Entity {
             }
 
             // Only perform actions if duration is not zero
-            if (getDuration() > 0)
+            if (getDuration() > 1)
             {
                 // Set entity movement
                 this.setDeltaMovement(movementDirection);
@@ -144,36 +144,43 @@ public class IceVerticalSpike extends Entity {
                 BlockPos icePlacePos = this.blockPosition().offset(0, -1, 0);
                 if(Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(this.level().getBlockState(icePlacePos).getBlock()) + ""))
                     this.level().setBlock(icePlacePos, Blocks.BLUE_ICE.defaultBlockState(), 3);
-                xIcePositions[getDuration()-1] = icePlacePos.getX();
-                yIcePositions[getDuration()-1] = icePlacePos.getY();
-                zIcePositions[getDuration()-1] = icePlacePos.getZ();
+                xIcePositions[getDuration()-1+9] = icePlacePos.getX();
+                yIcePositions[getDuration()-1+9] = icePlacePos.getY();
+                zIcePositions[getDuration()-1+9] = icePlacePos.getZ();
             }
 
+            //Straighten the last part
+            if(getDuration() == 3)
+                this.movementDirection = new Vec3(0,this.movementDirection.y,0);
+
             //If At 1, sync the positions
-            if(getDuration()==0)
+            if(getDuration()==1)
             {
                 // Teleport
                 for (LivingEntity enemy : this.level().getEntitiesOfClass(LivingEntity.class,
-                        new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5, this.getX() + 0.5, this.getY() + 2.5, this.getZ() + 0.5),
+                        new AABB(this.getX() - 1.5, this.getY() - 2.0, this.getZ() - 1.5, this.getX() + 1.5, this.getY() + 2.0, this.getZ() + 1.5),
                         enemy -> !(enemy.is(this))))
                 {
                     enemy.teleportTo(this.getX(),this.getY()+1.0,this.getZ());
                 }
 
                 // And also place 9 ice blocks
+                int finIdx = 9;
                 for(BlockPos icePlacePos : BlockPos.betweenClosed(this.blockPosition().offset(1,-1,1),this.blockPosition().offset(-1,-1,-1)))
                 {
                     if(Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(this.level().getBlockState(icePlacePos).getBlock()) + ""))
                         this.level().setBlock(icePlacePos, Blocks.BLUE_ICE.defaultBlockState(), 3);
-                    xIcePositions[getDuration()-1] = icePlacePos.getX();
-                    yIcePositions[getDuration()-1] = icePlacePos.getY();
-                    zIcePositions[getDuration()-1] = icePlacePos.getZ();
+                    xIcePositions[getDuration()-1+finIdx] = icePlacePos.getX();
+                    yIcePositions[getDuration()-1+finIdx] = icePlacePos.getY();
+                    zIcePositions[getDuration()-1+finIdx] = icePlacePos.getZ();
+
+                    --finIdx;
                 }
             }
 
             // Handle duration < -20 for ice destruction
-            if (getDuration() < -20) {
-                int idx = -(getDuration() + 20);
+            if (getDuration() < -80) {
+                int idx = -(getDuration() + 80);
                 if (idx < xIcePositions.length) {
                     BlockPos icePosition = new BlockPos(
                             xIcePositions[xIcePositions.length - idx],
@@ -187,13 +194,14 @@ public class IceVerticalSpike extends Entity {
             }
 
             // Final cleanup to discard entity
-            if (getDuration() < -100) {
+            if (getDuration() < -140) {
                 this.discard();
             }
 
             // Decrement duration at the end of the tick
             this.setDuration(getDuration() - 1);
-        } else
+        }
+        else
         {
             // Client Side Only: Render particles or other visuals
             if (getDuration() > 0) {
@@ -207,10 +215,11 @@ public class IceVerticalSpike extends Entity {
         {
             try {// Synchronize on both server and client
                 for (LivingEntity enemy : this.level().getEntitiesOfClass(LivingEntity.class,
-                        new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5, this.getX() + 0.5, this.getY() + 2.0, this.getZ() + 0.5),
-                        enemy -> !(enemy.is(this))))
+                        new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5,
+                                this.getX() + 0.5, this.getY() + 2.5, this.getZ() + 0.5),
+                        enemy -> !(enemy.is(this) || enemy.getUUID().equals(this.getOwnerUUID()))))
                 {
-                    enemy.setDeltaMovement(movementDirection.scale(1.0));
+                    enemy.setDeltaMovement(movementDirection);
                 }
             }catch(NullPointerException ignored){}
         }
@@ -220,24 +229,17 @@ public class IceVerticalSpike extends Entity {
         {
             try {// Synchronize on both server and client
                 for (LivingEntity enemy : this.level().getEntitiesOfClass(LivingEntity.class,
-                        new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5, this.getX() + 0.5, this.getY() + 2.0, this.getZ() + 0.5),
-                        enemy -> !(enemy.is(this))))
+                        new AABB(this.getX() - 0.5, this.getY() - 2.5, this.getZ() - 0.5,
+                                this.getX() + 0.5, this.getY() + 2.5, this.getZ() + 0.5),
+                        enemy -> !(enemy.is(this) || this.getOwnerUUID().equals(enemy.getUUID()) )))
                 {
-                    //If used on yourself then give Fall Immunity
-                    if(enemy.is(this.getOwner()))
-                    {
-                        enemy.setDeltaMovement(Utilities.calculateViewVector(Math.min(-90,enemy.getXRot()-45),enemy.getYRot()).scale(1.5));
-                    }
-                    //If used on Enemy then deal damage
-                    else
-                    {
-                        Vec3 motionDir;
-                        LivingEntity owner = this.getOwner();
-                        motionDir = (new Vec3(enemy.getX(),enemy.getY(),enemy.getZ())).subtract(new Vec3(owner.getX(),owner.getY(),owner.getZ())).normalize();
-                        enemy.setDeltaMovement(motionDir.scale(1.5));
-                        enemy.hurt(this.level().damageSources().playerAttack((Player)this.getOwner()), 4.0f);
-                    }
-                    if(enemy.hasEffect(ModEffects.SUPER_ICE_LAUNCH.get())) enemy.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false));
+                    Vec3 motionDir;
+                    LivingEntity owner = this.getOwner();
+                    motionDir = (new Vec3(enemy.getX(), enemy.getY(), enemy.getZ())).subtract(new Vec3(owner.getX(), owner.getY(), owner.getZ())).normalize();
+                    enemy.setDeltaMovement(motionDir.scale(1.5));
+                    enemy.hurt(this.level().damageSources().playerAttack((Player) this.getOwner()), 4.0f);
+
+                    if(enemy.hasEffect(ModEffects.SUPER_ICE_LAUNCH.get())) enemy.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(),40,0,false,false,false));
                     else enemy.addEffect(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(),40,0,false,false,false),enemy);
                 }
             }catch(NullPointerException ignored){}
