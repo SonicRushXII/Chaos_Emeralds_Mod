@@ -12,10 +12,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
-import net.sonicrushxii.chaos_emerald.potion_effects.ChaosBindEffect;
-import net.sonicrushxii.chaos_emerald.potion_effects.ChaosDashEffect;
-import net.sonicrushxii.chaos_emerald.potion_effects.ChaosFlameEffect;
-import net.sonicrushxii.chaos_emerald.potion_effects.SuperIcePadEffect;
+import net.sonicrushxii.chaos_emerald.potion_effects.*;
 
 public class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS
@@ -33,6 +30,9 @@ public class ModEffects {
             "chaos_flame_jump",()->((new ChaosFlameEffect(MobEffectCategory.BENEFICIAL,0xFF0000))));
     public static final RegistryObject<MobEffect> SUPER_ICE_LAUNCH = MOB_EFFECTS.register(
             "super_ice_launch",()->((new SuperIcePadEffect(MobEffectCategory.BENEFICIAL,0x0000FF))));
+
+    public static final RegistryObject<MobEffect> SUPER_CHAOS_DIVE = MOB_EFFECTS.register(
+            "super_chaos_dive",()->((new SuperDivePadEffect(MobEffectCategory.BENEFICIAL,0x00FF00))));
 
     public static void register(IEventBus eventBus)
     {

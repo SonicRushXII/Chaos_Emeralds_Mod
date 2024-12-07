@@ -4,7 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 
 public class ChaosEmeraldCap {
 
-    public float atkRotPhase = 0.0f;
+    public float atkRotPhaseX = 0.0f;
+    public float atkRotPhaseY = 0.0f;
     public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
     public byte[] superCooldownKey = new byte[EmeraldType.values().length];
 
@@ -24,7 +25,9 @@ public class ChaosEmeraldCap {
 
     //Super Emerald Usage
     public byte aquaSuperUse = 0;
+    public byte greenSuperUse = 0;
     public byte yellowSuperUse = 0;
+
 
     //Hyper Form
     public int hyperFormTimer = 0;
@@ -51,7 +54,8 @@ public class ChaosEmeraldCap {
 
     public void copyFrom(ChaosEmeraldCap source){
         //Attack Phase Rotation
-        this.atkRotPhase = source.atkRotPhase;
+        this.atkRotPhaseX = source.atkRotPhaseX;
+        this.atkRotPhaseY = source.atkRotPhaseY;
 
         //Chaos Emerald Usage
         if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldType.values().length];
@@ -64,6 +68,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Usage
         this.aquaSuperUse = source.aquaSuperUse;
+        this.greenSuperUse = source.greenSuperUse;
         this.yellowSuperUse = source.yellowSuperUse;
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
@@ -71,7 +76,8 @@ public class ChaosEmeraldCap {
 
     public void saveNBTData(CompoundTag nbt){
         //Attack Rotation Phase
-        nbt.putFloat("AtkRotPhase",this.atkRotPhase);
+        nbt.putFloat("AtkRotPhaseX",this.atkRotPhaseX);
+        nbt.putFloat("AtkRotPhaseY",this.atkRotPhaseY);
 
         //Copy Chaos Cooldown
         if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
@@ -95,6 +101,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         nbt.putByte("BubbleBoost",this.aquaSuperUse);
+        nbt.putByte("SuperChaosDive",this.greenSuperUse);
         nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
 
         //Hyper Form
@@ -103,7 +110,8 @@ public class ChaosEmeraldCap {
 
     public void loadNBTData(CompoundTag nbt){
         //Attack Rotation Phase
-        this.atkRotPhase = nbt.getFloat("AtkRotPhase");
+        this.atkRotPhaseX = nbt.getFloat("AtkRotPhaseX");
+        this.atkRotPhaseY = nbt.getFloat("AtkRotPhaseY");
 
         //Load Chaos Emerald Cooldown
         chaosCooldownKey = nbt.getByteArray("ChaosEmeraldCooldown");
@@ -127,9 +135,21 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         aquaSuperUse = nbt.getByte("BubbleBoost");
+        greenSuperUse = nbt.getByte("SuperChaosDive");
         yellowSuperUse = nbt.getByte("SuperChaosGambit");
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
+    }
+
+    public boolean isUsingActiveAbility()
+    {
+        boolean purpleChaos = this.purpleChaosUse > 0;
+        boolean greyChaos = this.greyChaosUse > 0;
+        boolean aquaSuper = this.aquaSuperUse > 0;
+        boolean greenSuper = this.greenSuperUse > 0;
+        boolean yellowSuper = this.yellowSuperUse > 0;
+
+        return greyChaos || purpleChaos || aquaSuper || greenSuper || yellowSuper;
     }
 }

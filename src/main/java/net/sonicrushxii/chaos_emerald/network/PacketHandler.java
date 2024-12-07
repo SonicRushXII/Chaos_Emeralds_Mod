@@ -35,6 +35,7 @@ public class PacketHandler {
         INSTANCE.messageBuilder(ParticleDirPacketS2C.class, id++).encoder(ParticleDirPacketS2C::encode).decoder(ParticleDirPacketS2C::new).consumerMainThread(ParticleDirPacketS2C::handle).add();
         INSTANCE.messageBuilder(PlayerStopSoundPacketS2C.class, id++).encoder(PlayerStopSoundPacketS2C::encode).decoder(PlayerStopSoundPacketS2C::new).consumerMainThread(PlayerStopSoundPacketS2C::handle).add();
         INSTANCE.messageBuilder(ParticleRaycastPacketS2C.class, id++).encoder(ParticleRaycastPacketS2C::encode).decoder(ParticleRaycastPacketS2C::new).consumerMainThread(ParticleRaycastPacketS2C::handle).add();
+        INSTANCE.messageBuilder(EmeraldDataSyncS2C.class, id++).encoder(EmeraldDataSyncS2C::encode).decoder(EmeraldDataSyncS2C::new).consumerMainThread(EmeraldDataSyncS2C::handle).add();
 
         //AQUA EMERALD
         INSTANCE.messageBuilder(BindEffectSyncPacketS2C.class, id++).encoder(BindEffectSyncPacketS2C::encode).decoder(BindEffectSyncPacketS2C::new).consumerMainThread(BindEffectSyncPacketS2C::handle).add();

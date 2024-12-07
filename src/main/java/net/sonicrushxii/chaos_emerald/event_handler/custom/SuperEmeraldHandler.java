@@ -1,5 +1,9 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.InputType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -7,7 +11,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
-import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -24,9 +27,12 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
+import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
+import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
@@ -41,13 +47,12 @@ public class SuperEmeraldHandler {
         if(pPlayer instanceof ServerPlayer player)
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.isUsingActiveAbility()) return;
+
                 if (chaosEmeraldCap.superCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] > 0) {
                     player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)), true);
                     return;
                 }
-
-                //Set Cooldown(in Seconds)
-                chaosEmeraldCap.superCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = 1;
 
                 //Super Aqua Emerald
                 chaosEmeraldCap.aquaSuperUse = 1;
@@ -62,117 +67,158 @@ public class SuperEmeraldHandler {
                 //Add Speed
                 if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
                     player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED);
+
             });
+
         }
 
     }
 
     public static void blueEmeraldUse(Level pLevel, Player pPlayer)
     {
-        pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            if(chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
-                pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)),true);
-                return;
-            }
+        if(!pLevel.isClientSide) {
 
-            //Set Cooldown(in Seconds)
-            chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 1;
+            pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                try {
+                    if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
-            //If Looking Down don't scale further
-            if(pPlayer.getXRot() >= 85.0 && pPlayer.getXRot() <= 90.0)
-            {
-                IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(),pLevel);
-                iceSuperSpike.setPos(new Vec3(pPlayer.getX(), pPlayer.getY()+0.1, pPlayer.getZ()));
-                iceSuperSpike.setOwner(pPlayer.getUUID());
-                iceSuperSpike.setMovementDirection(
-                        new Vec3(0,1,0)
-                                .add(Utilities.calculateViewVector(0,pPlayer.getYRot()).scale(0.4))
-                );
-
-                Vec3 launchVec = Utilities.calculateViewVector(-65f,pPlayer.getYRot()).scale(1.85);
-                pPlayer.setDeltaMovement(launchVec);
-                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),launchVec));
-                pLevel.addFreshEntity(iceSuperSpike);
-
-                if(pPlayer.hasEffect(ModEffects.SUPER_ICE_LAUNCH.get())) pPlayer.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),160,0,false,false,false));
-                else pPlayer.addEffect(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(),160,0,false,false,false),pPlayer);
-                return;
-            }
-
-            Vec3 startPos = new Vec3(pPlayer.getX(), pPlayer.getY()+pPlayer.getEyeHeight(), pPlayer.getZ());
-            Vec3 motionDir = pPlayer.getLookAngle();
-
-            //Look Forward and Spawn Ice spike over there
-            for(byte i=0;i<16;++i)
-            {
-                Vec3 destPos = startPos.add(motionDir.scale(i));
-                BlockPos pos = Utilities.convertToBlockPos(destPos);
-                List<LivingEntity> targetEntities = pLevel.getEntitiesOfClass(
-                    LivingEntity.class, new AABB(destPos.x() - 0.5, destPos.y() - 0.5, destPos.z() - 0.5,
-                                       destPos.x() + 0.5, destPos.y() + 0.5, destPos.z() + 0.5),
-                        target -> !(target.is(pPlayer))
-                );
-
-                //If Entities are found then target them
-                if(!targetEntities.isEmpty())
-                {
-                    //Grab the first Enemy
-                    LivingEntity target = targetEntities.get(0);
-
-                    //Grab
-                    List<LivingEntity> nearbyEntities = pLevel.getEntitiesOfClass(
-                            LivingEntity.class, new AABB(target.getX() - 2.5, target.getY() - 2.5, target.getZ() - 2.5,
-                                    target.getX() + 2.5, target.getY() + 2.5, target.getZ() + 2.5),
-                            adjacentEnemy -> !(adjacentEnemy.is(pPlayer))
-                    );
-                    for(LivingEntity enemy : nearbyEntities)
-                    {
-                        IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(),pLevel);
-                        iceSuperSpike.setPos(new Vec3(enemy.getX(), enemy.getY(), enemy.getZ()));
-                        iceSuperSpike.setOwner(pPlayer.getUUID());
-                        iceSuperSpike.setMovementDirection(new Vec3(0,1,0)
-                                .add(destPos.subtract(
-                                        new Vec3(
-                                                pPlayer.getX(),
-                                                pPlayer.getY(),
-                                                pPlayer.getZ()
-                                        )
-                                        ).normalize().scale(0.4)
-                                )
-                        );
-                        pLevel.addFreshEntity(iceSuperSpike);
+                    if (chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
+                        pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)), true);
+                        return;
                     }
-                    return;
-                }
 
-                //If Block is found target them
-                if(!Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLevel.getBlockState(pos).getBlock())+""))
-                {
-                    IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(),pLevel);
-                    iceSuperSpike.setPos(destPos.add(0,1,0));
-                    iceSuperSpike.setOwner(pPlayer.getUUID());
-                    iceSuperSpike.setMovementDirection(new Vec3(0,1,0)
-                            .add(destPos.subtract(
-                                    new Vec3(
-                                            pPlayer.getX(),
-                                            pPlayer.getY(),
-                                            pPlayer.getZ()
+                    //If Looking Down don't scale further
+                    if (pPlayer.getXRot() >= 85.0 && pPlayer.getXRot() <= 90.0) {
+                        IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
+                        iceSuperSpike.setPos(new Vec3(pPlayer.getX(), pPlayer.getY() + 0.1, pPlayer.getZ()));
+                        iceSuperSpike.setOwner(pPlayer.getUUID());
+                        iceSuperSpike.setMovementDirection(
+                                new Vec3(0, 1, 0)
+                                        .add(Utilities.calculateViewVector(0, pPlayer.getYRot()).scale(0.4))
+                        );
+
+                        Vec3 launchVec = Utilities.calculateViewVector(-65f, pPlayer.getYRot()).scale(1.85);
+                        pPlayer.setDeltaMovement(launchVec);
+                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(), launchVec));
+                        pLevel.addFreshEntity(iceSuperSpike);
+
+                        if (pPlayer.hasEffect(ModEffects.SUPER_ICE_LAUNCH.get()))
+                            pPlayer.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 160, 0, false, false, false));
+                        else
+                            pPlayer.addEffect(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 160, 0, false, false, false), pPlayer);
+                        return;
+                    }
+
+                    Vec3 startPos = new Vec3(pPlayer.getX(), pPlayer.getY() + pPlayer.getEyeHeight(), pPlayer.getZ());
+                    Vec3 motionDir = pPlayer.getLookAngle();
+
+                    //Look Forward and Spawn Ice spike over there
+                    for (byte i = 0; i < 16; ++i) {
+                        Vec3 destPos = startPos.add(motionDir.scale(i));
+                        BlockPos pos = Utilities.convertToBlockPos(destPos);
+                        List<LivingEntity> targetEntities = pLevel.getEntitiesOfClass(
+                                LivingEntity.class, new AABB(destPos.x() - 0.5, destPos.y() - 0.5, destPos.z() - 0.5,
+                                        destPos.x() + 0.5, destPos.y() + 0.5, destPos.z() + 0.5),
+                                target -> !(target.is(pPlayer))
+                        );
+
+                        //If Entities are found then target them
+                        if (!targetEntities.isEmpty()) {
+                            //Grab the first Enemy
+                            LivingEntity target = targetEntities.get(0);
+
+                            //Grab
+                            List<LivingEntity> nearbyEntities = pLevel.getEntitiesOfClass(
+                                    LivingEntity.class, new AABB(target.getX() - 2.5, target.getY() - 2.5, target.getZ() - 2.5,
+                                            target.getX() + 2.5, target.getY() + 2.5, target.getZ() + 2.5),
+                                    adjacentEnemy -> !(adjacentEnemy.is(pPlayer))
+                            );
+                            for (LivingEntity enemy : nearbyEntities) {
+                                IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
+                                iceSuperSpike.setPos(new Vec3(enemy.getX(), enemy.getY(), enemy.getZ()));
+                                iceSuperSpike.setOwner(pPlayer.getUUID());
+                                iceSuperSpike.setMovementDirection(new Vec3(0, 1, 0)
+                                        .add(destPos.subtract(
+                                                        new Vec3(
+                                                                pPlayer.getX(),
+                                                                pPlayer.getY(),
+                                                                pPlayer.getZ()
+                                                        )
+                                                ).normalize().scale(0.4)
+                                        )
+                                );
+                                pLevel.addFreshEntity(iceSuperSpike);
+                            }
+
+                            return;
+                        }
+
+                        //If Block is found target them
+                        if (!Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLevel.getBlockState(pos).getBlock()) + "")) {
+                            IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
+                            iceSuperSpike.setPos(destPos.add(0, 1, 0));
+                            iceSuperSpike.setOwner(pPlayer.getUUID());
+                            iceSuperSpike.setMovementDirection(new Vec3(0, 1, 0)
+                                    .add(destPos.subtract(
+                                                    new Vec3(
+                                                            pPlayer.getX(),
+                                                            pPlayer.getY(),
+                                                            pPlayer.getZ()
+                                                    )
+                                            ).normalize().scale(0.4)
                                     )
-                                    ).normalize().scale(0.4)
-                            )
-                    );
-                    pLevel.addFreshEntity(iceSuperSpike);
+                            );
+                            pLevel.addFreshEntity(iceSuperSpike);
 
-                    return;
+                            return;
+                        }
+                    }
                 }
-            }
-        });
+                finally {
+                    PacketHandler.sendToPlayer((ServerPlayer) pPlayer,new EmeraldDataSyncS2C(
+                            pPlayer.getId(),chaosEmeraldCap
+                    ));
+                }
+            });
+        }
     }
 
     public static void greenEmeraldUse(Level pLevel, Player pPlayer)
     {
+        if(pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                try {
+                    if (chaosEmeraldCap.greenSuperUse > 0 && !player.onGround())
+                        player.addDeltaMovement(Utilities.calculateViewVector(0, player.getYRot()).scale(0.3));
 
+                    if (chaosEmeraldCap.isUsingActiveAbility()) return;
+
+                    if (chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] > 0) {
+                        player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FF00)), true);
+                        return;
+                    }
+
+                    //Super Green Emerald
+                    chaosEmeraldCap.greenSuperUse = 1;
+
+                    //Give Effect
+                    if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
+                        player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get()).update(new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false));
+                    else
+                        player.addEffect(new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false), player);
+
+                    Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.85);
+                    player.setDeltaMovement(launchVec);
+                    PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), launchVec));
+                } finally {
+                    PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                            pPlayer.getId(),chaosEmeraldCap
+                    ));
+                }
+            });
+        }
     }
+
     public static void greyEmeraldUse(Level pLevel, Player pPlayer)
     {
 
@@ -190,102 +236,211 @@ public class SuperEmeraldHandler {
 
     public static void yellowEmeraldUse(Level pLevel, Player pPlayer)
     {
-        if(pPlayer instanceof ServerPlayer player)
-        {
+        if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                if (chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
-                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)), true);
-                    return;
+                try {
+                    if (chaosEmeraldCap.isUsingActiveAbility()) return;
+
+                    if (chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
+                        player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)), true);
+                        return;
+                    }
+
+                    //Super Aqua Emerald
+                    chaosEmeraldCap.yellowSuperUse = 1;
+
+                    //Get Saturation
+                    player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 6, 0, false, false, false), player);
+
+                    //Add Slowness
+                    if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
+                        player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.GAMBIT_SLOW);
+                } finally {
+                    PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                            pPlayer.getId(),chaosEmeraldCap
+                    ));
                 }
-
-                //Set Cooldown(in Seconds)
-                chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 1;
-
-                //Super Aqua Emerald
-                chaosEmeraldCap.yellowSuperUse = 1;
-
-                //Get Saturation
-                player.addEffect(new MobEffectInstance(MobEffects.SATURATION,6,0,false,false,false),player);
-
-                //Add Slowness
-                if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
-                    player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.GAMBIT_SLOW);
             });
         }
-
     }
 
     public static void serverTick(ServerPlayer player, int tick)
     {
-
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            //Bubble Boost
-            {
-                if(chaosEmeraldCap.aquaSuperUse > 0)
+            try {
+
+                //Bubble Boost
                 {
-                    //Add Timer
-                    chaosEmeraldCap.aquaSuperUse += 1;
+                    if (chaosEmeraldCap.aquaSuperUse > 0) {
+                        //Add Timer
+                        chaosEmeraldCap.aquaSuperUse += 1;
 
-                    //Particle
-                    PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                            ParticleTypes.BUBBLE,
-                            player.getX(), player.getY()+player.getEyeHeight()/2, player.getZ(),
-                            0.001, 0.50f, 1.00f, 0.50f, 10,
-                            false));
-                    PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                            new DustParticleOptions(new Vector3f(0f,1f,1f),1.5f),
-                            player.getX(), player.getY()+player.getEyeHeight()/2, player.getZ(),
-                            0.001, 0.50f, 1.00f, 0.50f, 5,
-                            false));
+                        //Particle
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.BUBBLE,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 10,
+                                false));
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(new Vector3f(0f, 1f, 1f), 1.5f),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 5,
+                                false));
 
-                    //Spawn Bubbles
-                    if(player.isSprinting())
-                    {
-                        //Spawn Right Bubble
-                        SuperAquaBubbleEntity superRightBubble = new SuperAquaBubbleEntity(ModEntityTypes.AQUA_BOOST_BUBBLE.get(),player.serverLevel());
-                        superRightBubble.setPos(new Vec3(player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ()));
-                        superRightBubble.setDuration(40);
-                        superRightBubble.setOwner(player.getUUID());
-                        superRightBubble.setMovementDirection(player.getLookAngle().scale(Utilities.random.nextFloat(0.5f,1.5f)).cross(new Vec3(0,1,0)));
+                        //Spawn Bubbles
+                        if (player.isSprinting()) {
+                            //Spawn Right Bubble
+                            SuperAquaBubbleEntity superRightBubble = new SuperAquaBubbleEntity(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), player.serverLevel());
+                            superRightBubble.setPos(new Vec3(player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ()));
+                            superRightBubble.setDuration(40);
+                            superRightBubble.setOwner(player.getUUID());
+                            superRightBubble.setMovementDirection(player.getLookAngle().scale(Utilities.random.nextFloat(0.5f, 1.5f)).cross(new Vec3(0, 1, 0)));
 
-                        player.level().addFreshEntity(superRightBubble);
+                            player.level().addFreshEntity(superRightBubble);
 
-                        //Spawn Left Bubble
-                        SuperAquaBubbleEntity superLeftBubble = new SuperAquaBubbleEntity(ModEntityTypes.AQUA_BOOST_BUBBLE.get(),player.serverLevel());
-                        superLeftBubble.setPos(new Vec3(player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ()));
-                        superLeftBubble.setDuration(40);
-                        superLeftBubble.setOwner(player.getUUID());
-                        superLeftBubble.setMovementDirection(player.getLookAngle().scale(Utilities.random.nextFloat(0.5f,1.5f)).cross(new Vec3(0,-1,0)));
+                            //Spawn Left Bubble
+                            SuperAquaBubbleEntity superLeftBubble = new SuperAquaBubbleEntity(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), player.serverLevel());
+                            superLeftBubble.setPos(new Vec3(player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ()));
+                            superLeftBubble.setDuration(40);
+                            superLeftBubble.setOwner(player.getUUID());
+                            superLeftBubble.setMovementDirection(player.getLookAngle().scale(Utilities.random.nextFloat(0.5f, 1.5f)).cross(new Vec3(0, -1, 0)));
 
-                        player.level().addFreshEntity(superLeftBubble);
+                            player.level().addFreshEntity(superLeftBubble);
+                        }
+
                     }
 
+                    if (chaosEmeraldCap.aquaSuperUse == 100) {
+                        //Reset Timer
+                        chaosEmeraldCap.aquaSuperUse = 0;
+
+                        //Remove Step Height
+                        if (player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
+                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).removeModifier(AttributeMultipliers.BUBBLE_BOOST_STEP.getId());
+
+                        //Remove Speed
+                        if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED.getId());
+
+                        //Set Cooldown(in Seconds)
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 1;
+                    }
                 }
 
-                if(chaosEmeraldCap.aquaSuperUse == 100)
+                //Chaos Dive
                 {
-                    //Reset Timer
-                    chaosEmeraldCap.aquaSuperUse = 0;
+                    //Duration
+                    if (chaosEmeraldCap.greenSuperUse > 0) {
+                        //Add Timer
+                        chaosEmeraldCap.greenSuperUse += 1;
 
-                    //Remove Step Height
-                    if (player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
-                        player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).removeModifier(AttributeMultipliers.BUBBLE_BOOST_STEP.getId());
+                        //Particle
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.ELECTRIC_SPARK,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 4,
+                                false));
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(new Vector3f(0f, 1f, 0f), 1.5f),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 2,
+                                false));
 
-                    //Remove Speed
-                    if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
-                        player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED.getId());
+
+                    }
+
+                    //Move to touching the ground later
+                    if (chaosEmeraldCap.greenSuperUse > 3 && chaosEmeraldCap.greenSuperUse < 38 && player.onGround())
+                        chaosEmeraldCap.greenSuperUse = 38;
+
+                    //Lock Ground Position
+                    if (chaosEmeraldCap.greenSuperUse > 3 && player.onGround()) {
+                        player.setDeltaMovement(0, player.getDeltaMovement().y(), 0);
+                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), new Vec3(0, player.getDeltaMovement().y(), 0)));
+                    }
+
+                    if (chaosEmeraldCap.greenSuperUse > 115) {
+                        //Reset Timer
+                        chaosEmeraldCap.greenSuperUse = 0;
+
+                        //Set Cooldown(in Seconds)
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 5;
+
+                        //Remove Effect
+                        if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
+                            player.removeEffect(ModEffects.SUPER_CHAOS_DIVE.get());
+                    }
                 }
-            }
 
-            //Chaos Gambit
+                //Chaos Gambit
+                {
+                    if (chaosEmeraldCap.yellowSuperUse > 0) {
+                        //Add Timer
+                        chaosEmeraldCap.yellowSuperUse += 1;
+
+                        //Particle
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.ELECTRIC_SPARK,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 4,
+                                false));
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(new Vector3f(1f, 1f, 0f), 1.5f),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.50f, 1.00f, 0.50f, 2,
+                                false));
+
+                        player.setDeltaMovement(0, 0, 0);
+                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), new Vec3(0, 0, 0)));
+                    }
+
+                    if (chaosEmeraldCap.yellowSuperUse == 10) {
+                        chaosEmeraldCap.atkRotPhaseX = player.getXRot();
+                        chaosEmeraldCap.atkRotPhaseY = player.getYRot();
+                    }
+
+                    if (chaosEmeraldCap.yellowSuperUse > 10) {
+                        Vec3 playerPos = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+                        Vec3 lookAngle = Utilities.calculateViewVector(chaosEmeraldCap.atkRotPhaseX, chaosEmeraldCap.atkRotPhaseY);
+
+                        for (int i = 1; i <= Math.min(chaosEmeraldCap.yellowSuperUse - 10, 24); i += 1) {
+                            Vec3 destPos = playerPos.add(lookAngle.scale(i * 1.5));
+
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    ParticleTypes.END_ROD,
+                                    destPos.x, destPos.y, destPos.z,
+                                    0.001, 1.75f, 1.75f, 1.75f, 2,
+                                    false));
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    new DustParticleOptions(new Vector3f(1f, 1f, 0f), 1.5f),
+                                    destPos.x, destPos.y, destPos.z,
+                                    0.001, 1.75f, 1.75f, 1.75f, 4,
+                                    true));
+                        }
+                    }
+
+                    if (chaosEmeraldCap.yellowSuperUse > 115) {
+                        //Reset Timer
+                        chaosEmeraldCap.yellowSuperUse = 0;
+
+                        //Remove Speed
+                        if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.GAMBIT_SLOW.getId());
+
+                        //Set Cooldown(in Seconds)
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 1;
+                    }
+                }
+            }finally
             {
-
+                PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                        player.getId(),chaosEmeraldCap
+                ));
             }
         });
     }
 
     public static void clientTick(LocalPlayer player, int tick)
     {
-
     }
 }

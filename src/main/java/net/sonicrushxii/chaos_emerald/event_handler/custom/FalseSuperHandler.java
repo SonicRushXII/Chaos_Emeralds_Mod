@@ -14,6 +14,7 @@ import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.PlayerStopSoundPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
@@ -231,6 +232,9 @@ public class FalseSuperHandler
                     }
                 }
             }
+            PacketHandler.sendToPlayer(player,new EmeraldDataSyncS2C(
+                    player.getId(),chaosEmeraldCap
+            ));
         });
     }
 

@@ -20,6 +20,9 @@ import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaRenderer;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazModel;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazRenderer;
+import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
+import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
+import net.sonicrushxii.chaos_emerald.entities.yellow.SuperEmeraldRenderModel;
 import net.sonicrushxii.chaos_emerald.event_handler.*;
 import net.sonicrushxii.chaos_emerald.modded.*;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
@@ -132,6 +135,15 @@ public class ChaosEmerald
 
             //Chaos Spaz
             event.registerLayerDefinition(ChaosSpazModel.LAYER_LOCATION,ChaosSpazModel::createBodyLayer);
+
+            //Chaos Dive
+            event.registerLayerDefinition(ChaosDivePlayerModel.LAYER_LOCATION,ChaosDivePlayerModel::createBodyLayer);
+
+            //Chaos Gambit
+                // Player Model
+                event.registerLayerDefinition(ChaosGambitPlayerModel.LAYER_LOCATION,ChaosGambitPlayerModel::createBodyLayer);
+                // Emerald Model
+                event.registerLayerDefinition(SuperEmeraldRenderModel.LAYER_LOCATION,SuperEmeraldRenderModel::createBodyLayer);
         }
     }
 }

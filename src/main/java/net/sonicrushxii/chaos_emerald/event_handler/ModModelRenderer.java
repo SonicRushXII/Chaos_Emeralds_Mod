@@ -7,6 +7,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -17,6 +18,7 @@ import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 public class ModModelRenderer {
     public record Texture(String textureLocation, byte frameNo) {}
@@ -68,5 +70,36 @@ public class ModModelRenderer {
 
         catch (NullPointerException | ClassCastException | NoSuchMethodError | NoSuchFieldException |
                NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ignored) {}
+    }
+
+    public static void renderPlayerModel(Class<? extends EntityModel> modelClass, RenderLivingEvent<?, ?> event, PoseStack poseStack, Consumer<ModelPart> customTransform) {
+        MultiBufferSource buffer = event.getMultiBufferSource();
+        LocalPlayer player = (LocalPlayer) event.getEntity();
+        int packedLight = event.getPackedLight();
+
+        // Render the custom model
+        try {
+            //Get Layer Location
+            Field layerField = modelClass.getDeclaredField("LAYER_LOCATION");
+            ModelLayerLocation layerLocation = (ModelLayerLocation) layerField.get(null);
+
+            //Find Model
+            EntityModelSet entityModelSet = Minecraft.getInstance().getEntityModels();
+            ModelPart modelPart = entityModelSet.bakeLayer(layerLocation);
+
+            //Perform Custom Transform
+            if (customTransform != null) customTransform.accept(modelPart);
+            VertexConsumer vertexConsumer;
+
+            vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(
+                    player.getSkinTextureLocation()
+            ));
+
+            EntityModel model = modelClass.getConstructor(ModelPart.class).newInstance(modelPart);
+            model.renderToBuffer(poseStack, vertexConsumer, packedLight, LivingEntityRenderer.getOverlayCoords(player, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+        } catch (NullPointerException | ClassCastException | NoSuchMethodError | NoSuchFieldException |
+                 NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException ignored) {
+        }
     }
 }

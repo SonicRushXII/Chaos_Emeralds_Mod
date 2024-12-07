@@ -27,5 +27,11 @@
   "creativetab.chaos_emerald": "Chaos Emerald Tab",
 
   "sounds.master_emerald.false_super.activate": "Master Emerald Charging(False Super)",
-  "sounds.master_emerald.false_super.chaos_spaz": "False-Super Chaos Spaz"
+  "sounds.master_emerald.false_super.chaos_spaz": "False-Super Chaos Spaz",
+
+  "effect.chaos_emerald.super_chaos_dive" : "Chaos Dive",
+  "effect.chaos_emerald.super_ice_launch" : "Chaos Ice Spiked",
+  "effect.chaos_emerald.chaos_flame_jump" : "Chaos Flame Jump",
+  "effect.chaos_emerald.super_chaos_dash" : "Chaos Dash",
+  "effect.chaos_emerald.chaos_bind" : "Chaos Aqua Bind"
 }

@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
+import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
+import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 
 @Mod.EventBusSubscriber(modid = ChaosEmerald.MOD_ID, value= Dist.CLIENT)
@@ -22,10 +24,10 @@ public class RenderHandler {
         PoseStack poseStack = event.getPoseStack();
         LivingEntity entity = event.getEntity();
 
-        //Grey Emerald
         if(entity instanceof Player player)
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //Grey Chaos Emerald
                 if(chaosEmeraldCap.greyChaosUse > 1)
                 {
                     float yaw = player.getYRot();
@@ -41,6 +43,49 @@ public class RenderHandler {
                     poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90F));
                     // Translate back to original position
                     poseStack.translate(0.0D, -1.0D, 0.0D); // Undo the initial translation
+                }
+
+                //Green Super Emerald
+                if (chaosEmeraldCap.greenSuperUse > 0)
+                {
+                    poseStack.pushPose();
+
+                    // Scale
+                    poseStack.scale(1.0f, 1.0f, 1.0f);
+
+                    //Apply Rotation & Translation
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-player.getYRot()));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                    poseStack.translate(0D, -1.5D, 0D);
+
+                    //Render The Custom Model
+                    ModModelRenderer.renderPlayerModel(ChaosDivePlayerModel.class, event, poseStack, (modelPart)->
+                    {
+                        modelPart.getChild("PlayerModel").xRot += (chaosEmeraldCap.greenSuperUse <= 10)?0:Math.min(30,chaosEmeraldCap.greenSuperUse-10)*(5*(float)Math.PI/180);
+                    });
+
+                    poseStack.popPose();
+                    event.setCanceled(true);
+                }
+
+                //Yellow Super Emerald
+                if (chaosEmeraldCap.yellowSuperUse > 10)
+                {
+                    poseStack.pushPose();
+
+                    // Scale
+                    poseStack.scale(1.0f, 1.0f, 1.0f);
+
+                    //Apply Rotation & Translation
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-chaosEmeraldCap.atkRotPhaseY));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                    poseStack.translate(0D, -1.5D, 0D);
+
+                    //Render The Custom Model
+                    ModModelRenderer.renderPlayerModel(ChaosGambitPlayerModel.class, event, poseStack, null);
+
+                    poseStack.popPose();
+                    event.setCanceled(true);
                 }
             });
         }
@@ -80,7 +125,7 @@ public class RenderHandler {
             }
         }
 
-        //Grey Emerald
+
         if(targetEntity instanceof Player player)
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
