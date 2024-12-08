@@ -107,6 +107,7 @@ public class ChaosEmerald
             //Aqua Emerald
             EntityRenderers.register(ModEntityTypes.ICE_CHAOS_SPIKE.get(), PointRenderer::new);
             EntityRenderers.register(ModEntityTypes.ICE_SUPER_SPIKE.get(), PointRenderer::new);
+
             //Yellow Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
 
@@ -116,6 +117,7 @@ public class ChaosEmerald
             //Super Emerald
             EntityRenderers.register(ModEntityTypes.EMERALD_TRANSFORMER.get(), PointRenderer::new);
             EntityRenderers.register(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), SuperAquaRenderer::new);
+            EntityRenderers.register(ModEntityTypes.CHAOS_DIVE_RIPPLE.get(), PointRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");

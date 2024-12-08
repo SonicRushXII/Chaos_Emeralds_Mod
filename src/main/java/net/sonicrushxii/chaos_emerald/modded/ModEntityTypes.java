@@ -13,6 +13,7 @@ import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
+import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 
@@ -34,6 +35,12 @@ public class ModEntityTypes {
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .setTrackingRange(32)
                     .build("aqua_super_bubble"));
+
+    public static final RegistryObject<EntityType<ChaosDiveRipple>> CHAOS_DIVE_RIPPLE = ENTITY_TYPES.register("dive_super_ripple",
+            () -> EntityType.Builder.<ChaosDiveRipple>of(ChaosDiveRipple::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .setTrackingRange(32)
+                    .build("dive_super_ripple"));
 
     public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
             () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)

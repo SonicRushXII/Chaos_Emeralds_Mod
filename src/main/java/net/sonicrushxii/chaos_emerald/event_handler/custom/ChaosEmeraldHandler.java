@@ -79,6 +79,7 @@ public class ChaosEmeraldHandler {
 
                 //Entity Effects
                 lookAngle = player.getLookAngle().scale(0.2);
+                int count = 0;
                 for(LivingEntity target : pLevel.getEntitiesOfClass(LivingEntity.class,
                         new AABB(displayPos.x()+3.5,displayPos.y()+3.5,displayPos.z()+3.5,
                                 displayPos.x()-3.5,displayPos.y()-3.5,displayPos.z()-3.5),
@@ -91,7 +92,9 @@ public class ChaosEmeraldHandler {
                     player.connection.send(new ClientboundUpdateMobEffectPacket(target.getId(),bindEffect));
 
                     target.addDeltaMovement(new Vec3(lookAngle.x,0.15,lookAngle.z));
+                    if(++count > 4) break;
                 }
+
 
                 //Set Cooldown(in Seconds)
                 chaosEmeraldCap.chaosCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = 40;

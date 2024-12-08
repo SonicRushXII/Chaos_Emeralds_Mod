@@ -1,24 +1,22 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.InputType;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -28,10 +26,9 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
+import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
-import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -253,11 +250,8 @@ public class SuperEmeraldHandler {
                         return;
                     }
 
-                    //Super Aqua Emerald
+                    //Super Yellow Emerald
                     chaosEmeraldCap.yellowSuperUse = 1;
-
-                    //Get Saturation
-                    player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 6, 0, false, false, false), player);
 
                     //Add Slowness
                     if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
@@ -273,6 +267,7 @@ public class SuperEmeraldHandler {
 
     public static void serverTick(ServerPlayer player, int tick)
     {
+        Level world = player.level();
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             try {
 
@@ -342,18 +337,27 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.greenSuperUse += 1;
 
                         //Particle
-                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                ParticleTypes.ELECTRIC_SPARK,
-                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
-                                0.001, 0.50f, 1.00f, 0.50f, 4,
-                                false));
-                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                new DustParticleOptions(new Vector3f(0f, 1f, 0f), 1.5f),
-                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
-                                0.001, 0.50f, 1.00f, 0.50f, 2,
-                                false));
-
-
+                        if(chaosEmeraldCap.greenSuperUse < 38)
+                        {
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    ParticleTypes.HAPPY_VILLAGER,
+                                    player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                    0.001, 0.50f, 1.00f, 0.50f, 2,
+                                    false));
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    new DustParticleOptions(new Vector3f(0f, 1f, 0f), 1.5f),
+                                    player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                    0.001, 0.50f, 1.00f, 0.50f, 2,
+                                    false));
+                        }
+                        else
+                        {
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    ParticleTypes.HAPPY_VILLAGER,
+                                    player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                    0.001, 0.50f, 1.00f, 0.50f, 1,
+                                    false));
+                        }
                     }
 
                     //Move to touching the ground later
@@ -364,6 +368,24 @@ public class SuperEmeraldHandler {
                     if (chaosEmeraldCap.greenSuperUse > 3 && player.onGround()) {
                         player.setDeltaMovement(0, player.getDeltaMovement().y(), 0);
                         PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), new Vec3(0, player.getDeltaMovement().y(), 0)));
+
+                        //Spawn Ripples
+                        if((chaosEmeraldCap.greenSuperUse-1) % 20 == 0)
+                        {
+                            Vec3 spawnPos = new Vec3(player.getX(),
+                                    player.getY()+0.1,
+                                    player.getZ());
+                            world.playSound(null,player.getX(),player.getY(),player.getZ(),
+                                    SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 0.4f, 2.0f);
+                            ChaosDiveRipple chaosDiveRipple = new ChaosDiveRipple(ModEntityTypes.CHAOS_DIVE_RIPPLE.get(), world);
+                            chaosDiveRipple.setPos(spawnPos);
+                            chaosDiveRipple.setOwner(player.getUUID());
+                            chaosDiveRipple.setLevelGround(player.isShiftKeyDown());
+                            chaosDiveRipple.setDuration(50);
+
+                            // Add the entity to the world
+                            world.addFreshEntity(chaosDiveRipple);
+                        }
                     }
 
                     if (chaosEmeraldCap.greenSuperUse > 115) {
@@ -406,23 +428,49 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.atkRotPhaseY = player.getYRot();
                     }
 
-                    if (chaosEmeraldCap.yellowSuperUse > 10) {
+                    if (chaosEmeraldCap.yellowSuperUse > 10)
+                    {
                         Vec3 playerPos = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
                         Vec3 lookAngle = Utilities.calculateViewVector(chaosEmeraldCap.atkRotPhaseX, chaosEmeraldCap.atkRotPhaseY);
 
                         for (int i = 1; i <= Math.min(chaosEmeraldCap.yellowSuperUse - 10, 24); i += 1) {
-                            Vec3 destPos = playerPos.add(lookAngle.scale(i * 1.5));
+                            Vec3 destPos = playerPos.add(lookAngle.scale(i * 1.8));
 
+                            //Display Particles in Gaussian Distribution
                             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                                     ParticleTypes.END_ROD,
                                     destPos.x, destPos.y, destPos.z,
-                                    0.001, 1.75f, 1.75f, 1.75f, 2,
+                                    0.001, 1.95f, 1.75f, 1.95f, 4,
                                     false));
                             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                    new DustParticleOptions(new Vector3f(1f, 1f, 0f), 1.5f),
+                                    new DustParticleOptions(new Vector3f(1f, 1f, 0f), 2f),
                                     destPos.x, destPos.y, destPos.z,
-                                    0.001, 1.75f, 1.75f, 1.75f, 4,
+                                    0.001, 1.95f, 1.75f, 1.95f, 8,
                                     true));
+
+                            for (BlockPos pos : BlockPos.betweenClosed(Utilities.convertToBlockPos(destPos).offset(-1,-1,-1),
+                                    Utilities.convertToBlockPos(destPos).offset(1,1,1)))
+                            {
+                                BlockState blockState = player.level().getBlockState(pos);
+                                if(!Utilities.unbreakableBlocks.contains(ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+""))
+                                    player.level().destroyBlock(pos, player.isShiftKeyDown());
+                            }
+
+                            //Deal Damage
+                            for(LivingEntity enemy : world.getEntitiesOfClass(LivingEntity.class, new AABB(
+                                    destPos.x+2.75, destPos.y+2.75, destPos.z+2.75,
+                                    destPos.x-2.75, destPos.y-2.75, destPos.z-2.75
+                                    ), (enemy)->(!enemy.is(player))
+                            ))
+                            {
+                                //Damage
+                                enemy.hurt(player.damageSources().playerAttack(player), 50.0f);
+
+                                //Updated Motion
+                                Vec3 motionDirection = (destPos).subtract(new Vec3(enemy.getX(),enemy.getY(),enemy.getZ())).scale(0.3);
+                                enemy.setDeltaMovement(motionDirection);
+                                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(enemy.getId(),motionDirection));
+                            }
                         }
                     }
 
@@ -430,9 +478,22 @@ public class SuperEmeraldHandler {
                         //Reset Timer
                         chaosEmeraldCap.yellowSuperUse = 0;
 
-                        //Remove Speed
+                        //Remove Slowness
                         if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
                             player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.GAMBIT_SLOW.getId());
+
+                        //Apply Tired Effects
+                        MobEffectInstance blindnessEffect = new MobEffectInstance(MobEffects.BLINDNESS, 20, 4, false, false, false);
+                        if (player.hasEffect(MobEffects.BLINDNESS))    player.getEffect(MobEffects.BLINDNESS).update(blindnessEffect);
+                        else                                           player.addEffect(blindnessEffect, player);
+
+                        MobEffectInstance weaknessEffect = new MobEffectInstance(MobEffects.WEAKNESS, 20, 4, false, false, false);
+                        if (player.hasEffect(MobEffects.WEAKNESS))    player.getEffect(MobEffects.WEAKNESS).update(weaknessEffect);
+                        else                                           player.addEffect(weaknessEffect, player);
+
+                        MobEffectInstance slownessEffect = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 4, false, false, false);
+                        if (player.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))    player.getEffect(MobEffects.MOVEMENT_SLOWDOWN).update(slownessEffect);
+                        else                                           player.addEffect(slownessEffect, player);
 
                         //Set Cooldown(in Seconds)
                         chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 1;
