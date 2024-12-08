@@ -28,7 +28,6 @@ public class SuperIcePadEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         super.applyEffectTick(pLivingEntity, pAmplifier);
-
         if(
                 pLivingEntity.onGround() &&
                 !(iceSafeBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLivingEntity.level().getBlockState(pLivingEntity.blockPosition().offset(0,-1,0)).getBlock())+""))

@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -36,6 +37,7 @@ import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
+import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -76,41 +78,44 @@ public class SuperEmeraldHandler {
 
     public static void blueEmeraldUse(Level pLevel, Player pPlayer)
     {
-        if(!pLevel.isClientSide) {
-
-            pPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+        if(pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 try {
                     if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
                     if (chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] > 0) {
-                        pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)), true);
+                        player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)), true);
                         return;
                     }
 
                     //If Looking Down don't scale further
-                    if (pPlayer.getXRot() >= 85.0 && pPlayer.getXRot() <= 90.0) {
+                    if (player.getXRot() >= 85.0 && player.getXRot() <= 90.0) {
                         IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
-                        iceSuperSpike.setPos(new Vec3(pPlayer.getX(), pPlayer.getY() + 0.1, pPlayer.getZ()));
-                        iceSuperSpike.setOwner(pPlayer.getUUID());
+                        iceSuperSpike.setPos(new Vec3(player.getX(), player.getY() + 0.1, player.getZ()));
+                        iceSuperSpike.setOwner(player.getUUID());
                         iceSuperSpike.setMovementDirection(
                                 new Vec3(0, 1, 0)
-                                        .add(Utilities.calculateViewVector(0, pPlayer.getYRot()).scale(0.4))
+                                        .add(Utilities.calculateViewVector(0, player.getYRot()).scale(0.4))
                         );
 
-                        Vec3 launchVec = Utilities.calculateViewVector(-65f, pPlayer.getYRot()).scale(1.85);
-                        pPlayer.setDeltaMovement(launchVec);
-                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(), launchVec));
+                        Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.85);
+                        player.setDeltaMovement(launchVec);
+                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), launchVec));
                         pLevel.addFreshEntity(iceSuperSpike);
 
-                        if (pPlayer.hasEffect(ModEffects.SUPER_ICE_LAUNCH.get()))
-                            pPlayer.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 160, 0, false, false, false));
-                        else
-                            pPlayer.addEffect(new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 160, 0, false, false, false), pPlayer);
+                        //Give Padding Effect
+                        Scheduler.scheduleTask(()->{
+                            MobEffectInstance iceLaunchEffect = new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 200, 0, false, false, false);
+                            if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    player.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(iceLaunchEffect);
+                            else                                                        player.addEffect(iceLaunchEffect, player);
+                            player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(),iceLaunchEffect));
+                        },2);
+
                         return;
                     }
 
-                    Vec3 startPos = new Vec3(pPlayer.getX(), pPlayer.getY() + pPlayer.getEyeHeight(), pPlayer.getZ());
-                    Vec3 motionDir = pPlayer.getLookAngle();
+                    Vec3 startPos = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+                    Vec3 motionDir = player.getLookAngle();
 
                     //Look Forward and Spawn Ice spike over there
                     for (byte i = 0; i < 16; ++i) {
@@ -119,7 +124,7 @@ public class SuperEmeraldHandler {
                         List<LivingEntity> targetEntities = pLevel.getEntitiesOfClass(
                                 LivingEntity.class, new AABB(destPos.x() - 0.5, destPos.y() - 0.5, destPos.z() - 0.5,
                                         destPos.x() + 0.5, destPos.y() + 0.5, destPos.z() + 0.5),
-                                target -> !(target.is(pPlayer))
+                                target -> !(target.is(player))
                         );
 
                         //If Entities are found then target them
@@ -131,18 +136,18 @@ public class SuperEmeraldHandler {
                             List<LivingEntity> nearbyEntities = pLevel.getEntitiesOfClass(
                                     LivingEntity.class, new AABB(target.getX() - 2.5, target.getY() - 2.5, target.getZ() - 2.5,
                                             target.getX() + 2.5, target.getY() + 2.5, target.getZ() + 2.5),
-                                    adjacentEnemy -> !(adjacentEnemy.is(pPlayer))
+                                    adjacentEnemy -> !(adjacentEnemy.is(player))
                             );
                             for (LivingEntity enemy : nearbyEntities) {
                                 IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
                                 iceSuperSpike.setPos(new Vec3(enemy.getX(), enemy.getY(), enemy.getZ()));
-                                iceSuperSpike.setOwner(pPlayer.getUUID());
+                                iceSuperSpike.setOwner(player.getUUID());
                                 iceSuperSpike.setMovementDirection(new Vec3(0, 1, 0)
                                         .add(destPos.subtract(
                                                         new Vec3(
-                                                                pPlayer.getX(),
-                                                                pPlayer.getY(),
-                                                                pPlayer.getZ()
+                                                                player.getX(),
+                                                                player.getY(),
+                                                                player.getZ()
                                                         )
                                                 ).normalize().scale(0.4)
                                         )
@@ -157,13 +162,13 @@ public class SuperEmeraldHandler {
                         if (!Utilities.passableBlocks.contains(ForgeRegistries.BLOCKS.getKey(pLevel.getBlockState(pos).getBlock()) + "")) {
                             IceVerticalSpike iceSuperSpike = new IceVerticalSpike(ModEntityTypes.ICE_SUPER_SPIKE.get(), pLevel);
                             iceSuperSpike.setPos(destPos.add(0, 1, 0));
-                            iceSuperSpike.setOwner(pPlayer.getUUID());
+                            iceSuperSpike.setOwner(player.getUUID());
                             iceSuperSpike.setMovementDirection(new Vec3(0, 1, 0)
                                     .add(destPos.subtract(
                                                     new Vec3(
-                                                            pPlayer.getX(),
-                                                            pPlayer.getY(),
-                                                            pPlayer.getZ()
+                                                            player.getX(),
+                                                            player.getY(),
+                                                            player.getZ()
                                                     )
                                             ).normalize().scale(0.4)
                                     )
@@ -175,8 +180,8 @@ public class SuperEmeraldHandler {
                     }
                 }
                 finally {
-                    PacketHandler.sendToPlayer((ServerPlayer) pPlayer,new EmeraldDataSyncS2C(
-                            pPlayer.getId(),chaosEmeraldCap
+                    PacketHandler.sendToPlayer(player,new EmeraldDataSyncS2C(
+                            player.getId(),chaosEmeraldCap
                     ));
                 }
             });
@@ -188,8 +193,11 @@ public class SuperEmeraldHandler {
         if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 try {
-                    if (chaosEmeraldCap.greenSuperUse > 0 && !player.onGround())
-                        player.addDeltaMovement(Utilities.calculateViewVector(0, player.getYRot()).scale(0.3));
+                    if (chaosEmeraldCap.greenSuperUse > 0 && !player.onGround()) {
+                        Vec3 motionDir = Utilities.calculateViewVector(0, player.getYRot()).scale(0.3);
+                        player.addDeltaMovement(motionDir);
+                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),player.getDeltaMovement().add(motionDir)));
+                    }
 
                     if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
@@ -202,10 +210,9 @@ public class SuperEmeraldHandler {
                     chaosEmeraldCap.greenSuperUse = 1;
 
                     //Give Effect
-                    if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
-                        player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get()).update(new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false));
-                    else
-                        player.addEffect(new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false), player);
+                    MobEffectInstance diveEffect = new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false);
+                    if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get()).update(diveEffect);
+                    else                                                        player.addEffect(diveEffect, player);
 
                     Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.85);
                     player.setDeltaMovement(launchVec);
@@ -242,7 +249,7 @@ public class SuperEmeraldHandler {
                     if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
                     if (chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
-                        player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)), true);
+                        player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFF00FF)), true);
                         return;
                     }
 
@@ -364,7 +371,7 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.greenSuperUse = 0;
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 5;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 1;
 
                         //Remove Effect
                         if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
