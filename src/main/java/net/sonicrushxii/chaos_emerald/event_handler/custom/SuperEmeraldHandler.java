@@ -211,7 +211,7 @@ public class SuperEmeraldHandler {
                     if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get()).update(diveEffect);
                     else                                                        player.addEffect(diveEffect, player);
 
-                    Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.85);
+                    Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.05);
                     player.setDeltaMovement(launchVec);
                     PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), launchVec));
                 } finally {
@@ -333,6 +333,7 @@ public class SuperEmeraldHandler {
                 {
                     //Duration
                     if (chaosEmeraldCap.greenSuperUse > 0) {
+                        System.out.println(chaosEmeraldCap.greenSuperUse);
                         //Add Timer
                         chaosEmeraldCap.greenSuperUse += 1;
 
@@ -373,7 +374,7 @@ public class SuperEmeraldHandler {
                         if((chaosEmeraldCap.greenSuperUse-1) % 20 == 0)
                         {
                             Vec3 spawnPos = new Vec3(player.getX(),
-                                    player.getY()+0.1,
+                                    player.getY()-0.1,
                                     player.getZ());
                             world.playSound(null,player.getX(),player.getY(),player.getZ(),
                                     SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 0.4f, 2.0f);

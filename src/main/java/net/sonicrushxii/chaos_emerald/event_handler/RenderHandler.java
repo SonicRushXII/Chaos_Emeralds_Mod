@@ -61,7 +61,7 @@ public class RenderHandler {
                     //Render The Custom Model
                     ModModelRenderer.renderPlayerModel(ChaosDivePlayerModel.class, event, poseStack, (modelPart)->
                     {
-                        modelPart.getChild("PlayerModel").xRot += (chaosEmeraldCap.greenSuperUse <= 10)?0:Math.min(30,chaosEmeraldCap.greenSuperUse-10)*(5*(float)Math.PI/180);
+                        modelPart.getChild("PlayerModel").xRot += (chaosEmeraldCap.greenSuperUse <= 5)?0:Math.min(20,chaosEmeraldCap.greenSuperUse-5)*(8f*(float)Math.PI/180);
                     });
 
                     poseStack.popPose();

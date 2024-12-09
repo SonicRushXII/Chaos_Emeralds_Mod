@@ -148,10 +148,10 @@ public class ChaosDiveRipple extends Entity{
             if(this.level().isClientSide)
             {
                 this.level().addParticle(ParticleTypes.ELECTRIC_SPARK,(i%5==0),
-                        this.getX()+radius*Math.sin(theta), this.getY(), this.getZ()+radius*Math.cos(theta),
+                        this.getX()+radius*Math.sin(theta), this.getY()+0.2, this.getZ()+radius*Math.cos(theta),
                         0.0,0.0,0.0);
                 this.level().addParticle(new DustParticleOptions(new Vector3f(0f,1f,0f),1f),(i%3==0),
-                        this.getX()+radius*Math.sin(theta), this.getY(), this.getZ()+radius*Math.cos(theta),
+                        this.getX()+radius*Math.sin(theta), this.getY()+0.2, this.getZ()+radius*Math.cos(theta),
                         0.0,0.0,0.0);
             }
             else
