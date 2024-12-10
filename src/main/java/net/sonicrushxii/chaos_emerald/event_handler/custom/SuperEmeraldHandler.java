@@ -559,12 +559,45 @@ public class SuperEmeraldHandler {
                             player.level().addFreshEntity(superChaosSlicer);
                         }
 
-                        //End Chaos Slicer
+                        //End Chaos Inferno
                         if(chaosEmeraldCap.purpleSuperUse > 25) {
                             chaosEmeraldCap.purpleSuperUse = 0;
                             //Set Cooldown(in Seconds)
                             chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 1;
                         }
+                    }
+                }
+
+                //Chaos Inferno
+                {
+                    if(chaosEmeraldCap.redSuperUse > 0)
+                    {
+                        chaosEmeraldCap.redSuperUse += 1;
+
+                        //Display Particle Every Tick
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(new Vector3f(1F, 0F, 0F), 1.0F),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.5F, player.getEyeHeight() / 2, 0.5F, 1, true));
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.FLAME,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.5F, player.getEyeHeight() / 2, 0.5F, 1, true));
+
+                        //Display Particle Every Second
+                        if (tick == 0) {
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    ParticleTypes.LAVA,
+                                    player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                    0.001, 0.5F, player.getEyeHeight() / 2, 0.5F, 3, false));
+                        }
+                    }
+
+                    //End Chaos Inferno
+                    if(chaosEmeraldCap.redSuperUse == Byte.MAX_VALUE) {
+                        chaosEmeraldCap.redSuperUse = 0;
+                        //Set Cooldown(in Seconds)
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 1;
                     }
                 }
 
