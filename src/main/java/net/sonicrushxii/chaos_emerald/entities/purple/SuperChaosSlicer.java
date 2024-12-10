@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.entities.yellow;
+package net.sonicrushxii.chaos_emerald.entities.purple;
 
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.entities.all.LinearMovingEntity;
 import net.sonicrushxii.chaos_emerald.entities.all.PointEntity;
@@ -23,14 +24,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ChaosSpear extends LinearMovingEntity {
-    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.OPTIONAL_UUID);
+public class SuperChaosSlicer extends LinearMovingEntity {
+    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> INVERTED = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
     private static final float STRENGTH = 1.5f;
     private static final float DAMAGE = 4.0F;
 
-    public ChaosSpear(EntityType<? extends PointEntity> type, Level world) {
+    public SuperChaosSlicer(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
     }
 
@@ -44,6 +46,7 @@ public class ChaosSpear extends LinearMovingEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DESTROY_BLOCKS, true);
+        this.entityData.define(INVERTED, false);
         this.entityData.define(OWNER,Optional.empty());
     }
 
@@ -52,6 +55,8 @@ public class ChaosSpear extends LinearMovingEntity {
         super.readAdditionalSaveData(tag);
         // Destroy Blocks
         if(tag.contains("DestroyBlocks")) setDestroyBlocks(tag.getBoolean("DestroyBlocks"));
+        // Inverted
+        if(tag.contains("Inverted")) setInverted(tag.getBoolean("Inverted"));
         // Load the owner's UUID
         if (tag.hasUUID("OwnerUUID")) this.setOwner(tag.getUUID("OwnerUUID"));
     }
@@ -63,6 +68,7 @@ public class ChaosSpear extends LinearMovingEntity {
         UUID ownerUuid = getOwnerUUID();
         if (ownerUuid != null) tag.putUUID("OwnerUUID", ownerUuid);
         tag.putBoolean("DestroyBlocks", isDestroyBlocks());
+        tag.putBoolean("Inverted", isInverted());
     }
 
     // Sets the owner by UUID
@@ -92,18 +98,32 @@ public class ChaosSpear extends LinearMovingEntity {
         this.entityData.set(DESTROY_BLOCKS, destroyBlocks);
     }
 
+    public boolean isInverted() {
+        return this.entityData.get(INVERTED);
+    }
+
+    public void setInverted(boolean inverted) {
+        this.entityData.set(INVERTED, inverted);
+    }
+
     @Override
     public void tick() {
         super.tick();
         if(this.level().isClientSide) {
-            Utilities.displayParticle(this.level(), new DustParticleOptions(new Vector3f(1f, 1f, 0f), 1f),
-                    this.getX(), this.getY(), this.getZ(), 0.3f, 0.3f, 0.3f, 0, 15, true);
-            Utilities.displayParticle(this.level(),ParticleTypes.END_ROD,
-                    this.getX(),this.getY(),this.getZ(),0.3f,0.3f,0.3f,0,1,false);
+            Vec3 currPos = new Vec3(this.getX(),this.getY(),this.getZ());
+            Vec3 upDiag = getMovementDirection().cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
+            Vec3 downDiag = getMovementDirection().cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
+
+            Utilities.particleRaycast(this.level(),
+                    new DustParticleOptions(new Vector3f(0.75f, 0f, 1f), 1.4f),
+                    currPos.add(upDiag),currPos.add(downDiag));
+            Utilities.particleRaycast(this.level(),
+                    ParticleTypes.ELECTRIC_SPARK,
+                    currPos.add(upDiag),currPos.add(downDiag));
         }
         else{
             // Check for collision
-            if(this.onGround() || this.horizontalCollision || this.verticalCollision && this.getDeltaMovement().y > 0)  explode();
+            if(this.onGround() || this.horizontalCollision || this.verticalCollision && this.getDeltaMovement().y > 0)  kill();
 
             // Check for entity collisions and apply damage
             List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
@@ -118,34 +138,7 @@ public class ChaosSpear extends LinearMovingEntity {
                             enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);
                     }
                 }catch(NullPointerException ignored){}
-                explode();
             }
-        }
-    }
-
-    private void explode()
-    {
-        this.kill();
-        if(this.isDestroyBlocks() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
-        {
-            this.level().explode(
-                    /* Exploder (null if no specific entity causes it) */ getOwner(),
-                    /* Center x, y, z positions */ this.getX(), this.getY(), this.getZ(),
-                    /* Strength */ STRENGTH,
-                    /* Causes fire */ false,
-                    /* Block Interaction Mode */ Level.ExplosionInteraction.TNT
-            );
-        }
-        else
-        {
-            //Deal Damage and Use Particle Effects
-            this.level().explode(
-                    /* Exploder (null if no specific entity causes it) */ getOwner(),
-                    /* Center x, y, z positions */ this.getX(), this.getY(), this.getZ(),
-                    /* Strength */ STRENGTH,
-                    /* Causes fire */ false,
-                    /* Block Interaction Mode */ Level.ExplosionInteraction.NONE
-            );
         }
     }
 }

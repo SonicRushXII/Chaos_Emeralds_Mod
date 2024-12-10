@@ -15,6 +15,7 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
+import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 
 @Mod.EventBusSubscriber(modid = ChaosEmerald.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -42,6 +43,12 @@ public class ModEntityTypes {
                     .setTrackingRange(32)
                     .build("dive_super_ripple"));
 
+    public static final RegistryObject<EntityType<SuperChaosSlicer>> CHAOS_SLICER = ENTITY_TYPES.register("super_chaos_slicer",
+            () -> EntityType.Builder.<SuperChaosSlicer>of(SuperChaosSlicer::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .setTrackingRange(32)
+                    .build("super_chaos_slicer"));
+
     public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
             () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
@@ -54,6 +61,7 @@ public class ModEntityTypes {
             () -> EntityType.Builder.<EmeraldTransformer>of(EmeraldTransformer::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("emerald_transformer"));
+
 
     public static void register(IEventBus eventBus){ ENTITY_TYPES.register(eventBus);}
 }

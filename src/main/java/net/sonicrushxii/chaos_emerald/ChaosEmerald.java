@@ -118,6 +118,7 @@ public class ChaosEmerald
             EntityRenderers.register(ModEntityTypes.EMERALD_TRANSFORMER.get(), PointRenderer::new);
             EntityRenderers.register(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), SuperAquaRenderer::new);
             EntityRenderers.register(ModEntityTypes.CHAOS_DIVE_RIPPLE.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.CHAOS_SLICER.get(), PointRenderer::new);
 
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");

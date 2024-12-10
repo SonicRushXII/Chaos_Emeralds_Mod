@@ -202,8 +202,8 @@ public class ChaosEmeraldHandler {
 
                 //Deal damage
                 tpTarget.hurt(pLevel.damageSources().playerAttack(player), 4);
-                tpTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,110,11,false,true,false),player);
-                tpTarget.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,110,11,false,true,false),player);
+                tpTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,110,1,false,true,false),player);
+                tpTarget.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,110,1,false,true,false),player);
 
                 //Particle
                 PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(new DustParticleOptions(new Vector3f(0,1,0),2),

@@ -318,9 +318,9 @@ public class Utilities {
     public static BlockPos convertToBlockPos(Vec3 vec3)
     {
         // Convert the Vec3 coordinates to integer coordinates for the BlockPos
-        int x = (int)vec3.x;
-        int y = (int)vec3.y;
-        int z = (int)vec3.z;
+        int x = (int)Math.floor(vec3.x);
+        int y = (int)Math.floor(vec3.y);
+        int z = (int)Math.floor(vec3.z);
 
         // Create and return the new BlockPos object with these coordinates
         return new BlockPos(x, y, z);
@@ -409,8 +409,8 @@ public class Utilities {
         double distance = direction.length();
         Vec3 directionNormalized = direction.normalize();
 
-        for (int i = 0; i <= (int) distance*2; i++) {
-            Vec3 point = pos1.add(directionNormalized.scale((i+1)/2.0));
+        for (int i = 0; i <= (int) distance*3; i++) {
+            Vec3 point = pos1.add(directionNormalized.scale((i+1)/3.0));
             world.addParticle(particleType,
                     point.x, point.y, point.z,
                     0, 0, 0);

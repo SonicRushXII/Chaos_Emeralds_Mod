@@ -179,8 +179,8 @@ public class ChaosDiveRipple extends Entity{
                 //Level the Ground
                 if(this.canLevelGround()) {
                     BlockPos currBlockPos = Utilities.convertToBlockPos(destPos);
-                    BlockPos start = currBlockPos.offset(0, 0, 0);
-                    BlockPos end = currBlockPos.offset(0, 3, 0);
+                    BlockPos start = currBlockPos.offset(0, 1, 0);
+                    BlockPos end = currBlockPos.offset(0, 4, 0);
 
                     for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
                         BlockState blockState = this.level().getBlockState(pos);
