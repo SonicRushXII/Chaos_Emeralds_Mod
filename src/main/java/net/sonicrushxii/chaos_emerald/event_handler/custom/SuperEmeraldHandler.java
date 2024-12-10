@@ -26,7 +26,9 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
+import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
+import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
@@ -68,7 +70,7 @@ public class SuperEmeraldHandler {
                     player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED);
 
                 //Sync To Client
-                PacketHandler.sendToPlayer(player,new EmeraldDataSyncS2C(
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         player.getId(),chaosEmeraldCap
                 ));
             });
@@ -181,7 +183,7 @@ public class SuperEmeraldHandler {
                     }
                 }
                 finally {
-                    PacketHandler.sendToPlayer(player,new EmeraldDataSyncS2C(
+                    PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                             player.getId(),chaosEmeraldCap
                     ));
                 }
@@ -218,7 +220,7 @@ public class SuperEmeraldHandler {
                 player.setDeltaMovement(launchVec);
                 PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), launchVec));
 
-                PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
                         pPlayer.getId(),chaosEmeraldCap
                 ));
             });
@@ -232,14 +234,42 @@ public class SuperEmeraldHandler {
 
     public static void purpleEmeraldUse(Level pLevel, Player pPlayer)
     {
-        if(pPlayer instanceof ServerPlayer player)
-        {
+        if(pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if (chaosEmeraldCap.isUsingActiveAbility()) return;
+
+                if (chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFF00FF)), true);
+                    return;
+                }
+
+                chaosEmeraldCap.purpleSuperUse = 1;
+
+                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
+                        pPlayer.getId(),chaosEmeraldCap
+                ));
+            });
         }
     }
 
     public static void redEmeraldUse(Level pLevel, Player pPlayer)
     {
+        if(pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
+                if (chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFF00FF)), true);
+                    return;
+                }
+
+                chaosEmeraldCap.redSuperUse = 1;
+
+                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
+                        pPlayer.getId(),chaosEmeraldCap
+                ));
+            });
+        }
     }
 
     public static void yellowEmeraldUse(Level pLevel, Player pPlayer)
@@ -249,7 +279,7 @@ public class SuperEmeraldHandler {
                 if (chaosEmeraldCap.isUsingActiveAbility()) return;
 
                 if (chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] > 0) {
-                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFF00FF)), true);
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)), true);
                     return;
                 }
 
@@ -260,7 +290,7 @@ public class SuperEmeraldHandler {
                 if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
                     player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.GAMBIT_SLOW);
 
-                PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
                         pPlayer.getId(),chaosEmeraldCap
                 ));
             });
@@ -502,9 +532,45 @@ public class SuperEmeraldHandler {
                     }
                 }
 
+                //Chaos Slicer
+                {
+                    if(chaosEmeraldCap.purpleSuperUse > 0)
+                    {
+                        chaosEmeraldCap.purpleSuperUse += 1;
+
+                        //Throw Slicer Projectile
+                        if(chaosEmeraldCap.purpleSuperUse == 12 || chaosEmeraldCap.purpleSuperUse == 22)
+                        {
+                            SuperChaosSlicer superChaosSlicer = new SuperChaosSlicer(ModEntityTypes.CHAOS_SLICER.get(), player.level());
+
+                            Vec3 sideDir = player.getLookAngle().cross(new Vec3(0,(chaosEmeraldCap.purpleSuperUse==22)?-1:1,0));
+
+                            Vec3 spawnPos = new Vec3(player.getX()+player.getLookAngle().x,
+                                    player.getY()+player.getLookAngle().y+1.0,
+                                    player.getZ()+player.getLookAngle().z).add(sideDir);
+
+                            superChaosSlicer.setPos(spawnPos);
+                            superChaosSlicer.setDuration(120);
+                            superChaosSlicer.setMovementDirection(player.getLookAngle());
+                            superChaosSlicer.setOwner(player.getUUID());
+                            superChaosSlicer.setInverted( chaosEmeraldCap.purpleSuperUse==22 );
+
+                            // Add the entity to the world
+                            player.level().addFreshEntity(superChaosSlicer);
+                        }
+
+                        //End Chaos Slicer
+                        if(chaosEmeraldCap.purpleSuperUse > 25) {
+                            chaosEmeraldCap.purpleSuperUse = 0;
+                            //Set Cooldown(in Seconds)
+                            chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 1;
+                        }
+                    }
+                }
+
             }finally
             {
-                PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(
+                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
                         player.getId(),chaosEmeraldCap
                 ));
             }

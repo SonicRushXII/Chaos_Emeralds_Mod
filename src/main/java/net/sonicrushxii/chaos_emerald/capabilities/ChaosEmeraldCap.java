@@ -27,7 +27,8 @@ public class ChaosEmeraldCap {
     public byte aquaSuperUse = 0;
     public byte greenSuperUse = 0;
     public byte yellowSuperUse = 0;
-
+    public byte purpleSuperUse = 0;
+    public byte redSuperUse = 0;
 
     //Hyper Form
     public int hyperFormTimer = 0;
@@ -70,6 +71,9 @@ public class ChaosEmeraldCap {
         this.aquaSuperUse = source.aquaSuperUse;
         this.greenSuperUse = source.greenSuperUse;
         this.yellowSuperUse = source.yellowSuperUse;
+        this.purpleSuperUse = source.purpleSuperUse;
+        this.redSuperUse = source.redSuperUse;
+
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
     }
@@ -103,6 +107,8 @@ public class ChaosEmeraldCap {
         nbt.putByte("BubbleBoost",this.aquaSuperUse);
         nbt.putByte("SuperChaosDive",this.greenSuperUse);
         nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
+        nbt.putByte("SuperChaosSlicer",this.purpleSuperUse);
+        nbt.putByte("SuperChaosInferno",this.redSuperUse);
 
         //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
@@ -137,6 +143,8 @@ public class ChaosEmeraldCap {
         aquaSuperUse = nbt.getByte("BubbleBoost");
         greenSuperUse = nbt.getByte("SuperChaosDive");
         yellowSuperUse = nbt.getByte("SuperChaosGambit");
+        purpleSuperUse = nbt.getByte("SuperChaosSlicer");
+        redSuperUse = nbt.getByte("SuperChaosInferno");
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
@@ -149,7 +157,8 @@ public class ChaosEmeraldCap {
         boolean aquaSuper = this.aquaSuperUse > 0;
         boolean greenSuper = this.greenSuperUse > 0;
         boolean yellowSuper = this.yellowSuperUse > 0;
+        boolean purpleSuper = this.purpleSuperUse > 0;
 
-        return greyChaos || purpleChaos || aquaSuper || greenSuper || yellowSuper;
+        return greyChaos || purpleChaos || aquaSuper || greenSuper || yellowSuper || purpleSuper;
     }
 }

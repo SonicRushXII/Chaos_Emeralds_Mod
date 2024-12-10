@@ -232,7 +232,7 @@ public class FalseSuperHandler
                     }
                 }
             }
-            PacketHandler.sendToPlayer(player,new EmeraldDataSyncS2C(
+            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                     player.getId(),chaosEmeraldCap
             ));
         });

@@ -25,15 +25,24 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SuperChaosSlicer extends LinearMovingEntity {
-    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Float> MOVEMENT_X = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> MOVEMENT_Y = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> MOVEMENT_Z = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> INVERTED = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(SuperChaosSlicer.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
-    private static final float STRENGTH = 1.5f;
-    private static final float DAMAGE = 4.0F;
+    private static final float DAMAGE = 9.0F;
 
     public SuperChaosSlicer(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
+    }
+
+    @Override
+    public void setMovementDirection(Vec3 movementDirection) {
+        this.setMotionX((float)movementDirection.x);
+        this.setMotionY((float)movementDirection.y);
+        this.setMotionZ((float)movementDirection.z);
+        this.movementDirection = movementDirection;
     }
 
     @Override
@@ -45,7 +54,9 @@ public class SuperChaosSlicer extends LinearMovingEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DESTROY_BLOCKS, true);
+        this.entityData.define(MOVEMENT_X, 0.0f);
+        this.entityData.define(MOVEMENT_Y, 0.0f);
+        this.entityData.define(MOVEMENT_Z, 0.0f);
         this.entityData.define(INVERTED, false);
         this.entityData.define(OWNER,Optional.empty());
     }
@@ -53,12 +64,15 @@ public class SuperChaosSlicer extends LinearMovingEntity {
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        // Destroy Blocks
-        if(tag.contains("DestroyBlocks")) setDestroyBlocks(tag.getBoolean("DestroyBlocks"));
         // Inverted
         if(tag.contains("Inverted")) setInverted(tag.getBoolean("Inverted"));
+        if(tag.contains("MotionX")) setMotionX(tag.getFloat("MotionX"));
+        if(tag.contains("MotionY")) setMotionY(tag.getFloat("MotionY"));
+        if(tag.contains("MotionZ")) setMotionZ(tag.getFloat("MotionZ"));
         // Load the owner's UUID
-        if (tag.hasUUID("OwnerUUID")) this.setOwner(tag.getUUID("OwnerUUID"));
+        if(tag.hasUUID("OwnerUUID")) this.setOwner(tag.getUUID("OwnerUUID"));
+
+
     }
 
     @Override
@@ -67,8 +81,10 @@ public class SuperChaosSlicer extends LinearMovingEntity {
         super.addAdditionalSaveData(tag);
         UUID ownerUuid = getOwnerUUID();
         if (ownerUuid != null) tag.putUUID("OwnerUUID", ownerUuid);
-        tag.putBoolean("DestroyBlocks", isDestroyBlocks());
         tag.putBoolean("Inverted", isInverted());
+        tag.putFloat("MotionX",getMotionX());
+        tag.putFloat("MotionY",getMotionY());
+        tag.putFloat("MotionZ",getMotionZ());
     }
 
     // Sets the owner by UUID
@@ -90,14 +106,6 @@ public class SuperChaosSlicer extends LinearMovingEntity {
         return null;
     }
 
-    public boolean isDestroyBlocks() {
-        return this.entityData.get(DESTROY_BLOCKS);
-    }
-
-    public void setDestroyBlocks(boolean destroyBlocks) {
-        this.entityData.set(DESTROY_BLOCKS, destroyBlocks);
-    }
-
     public boolean isInverted() {
         return this.entityData.get(INVERTED);
     }
@@ -106,13 +114,26 @@ public class SuperChaosSlicer extends LinearMovingEntity {
         this.entityData.set(INVERTED, inverted);
     }
 
+    public void setMotionX(float motionX) {this.entityData.set(MOVEMENT_X,motionX);}
+    public void setMotionY(float motionY) {this.entityData.set(MOVEMENT_Y,motionY);}
+    public void setMotionZ(float motionZ) {this.entityData.set(MOVEMENT_Z,motionZ);}
+
+    public float getMotionX()   { return this.entityData.get(MOVEMENT_X);}
+    public float getMotionY()   { return this.entityData.get(MOVEMENT_Y);}
+    public float getMotionZ()   { return this.entityData.get(MOVEMENT_Z);}
+
     @Override
     public void tick() {
         super.tick();
         if(this.level().isClientSide) {
             Vec3 currPos = new Vec3(this.getX(),this.getY(),this.getZ());
-            Vec3 upDiag = getMovementDirection().cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
-            Vec3 downDiag = getMovementDirection().cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
+
+            Vec3 movementDirection = new Vec3(getMotionX(),getMotionY(),getMotionZ());
+
+            Vec3 upDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
+            Vec3 downDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
+
+            System.out.println(upDiag + " , " + downDiag);
 
             Utilities.particleRaycast(this.level(),
                     new DustParticleOptions(new Vector3f(0.75f, 0f, 1f), 1.4f),
