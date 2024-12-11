@@ -25,6 +25,7 @@ public class ChaosEmeraldCap {
 
     //Super Emerald Usage
     public byte aquaSuperUse = 0;
+    public boolean isWaterBoosting = false;
     public byte greenSuperUse = 0;
     public byte yellowSuperUse = 0;
     public byte purpleSuperUse = 0;
@@ -69,6 +70,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Usage
         this.aquaSuperUse = source.aquaSuperUse;
+        this.isWaterBoosting = source.isWaterBoosting;
         this.greenSuperUse = source.greenSuperUse;
         this.yellowSuperUse = source.yellowSuperUse;
         this.purpleSuperUse = source.purpleSuperUse;
@@ -105,6 +107,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         nbt.putByte("BubbleBoost",this.aquaSuperUse);
+        nbt.putBoolean("isWaterBoosting",this.isWaterBoosting);
         nbt.putByte("SuperChaosDive",this.greenSuperUse);
         nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
         nbt.putByte("SuperChaosSlicer",this.purpleSuperUse);
@@ -141,6 +144,7 @@ public class ChaosEmeraldCap {
 
         //Super Emerald Times
         aquaSuperUse = nbt.getByte("BubbleBoost");
+        isWaterBoosting = nbt.getBoolean("isWaterBoosting");
         greenSuperUse = nbt.getByte("SuperChaosDive");
         yellowSuperUse = nbt.getByte("SuperChaosGambit");
         purpleSuperUse = nbt.getByte("SuperChaosSlicer");
@@ -154,11 +158,10 @@ public class ChaosEmeraldCap {
     {
         boolean purpleChaos = this.purpleChaosUse > 0;
         boolean greyChaos = this.greyChaosUse > 0;
-        boolean aquaSuper = this.aquaSuperUse > 0;
         boolean greenSuper = this.greenSuperUse > 0;
         boolean yellowSuper = this.yellowSuperUse > 0;
         boolean purpleSuper = this.purpleSuperUse > 0;
 
-        return greyChaos || purpleChaos || aquaSuper || greenSuper || yellowSuper || purpleSuper;
+        return greyChaos || purpleChaos || greenSuper || yellowSuper || purpleSuper;
     }
 }

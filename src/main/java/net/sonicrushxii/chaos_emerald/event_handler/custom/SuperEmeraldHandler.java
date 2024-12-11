@@ -6,6 +6,7 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -344,8 +346,49 @@ public class SuperEmeraldHandler {
                             superLeftBubble.setMovementDirection(player.getLookAngle().scale(Utilities.random.nextFloat(0.5f, 1.5f)).cross(new Vec3(0, -1, 0)));
 
                             player.level().addFreshEntity(superLeftBubble);
-                        }
 
+                            //Water Boost
+                            if (!player.isInWater())
+                            {
+                                try {
+                                    if (ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
+                                            .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
+                                        //Get Motion
+                                        Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
+
+                                        if (chaosEmeraldCap.isWaterBoosting == false) {
+                                            player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                                            chaosEmeraldCap.isWaterBoosting = true;
+
+                                            //Slight upward
+                                            playerDirection = Utilities.calculateViewVector(-1,player.getYRot());
+                                        }
+
+                                        //Move Forward
+                                        player.setDeltaMovement(playerDirection.scale(2.0));
+                                        player.connection.send(new ClientboundSetEntityMotionPacket(player));
+                                    }
+                                } catch (NullPointerException ignored) {
+                                }
+                            }
+                        }
+                    }
+
+                    //Undo Water Boost
+                    try {
+                        if (chaosEmeraldCap.isWaterBoosting)
+                            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
+                                    .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))
+                                    ||
+                                    !(chaosEmeraldCap.aquaSuperUse > 0)
+                                    ||
+                                    (player.getDeltaMovement().x < 0.5 && player.getDeltaMovement().y < 0.5 && player.getDeltaMovement().z < 0.5)
+                                    ||
+                                    player.isInWater()) {
+                                player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                                chaosEmeraldCap.isWaterBoosting = false;
+                            }
+                    } catch (NullPointerException ignored) {
                     }
 
                     if (chaosEmeraldCap.aquaSuperUse == 100) {
@@ -500,7 +543,7 @@ public class SuperEmeraldHandler {
                             ))
                             {
                                 //Damage
-                                enemy.hurt(player.damageSources().playerAttack(player), 50.0f);
+                                enemy.hurt(player.damageSources().playerAttack(player), 13.33f);
 
                                 //Updated Motion
                                 Vec3 motionDirection = (destPos).subtract(new Vec3(enemy.getX(),enemy.getY(),enemy.getZ())).scale(0.3);
@@ -543,7 +586,7 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.purpleSuperUse += 1;
 
                         //Throw Slicer Projectile
-                        if(chaosEmeraldCap.purpleSuperUse == 12 || chaosEmeraldCap.purpleSuperUse == 22)
+                        if(chaosEmeraldCap.purpleSuperUse == 2 || chaosEmeraldCap.purpleSuperUse == 12)
                         {
                             SuperChaosSlicer superChaosSlicer = new SuperChaosSlicer(ModEntityTypes.CHAOS_SLICER.get(), player.level());
 
@@ -555,7 +598,7 @@ public class SuperEmeraldHandler {
 
                             superChaosSlicer.setPos(spawnPos);
                             superChaosSlicer.setDuration(120);
-                            superChaosSlicer.setMovementDirection(player.getLookAngle());
+                            superChaosSlicer.setMovementDirection(player.getLookAngle().scale(1.5));
                             superChaosSlicer.setOwner(player.getUUID());
                             superChaosSlicer.setInverted( chaosEmeraldCap.purpleSuperUse==22 );
 
@@ -564,7 +607,7 @@ public class SuperEmeraldHandler {
                         }
 
                         //End Chaos Inferno
-                        if(chaosEmeraldCap.purpleSuperUse > 25) {
+                        if(chaosEmeraldCap.purpleSuperUse > 15) {
                             chaosEmeraldCap.purpleSuperUse = 0;
                             //Set Cooldown(in Seconds)
                             chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 1;
@@ -578,21 +621,18 @@ public class SuperEmeraldHandler {
                     {
                         chaosEmeraldCap.redSuperUse += 1;
 
-                        //Super Inferno
-                        if(tick % 4 == 0) {
-                            PacketHandler.sendToALLPlayers(new SuperInfernoParticleS2C(
-                                    player.getX(), player.getY()+player.getEyeHeight()/3, player.getZ(), (byte)(tick/4+1)
-                            ));
+                        PacketHandler.sendToALLPlayers(new SuperInfernoParticleS2C(
+                                player.getX(), player.getY()+player.getEyeHeight()/3, player.getZ(), chaosEmeraldCap.redSuperUse
+                        ));
 
-                            for(LivingEntity enemy : player.level().getEntitiesOfClass(LivingEntity.class,
-                                    new AABB(player.getX()+3.0,player.getY()-1.0,player.getZ()+3.0,
-                                            player.getX()-3.0,player.getY()+5.0,player.getZ()-3.0),
-                                    (entity)->!entity.is(player)))
-                            {
-                                //Damage Enemy
-                                enemy.hurt(player.damageSources().playerAttack(player), 2.0f);
-                                if(Utilities.random.nextInt(100) < 20)  enemy.setRemainingFireTicks(200);
-                            }
+                        for(LivingEntity enemy : player.level().getEntitiesOfClass(LivingEntity.class,
+                                new AABB(player.getX()+3.0,player.getY()-1.0,player.getZ()+3.0,
+                                        player.getX()-3.0,player.getY()+5.0,player.getZ()-3.0),
+                                (entity)->!entity.is(player)))
+                        {
+                            //Damage Enemy
+                            enemy.hurt(player.damageSources().playerAttack(player), 2.0f);
+                            if(Utilities.random.nextInt(100) < 20)  enemy.setRemainingFireTicks(40);
                         }
 
                         //Display Particle Every Second
