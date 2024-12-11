@@ -10,6 +10,7 @@ import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.network.all.*;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.red.SuperInfernoParticleS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ActivateFalseSuper;
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
@@ -48,6 +49,7 @@ public class PacketHandler {
 
         //RED EMERALD
         INSTANCE.messageBuilder(FireSyncPacketS2C.class, id++).encoder(FireSyncPacketS2C::encode).decoder(FireSyncPacketS2C::new).consumerMainThread(FireSyncPacketS2C::handle).add();
+        INSTANCE.messageBuilder(SuperInfernoParticleS2C.class, id++).encoder(SuperInfernoParticleS2C::encode).decoder(SuperInfernoParticleS2C::new).consumerMainThread(SuperInfernoParticleS2C::handle).add();
 
         //ACTIVATE FALSE SUPER
         INSTANCE.messageBuilder(ActivateFalseSuper.class, id++).encoder(ActivateFalseSuper::encode).decoder(ActivateFalseSuper::new).consumerMainThread(ActivateFalseSuper::handle).add();

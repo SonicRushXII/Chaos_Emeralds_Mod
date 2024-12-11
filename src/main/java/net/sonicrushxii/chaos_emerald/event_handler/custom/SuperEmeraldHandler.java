@@ -12,9 +12,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -35,6 +38,7 @@ import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
+import net.sonicrushxii.chaos_emerald.network.red.SuperInfernoParticleS2C;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 import org.joml.Vector3f;
@@ -574,15 +578,22 @@ public class SuperEmeraldHandler {
                     {
                         chaosEmeraldCap.redSuperUse += 1;
 
-                        //Display Particle Every Tick
-                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                new DustParticleOptions(new Vector3f(1F, 0F, 0F), 1.0F),
-                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
-                                0.001, 0.5F, player.getEyeHeight() / 2, 0.5F, 1, true));
-                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                ParticleTypes.FLAME,
-                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
-                                0.001, 0.5F, player.getEyeHeight() / 2, 0.5F, 1, true));
+                        //Super Inferno
+                        if(tick % 4 == 0) {
+                            PacketHandler.sendToALLPlayers(new SuperInfernoParticleS2C(
+                                    player.getX(), player.getY()+player.getEyeHeight()/3, player.getZ(), (byte)(tick/4+1)
+                            ));
+
+                            for(LivingEntity enemy : player.level().getEntitiesOfClass(LivingEntity.class,
+                                    new AABB(player.getX()+3.0,player.getY()-1.0,player.getZ()+3.0,
+                                            player.getX()-3.0,player.getY()+5.0,player.getZ()-3.0),
+                                    (entity)->!entity.is(player)))
+                            {
+                                //Damage Enemy
+                                enemy.hurt(player.damageSources().playerAttack(player), 2.0f);
+                                if(Utilities.random.nextInt(100) < 20)  enemy.setRemainingFireTicks(200);
+                            }
+                        }
 
                         //Display Particle Every Second
                         if (tick == 0) {
@@ -594,7 +605,7 @@ public class SuperEmeraldHandler {
                     }
 
                     //End Chaos Inferno
-                    if(chaosEmeraldCap.redSuperUse == Byte.MAX_VALUE) {
+                    if(chaosEmeraldCap.redSuperUse > 600) {
                         chaosEmeraldCap.redSuperUse = 0;
                         //Set Cooldown(in Seconds)
                         chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 1;

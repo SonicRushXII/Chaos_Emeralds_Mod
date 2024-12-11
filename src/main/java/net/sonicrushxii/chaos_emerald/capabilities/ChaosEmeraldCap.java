@@ -28,7 +28,7 @@ public class ChaosEmeraldCap {
     public byte greenSuperUse = 0;
     public byte yellowSuperUse = 0;
     public byte purpleSuperUse = 0;
-    public byte redSuperUse = 0;
+    public short redSuperUse = 0;
 
     //Hyper Form
     public int hyperFormTimer = 0;
@@ -108,7 +108,7 @@ public class ChaosEmeraldCap {
         nbt.putByte("SuperChaosDive",this.greenSuperUse);
         nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
         nbt.putByte("SuperChaosSlicer",this.purpleSuperUse);
-        nbt.putByte("SuperChaosInferno",this.redSuperUse);
+        nbt.putShort("SuperChaosInferno",this.redSuperUse);
 
         //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
@@ -144,7 +144,7 @@ public class ChaosEmeraldCap {
         greenSuperUse = nbt.getByte("SuperChaosDive");
         yellowSuperUse = nbt.getByte("SuperChaosGambit");
         purpleSuperUse = nbt.getByte("SuperChaosSlicer");
-        redSuperUse = nbt.getByte("SuperChaosInferno");
+        redSuperUse = nbt.getShort("SuperChaosInferno");
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");

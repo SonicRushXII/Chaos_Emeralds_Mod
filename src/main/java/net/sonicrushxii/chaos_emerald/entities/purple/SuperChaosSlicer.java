@@ -6,6 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,8 +73,6 @@ public class SuperChaosSlicer extends LinearMovingEntity {
         if(tag.contains("MotionZ")) setMotionZ(tag.getFloat("MotionZ"));
         // Load the owner's UUID
         if(tag.hasUUID("OwnerUUID")) this.setOwner(tag.getUUID("OwnerUUID"));
-
-
     }
 
     @Override
@@ -133,8 +133,6 @@ public class SuperChaosSlicer extends LinearMovingEntity {
             Vec3 upDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
             Vec3 downDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
 
-            System.out.println(upDiag + " , " + downDiag);
-
             Utilities.particleRaycast(this.level(),
                     new DustParticleOptions(new Vector3f(0.75f, 0f, 1f), 1.4f),
                     currPos.add(upDiag),currPos.add(downDiag));
@@ -155,8 +153,11 @@ public class SuperChaosSlicer extends LinearMovingEntity {
             if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4) {
                 try {// Synchronize on server only
                     for (Entity enemy : enemies) {
-                        if(enemy instanceof LivingEntity)
-                            enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);
+                        if(enemy instanceof LivingEntity livingEnemy) {
+                            livingEnemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()), DAMAGE);
+                            livingEnemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1, false, true));
+                            livingEnemy.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0, false, true));
+                        }
                     }
                 }catch(NullPointerException ignored){}
             }
