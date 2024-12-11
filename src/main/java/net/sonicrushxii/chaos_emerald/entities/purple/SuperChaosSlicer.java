@@ -154,7 +154,7 @@ public class SuperChaosSlicer extends LinearMovingEntity {
                 try {// Synchronize on server only
                     for (Entity enemy : enemies) {
                         if(enemy instanceof LivingEntity livingEnemy) {
-                            livingEnemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()), DAMAGE);
+                            livingEnemy.hurt(this.damageSources().indirectMagic((Player)this.getOwner(),null), DAMAGE);
                             livingEnemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1, false, true));
                             livingEnemy.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0, false, true));
                         }
