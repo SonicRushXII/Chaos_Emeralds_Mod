@@ -590,7 +590,7 @@ public class SuperEmeraldHandler {
                         {
                             SuperChaosSlicer superChaosSlicer = new SuperChaosSlicer(ModEntityTypes.CHAOS_SLICER.get(), player.level());
 
-                            Vec3 sideDir = player.getLookAngle().cross(new Vec3(0,(chaosEmeraldCap.purpleSuperUse==22)?-1:1,0));
+                            Vec3 sideDir = player.getLookAngle().cross(new Vec3(0,(chaosEmeraldCap.purpleSuperUse==12)?-1:1,0));
 
                             Vec3 spawnPos = new Vec3(player.getX()+player.getLookAngle().x,
                                     player.getY()+player.getLookAngle().y+1.0,
@@ -600,7 +600,7 @@ public class SuperEmeraldHandler {
                             superChaosSlicer.setDuration(120);
                             superChaosSlicer.setMovementDirection(player.getLookAngle().scale(1.5));
                             superChaosSlicer.setOwner(player.getUUID());
-                            superChaosSlicer.setInverted( chaosEmeraldCap.purpleSuperUse==22 );
+                            superChaosSlicer.setInverted(chaosEmeraldCap.purpleSuperUse==12);
 
                             // Add the entity to the world
                             player.level().addFreshEntity(superChaosSlicer);
