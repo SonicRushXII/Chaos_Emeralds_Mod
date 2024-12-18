@@ -1,0 +1,14 @@
+{
+  "name": "chaos_emerald:reprieve",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location":"chaos_emerald:ancient_hub",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }]
+}

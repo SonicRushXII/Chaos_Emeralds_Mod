@@ -1,0 +1,27 @@
+{
+  "type": "chaos_emerald:void_type",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:the_void",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "height": 0,
+          "block": "minecraft:air"
+        }
+      ],
+      "structure_overrides": [
+        {
+          "structure": "chaos_emerald:master_emerald_island",
+          "config": {
+            "spacing": 1,
+            "separation": 0,
+            "salt": 0
+          }
+        }
+      ]
+    }
+  }
+}

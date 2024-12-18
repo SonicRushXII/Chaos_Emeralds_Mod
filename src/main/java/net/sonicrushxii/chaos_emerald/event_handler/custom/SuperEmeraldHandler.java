@@ -1,6 +1,7 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,6 +9,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -34,8 +37,10 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
+import net.sonicrushxii.chaos_emerald.modded.ModDimensions;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
+import net.sonicrushxii.chaos_emerald.modded.ModTeleporter;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -235,7 +240,23 @@ public class SuperEmeraldHandler {
 
     public static void greyEmeraldUse(Level pLevel, Player pPlayer)
     {
+        if (!pLevel.isClientSide && pPlayer != null) {
+            BlockPos targetPos = new BlockPos(100, 100, 100);                                       // Example coordinates
+            ServerLevel destinationWorld = pLevel.getServer().getLevel(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY); // Target Dimension
+            ServerLevel originalWorld = pLevel.getServer().getLevel(Level.OVERWORLD);
 
+            // Optional: play teleport sound
+            if (!pLevel.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
+            {
+                pPlayer.changeDimension(destinationWorld, new ModTeleporter(targetPos, false));
+                pPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+            }
+            else
+            {
+                pPlayer.changeDimension(originalWorld, new ModTeleporter(targetPos, false));
+                pPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+            }
+        }
     }
 
     public static void purpleEmeraldUse(Level pLevel, Player pPlayer)
