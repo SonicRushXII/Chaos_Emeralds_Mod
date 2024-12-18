@@ -38,37 +38,36 @@ public class SuperBlockItem extends BlockItem {
         //Get Last Token
         switch(sg.nextToken())
         {
-            case "aqua_emerald": System.out.println("Used Aqua Emerald");
+            case "aqua_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
                 break;
-            case "blue_emerald":System.out.println("Used Blue Emerald");
+            case "blue_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
                 break;
-            case "green_emerald": System.out.println("Used Green Emerald");
+            case "green_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
                 break;
-            case "grey_emerald": System.out.println("Used Grey Emerald");
+            case "grey_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
                 break;
-            case "purple_emerald": System.out.println("Used Purple Emerald");
+            case "purple_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
                 break;
-            case "red_emerald": System.out.println("Used Red Emerald");
+            case "red_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
                 break;
-            case "yellow_emerald": System.out.println("Used Yellow Emerald");
+            case "yellow_emerald":
                 if (isCtrlDown) ChaosEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
                 else                            SuperEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
                 break;
             default: return false;
         }
-        System.out.println("Client Side:"+pLevel.isClientSide+", Use Item:"+itemString);
         return true;
     }
 

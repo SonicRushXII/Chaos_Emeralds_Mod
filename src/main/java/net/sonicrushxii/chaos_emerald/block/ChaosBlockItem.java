@@ -28,30 +28,29 @@ public class ChaosBlockItem extends BlockItem {
         //Get Last Token
         switch(sg.nextToken())
         {
-            case "aqua_emerald": System.out.println("Used Aqua Emerald");
+            case "aqua_emerald":
                 ChaosEmeraldHandler.aquaEmeraldUse(pLevel,pPlayer);
                 break;
-            case "blue_emerald":System.out.println("Used Blue Emerald");
+            case "blue_emerald":
                 ChaosEmeraldHandler.blueEmeraldUse(pLevel,pPlayer);
                 break;
-            case "green_emerald": System.out.println("Used Green Emerald");
+            case "green_emerald":
                 ChaosEmeraldHandler.greenEmeraldUse(pLevel,pPlayer);
                 break;
-            case "grey_emerald": System.out.println("Used Grey Emerald");
+            case "grey_emerald":
                 ChaosEmeraldHandler.greyEmeraldUse(pLevel,pPlayer);
                 break;
-            case "purple_emerald": System.out.println("Used Purple Emerald");
+            case "purple_emerald":
                 ChaosEmeraldHandler.purpleEmeraldUse(pLevel,pPlayer);
                 break;
-            case "red_emerald": System.out.println("Used Red Emerald");
+            case "red_emerald":
                 ChaosEmeraldHandler.redEmeraldUse(pLevel,pPlayer);
                 break;
-            case "yellow_emerald": System.out.println("Used Yellow Emerald");
+            case "yellow_emerald":
                 ChaosEmeraldHandler.yellowEmeraldUse(pLevel,pPlayer);
                 break;
             default: return false;
         }
-        System.out.println("Client Side:"+pLevel.isClientSide+", Use Item:"+itemString);
         return true;
     }
 
