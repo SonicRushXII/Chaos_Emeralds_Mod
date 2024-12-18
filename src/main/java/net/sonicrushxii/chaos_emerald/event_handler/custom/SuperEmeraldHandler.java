@@ -631,8 +631,8 @@ public class SuperEmeraldHandler {
                                 (entity)->!entity.is(player)))
                         {
                             //Damage Enemy
-                            enemy.hurt(player.damageSources().playerAttack(player), 2.0f);
-                            if(Utilities.random.nextInt(100) < 20)  enemy.setRemainingFireTicks(40);
+                            enemy.hurt(player.damageSources().playerAttack(player), 1.0f);
+                            if(Utilities.random.nextInt(100) < 5)  enemy.setRemainingFireTicks(40);
                         }
 
                         //Display Particle Every Second

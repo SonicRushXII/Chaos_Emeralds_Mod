@@ -130,8 +130,8 @@ public class SuperChaosSlicer extends LinearMovingEntity {
 
             Vec3 movementDirection = new Vec3(getMotionX(),getMotionY(),getMotionZ());
 
-            Vec3 upDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
-            Vec3 downDiag = movementDirection.scale(2.0).cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
+            Vec3 upDiag = movementDirection.scale(1.75).cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0);
+            Vec3 downDiag = movementDirection.scale(1.75).cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0);
 
             Utilities.particleRaycast(this.level(),
                     new DustParticleOptions(new Vector3f(0.75f, 0f, 1f), 1.4f),
@@ -144,22 +144,39 @@ public class SuperChaosSlicer extends LinearMovingEntity {
             // Check for collision
             if(this.onGround() || this.horizontalCollision || this.verticalCollision && this.getDeltaMovement().y > 0)  kill();
 
-            // Check for entity collisions and apply damage
-            List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
-                    new AABB(this.getX() - 1.0, this.getY() - 1.0, this.getZ() - 1.0,
-                            this.getX() + 1.0, this.getY() + 1.0, this.getZ() + 1.0),
-                    enemy -> !(enemy.is(this))
-            );
-            if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4) {
-                try {// Synchronize on server only
-                    for (Entity enemy : enemies) {
-                        if(enemy instanceof LivingEntity livingEnemy) {
-                            livingEnemy.hurt(this.damageSources().indirectMagic((Player)this.getOwner(),null), DAMAGE);
-                            livingEnemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1, false, true));
-                            livingEnemy.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0, false, true));
+            //Calculate slice
+            Vec3 upDiag = movementDirection.scale(1.75).cross(new Vec3(0,(isInverted())?1:-1,0)).add(0,1.2,0).add(this.getX(),this.getY(),this.getZ());
+            Vec3 downDiag = movementDirection.scale(1.75).cross(new Vec3(0,(isInverted())?-1:1,0)).add(0,-1.2,0).add(this.getX(),this.getY(),this.getZ());
+
+            // Calculate the vector from pos1 to pos2
+            Vec3 direction = upDiag.subtract(downDiag);
+
+            double distance = direction.length();
+            Vec3 directionNormalized = direction.normalize();
+
+            for (int i = 0; i <= (int) distance*3; i++) {
+
+                Vec3 point = downDiag.add(directionNormalized.scale((i+1)/3.0));
+
+                // Check for entity collisions and apply damage
+                List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
+                        new AABB(point.x - 1.75, point.y - 1.75, point.z - 1.75,
+                                point.x + 1.75, point.y + 1.75, point.z + 1.75),
+                        enemy -> !(enemy.is(this)));
+
+                if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4) {
+                    try {// Synchronize on server only
+                        for (Entity enemy : enemies)
+                        {
+                            if(enemy instanceof LivingEntity livingEnemy)
+                            {
+                                livingEnemy.hurt(this.damageSources().indirectMagic((Player)this.getOwner(),null), DAMAGE);
+                                livingEnemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1, false, true));
+                                livingEnemy.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0, false, true));
+                            }
                         }
-                    }
-                }catch(NullPointerException ignored){}
+                    }catch(NullPointerException ignored){}
+                }
             }
         }
     }
