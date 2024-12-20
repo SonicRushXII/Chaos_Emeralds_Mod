@@ -1,27 +1,26 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,9 +33,9 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
-import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
+import net.sonicrushxii.chaos_emerald.event_handler.WorldLoadHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModDimensions;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
@@ -50,9 +49,28 @@ import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import net.sonicrushxii.chaos_emerald.scheduler.Scheduler;
 import org.joml.Vector3f;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SuperEmeraldHandler {
+
+    public static byte BUBBLE_BOOST_TIME = 100;                         //Time in Ticks
+    public static byte BUBBLE_BOOST_CD = 1;
+
+    public static byte ICE_SPIKE_CD = 1;
+
+    public static byte CHAOS_DIVE_TIME = 115;                           //Time in Ticks
+    public static byte CHAOS_DIVE_CD = 1;
+
+    public static byte CHAOS_GAMBIT_TIME = 115;                         //Time in Ticks
+    public static byte CHAOS_GAMBIT_CD = 1;
+
+    public static int CHAOS_INFERNO_TIME = 300;                         //Time in Ticks
+    public static byte CHAOS_INFERNO_CD = 1;
+
+    public static int CHAOS_REPRIEVE_TIME = 600;                        //Time in Seconds
+    public static int CHAOS_REPRIEVE_CD = 1;
+
 
     public static void aquaEmeraldUse(Level pLevel, Player pPlayer)
     {
@@ -101,6 +119,8 @@ public class SuperEmeraldHandler {
                         player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x0000FF)), true);
                         return;
                     }
+
+                    chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = ICE_SPIKE_CD;
 
                     //If Looking Down don't scale further
                     if (player.getXRot() >= 85.0 && player.getXRot() <= 90.0) {
@@ -240,22 +260,77 @@ public class SuperEmeraldHandler {
 
     public static void greyEmeraldUse(Level pLevel, Player pPlayer)
     {
-        if (!pLevel.isClientSide && pPlayer != null) {
-            BlockPos targetPos = new BlockPos(100, 100, 100);                                       // Example coordinates
-            ServerLevel destinationWorld = pLevel.getServer().getLevel(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY); // Target Dimension
-            ServerLevel originalWorld = pLevel.getServer().getLevel(Level.OVERWORLD);
+        if(pPlayer instanceof ServerPlayer player)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                if(chaosEmeraldCap.greySuperUse < 0) {
+                    pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xEEEEEE)),true);
+                    return;
+                }
 
-            // Optional: play teleport sound
-            if (!pLevel.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
-            {
-                pPlayer.changeDimension(destinationWorld, new ModTeleporter(targetPos, false));
-                pPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
-            }
-            else
-            {
-                pPlayer.changeDimension(originalWorld, new ModTeleporter(targetPos, false));
-                pPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
-            }
+                ServerLevel destinationWorld = pLevel.getServer().getLevel(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY); // Target Dimension
+
+                // Optional: play teleport sound
+                if (!pLevel.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
+                {
+                    //Store Player's original Position
+                    chaosEmeraldCap.currentDimension = String.valueOf(player.level().dimension().location());
+
+                    chaosEmeraldCap.greySuperPos[0] = player.getBlockX();
+                    chaosEmeraldCap.greySuperPos[1] = player.getBlockY();
+                    chaosEmeraldCap.greySuperPos[2] = player.getBlockZ();
+                    chaosEmeraldCap.greySuperPos[3] = (int)player.getYRot();
+                    chaosEmeraldCap.greySuperPos[4] = (int)player.getXRot();
+
+                    PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
+                            pPlayer.getId(),chaosEmeraldCap
+                    ));
+
+                    //Cooldown
+                    chaosEmeraldCap.greySuperUse = 1;
+
+                    //Change Dimensions
+                    player.changeDimension(destinationWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
+                    player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                    //Get Slowfalling
+                    player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
+
+                    //Teleport to the Position
+                    player.teleportTo(destinationWorld,
+                            WorldLoadHandler.reprieveTargetPos.getX(),
+                            WorldLoadHandler.reprieveTargetPos.getY(),
+                            WorldLoadHandler.reprieveTargetPos.getZ(),
+                            Collections.emptySet(),
+                            0, 0);
+                    player.connection.send(new ClientboundTeleportEntityPacket(player));
+                }
+                else
+                {
+                    //Get Original Dimensions
+                    ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                            new ResourceLocation(chaosEmeraldCap.currentDimension)));
+
+                    //Change back to the original world
+                    player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
+                    player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                    //Get Slowfalling
+                    player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
+
+                    //Cooldown
+                    chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+
+                    //Teleport to the Position
+                    player.teleportTo(originalWorld,
+                            chaosEmeraldCap.greySuperPos[0],
+                            chaosEmeraldCap.greySuperPos[1],
+                            chaosEmeraldCap.greySuperPos[2],
+                            Collections.emptySet(),
+                            chaosEmeraldCap.greySuperPos[3],chaosEmeraldCap.greySuperPos[4]);
+                    player.connection.send(new ClientboundTeleportEntityPacket(player));
+                }
+            });
         }
     }
 
@@ -412,7 +487,7 @@ public class SuperEmeraldHandler {
                     } catch (NullPointerException ignored) {
                     }
 
-                    if (chaosEmeraldCap.aquaSuperUse == 100) {
+                    if (chaosEmeraldCap.aquaSuperUse == BUBBLE_BOOST_TIME) {
                         //Reset Timer
                         chaosEmeraldCap.aquaSuperUse = 0;
 
@@ -425,7 +500,7 @@ public class SuperEmeraldHandler {
                             player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED.getId());
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 1;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = BUBBLE_BOOST_CD;
                     }
                 }
 
@@ -488,12 +563,12 @@ public class SuperEmeraldHandler {
                         }
                     }
 
-                    if (chaosEmeraldCap.greenSuperUse > 115) {
+                    if (chaosEmeraldCap.greenSuperUse > CHAOS_DIVE_TIME) {
                         //Reset Timer
                         chaosEmeraldCap.greenSuperUse = 0;
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 1;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = CHAOS_DIVE_CD;
 
                         //Remove Effect
                         if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
@@ -574,7 +649,7 @@ public class SuperEmeraldHandler {
                         }
                     }
 
-                    if (chaosEmeraldCap.yellowSuperUse > 115) {
+                    if (chaosEmeraldCap.yellowSuperUse > CHAOS_GAMBIT_TIME) {
                         //Reset Timer
                         chaosEmeraldCap.yellowSuperUse = 0;
 
@@ -596,7 +671,7 @@ public class SuperEmeraldHandler {
                         else                                           player.addEffect(slownessEffect, player);
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 1;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = CHAOS_GAMBIT_CD;
                     }
                 }
 
@@ -666,10 +741,76 @@ public class SuperEmeraldHandler {
                     }
 
                     //End Chaos Inferno
-                    if(chaosEmeraldCap.redSuperUse > 600) {
+                    if(chaosEmeraldCap.redSuperUse > CHAOS_INFERNO_TIME) {
                         chaosEmeraldCap.redSuperUse = 0;
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 1;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = CHAOS_INFERNO_CD;
+                    }
+                }
+
+                //Chaos Reprieve
+                {
+                    if(tick == 0)
+                    {
+                        //Grey Super Use
+                        if(chaosEmeraldCap.greySuperUse != 0)   chaosEmeraldCap.greySuperUse += 1;
+
+                        //Go Home after Time
+                        if(chaosEmeraldCap.greySuperUse >= CHAOS_REPRIEVE_TIME
+                                &&
+                                player.serverLevel().dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
+                        {
+                            //Get Original Dimensions
+                            ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                                    new ResourceLocation(chaosEmeraldCap.currentDimension)));
+
+                            //Change back to the original world
+                            player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
+                            player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                            //Get Slowfalling
+                            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
+
+                            //Cooldown
+                            chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+
+                            //Teleport to the Position
+                            player.teleportTo(originalWorld,
+                                    chaosEmeraldCap.greySuperPos[0],
+                                    chaosEmeraldCap.greySuperPos[1],
+                                    chaosEmeraldCap.greySuperPos[2],
+                                    Collections.emptySet(),
+                                    chaosEmeraldCap.greySuperPos[3],chaosEmeraldCap.greySuperPos[4]);
+                            player.connection.send(new ClientboundTeleportEntityPacket(player));
+                        }
+                    }
+
+                    //Go Home if you fall off
+                    if(player.getY() < 0 &&
+                            player.serverLevel().dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
+                    {
+                        //Get Original Dimensions
+                        ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                                new ResourceLocation(chaosEmeraldCap.currentDimension)));
+
+                        //Change back to the original world
+                        player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
+                        player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                        //Cooldown
+                        chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+
+                        //Get Slowfalling
+                        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
+
+                        //Teleport to the Position
+                        player.teleportTo(originalWorld,
+                                chaosEmeraldCap.greySuperPos[0],
+                                chaosEmeraldCap.greySuperPos[1],
+                                chaosEmeraldCap.greySuperPos[2],
+                                Collections.emptySet(),
+                                chaosEmeraldCap.greySuperPos[3],chaosEmeraldCap.greySuperPos[4]);
+                        player.connection.send(new ClientboundTeleportEntityPacket(player));
                     }
                 }
 

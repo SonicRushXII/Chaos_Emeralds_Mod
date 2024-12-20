@@ -51,8 +51,8 @@ public class SuperBlockItem extends BlockItem {
                 else                            SuperEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
                 break;
             case "grey_emerald":
-                if (isCtrlDown)                 ChaosEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
+                if (isCtrlDown)                 SuperEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
+                else                            ChaosEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
                 break;
             case "purple_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);

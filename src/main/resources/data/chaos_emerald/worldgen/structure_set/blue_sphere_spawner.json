@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 2105203712,
+    "separation": 3,
+    "spacing": 4,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "chaos_emerald:blue_spheres",
+      "weight": 1
+    }
+  ]
+}

@@ -29,6 +29,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
+import net.sonicrushxii.chaos_emerald.modded.ModDimensions;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
@@ -403,7 +404,8 @@ public class ChaosEmeraldHandler {
 
                 //Grey Emerald Use
                 if (chaosEmeraldCap.greyChaosUse > 0) {
-                    chaosEmeraldCap.greyChaosUse += 1;
+                    if(!world.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))   chaosEmeraldCap.greyChaosUse += 1;
+                    else                                                                    chaosEmeraldCap.greyChaosUse = (serverTick%2 == 0)? (byte) (chaosEmeraldCap.greyChaosUse + 1) :chaosEmeraldCap.greyChaosUse;
 
                     Vec3 lookAngle = player.getLookAngle();
                     BlockPos playerPos = new BlockPos(
@@ -428,16 +430,20 @@ public class ChaosEmeraldHandler {
                         enemy.hurt(world.damageSources().playerAttack(player), 4);
                     }
 
-                    //Break Blocks
-                    BlockPos start = playerPos.offset(-radius, -(radius+1), -radius);
-                    BlockPos end = playerPos.offset(radius, radius+2, radius);
+                    //Break Blocks if not in Chaos Reprieve
+                    if(!world.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
+                    {
+                        BlockPos start = playerPos.offset(-radius, -(radius+1), -radius);
+                        BlockPos end = playerPos.offset(radius, radius+2, radius);
 
-                    // Use BlockPos.betweenClosed to iterate over all positions in the cube
-                    for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
-                        BlockState blockState = player.level().getBlockState(pos);
-                        if(!Utilities.unbreakableBlocks.contains(ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+""))
-                            player.level().destroyBlock(pos, player.isShiftKeyDown());
+                        // Use BlockPos.betweenClosed to iterate over all positions in the cube
+                        for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
+                            BlockState blockState = player.level().getBlockState(pos);
+                            if(!Utilities.unbreakableBlocks.contains(ForgeRegistries.BLOCKS.getKey(blockState.getBlock())+""))
+                                player.level().destroyBlock(pos, player.isShiftKeyDown());
+                        }
                     }
+
                     player.setDeltaMovement(lookAngle.scale(1));
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyChaosUse,player.getDeltaMovement()));
                 }

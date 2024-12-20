@@ -1,6 +1,8 @@
 package net.sonicrushxii.chaos_emerald.capabilities;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 public class ChaosEmeraldCap {
 
@@ -30,6 +32,9 @@ public class ChaosEmeraldCap {
     public byte yellowSuperUse = 0;
     public byte purpleSuperUse = 0;
     public short redSuperUse = 0;
+    public int greySuperUse = 0;
+    public int[] greySuperPos = new int[5];
+    public String currentDimension = "minecraft:overworld";
 
     //Hyper Form
     public int hyperFormTimer = 0;
@@ -75,6 +80,10 @@ public class ChaosEmeraldCap {
         this.yellowSuperUse = source.yellowSuperUse;
         this.purpleSuperUse = source.purpleSuperUse;
         this.redSuperUse = source.redSuperUse;
+        this.greySuperUse = source.greySuperUse;
+        if(source.greySuperPos.length == 0) this.greySuperPos = new int[5];
+        else this.greySuperPos = source.greySuperPos;
+        this.currentDimension = source.currentDimension;
 
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
@@ -112,6 +121,10 @@ public class ChaosEmeraldCap {
         nbt.putByte("SuperChaosGambit",this.yellowSuperUse);
         nbt.putByte("SuperChaosSlicer",this.purpleSuperUse);
         nbt.putShort("SuperChaosInferno",this.redSuperUse);
+        nbt.putInt("SuperReprieveTime",this.greySuperUse);
+        if(greySuperPos.length == 0) greySuperPos = new int[5];
+        nbt.putIntArray("SuperDimReturnCoords", greySuperPos);
+        nbt.putString("CurrentDimension",this.currentDimension);
 
         //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
@@ -149,6 +162,10 @@ public class ChaosEmeraldCap {
         yellowSuperUse = nbt.getByte("SuperChaosGambit");
         purpleSuperUse = nbt.getByte("SuperChaosSlicer");
         redSuperUse = nbt.getShort("SuperChaosInferno");
+        greySuperUse = nbt.getInt("SuperReprieveTime");
+        greySuperPos = nbt.getIntArray("SuperDimReturnCoords");
+        if(greySuperPos.length == 0) greySuperPos = new int[5];
+        currentDimension = nbt.getString("CurrentDimension");
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
