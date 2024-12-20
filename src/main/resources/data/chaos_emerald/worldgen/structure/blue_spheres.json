@@ -1,5 +1,5 @@
 {
-  "biomes": "minecraft:the_void",
+  "biomes": "#chaos_emerald:has_structure/blue_spheres",
   "adapt_noise": false,
   "spawn_overrides": {},
   "type": "minecraft:jigsaw",

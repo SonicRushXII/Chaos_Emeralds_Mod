@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:the_void",
+    {
+      "id": "chaos_emerald:special_stage",
+      "required": false
+    }
+  ]
+}

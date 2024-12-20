@@ -3,7 +3,7 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "minecraft:the_void",
+      "biome": "chaos_emerald:special_stage",
       "lakes": false,
       "features": false,
       "layers": [
@@ -14,12 +14,7 @@
       ],
       "structure_overrides": [
         {
-          "structure": "chaos_emerald:master_emerald_island",
-          "config": {
-            "spacing": 1,
-            "separation": 0,
-            "salt": 0
-          }
+          "structure": "chaos_emerald:blue_spheres"
         }
       ]
     }
