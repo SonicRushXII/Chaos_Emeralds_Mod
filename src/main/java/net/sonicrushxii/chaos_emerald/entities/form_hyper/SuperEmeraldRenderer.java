@@ -2,6 +2,7 @@ package net.sonicrushxii.chaos_emerald.entities.form_hyper;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -47,8 +48,9 @@ public class SuperEmeraldRenderer extends EntityRenderer<SuperEmeraldEntity> {
         poseStack.pushPose();
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity)));
 
-        poseStack.scale(1.25F,1.25F,1.25F);
-        poseStack.translate(0D,-1.0D,0D);
+        //poseStack.scale(1.0F,1.0F,1.0F);
+        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+        poseStack.translate(0D,-1.4D,0D);
 
         this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 

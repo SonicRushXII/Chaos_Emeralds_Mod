@@ -13,6 +13,8 @@ import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
+import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldEntity;
+import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldEntity;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
@@ -21,6 +23,15 @@ import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 @Mod.EventBusSubscriber(modid = ChaosEmerald.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ChaosEmerald.MOD_ID);
+
+    public static final RegistryObject<EntityType<ChaosEmeraldEntity>> CHAOS_EMERALD_ENTITY = ENTITY_TYPES.register("chaos_emerald_entity",
+            () -> EntityType.Builder.<ChaosEmeraldEntity>of(ChaosEmeraldEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("chaos_emerald_entity"));
+    public static final RegistryObject<EntityType<SuperEmeraldEntity>> SUPER_EMERALD_ENTITY = ENTITY_TYPES.register("super_emerald_entity",
+            () -> EntityType.Builder.<SuperEmeraldEntity>of(SuperEmeraldEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("super_emerald_entity"));
 
     public static final RegistryObject<EntityType<IceHorizontalSpike>> ICE_CHAOS_SPIKE = ENTITY_TYPES.register("ice_chaos_spike",
             () -> EntityType.Builder.<IceHorizontalSpike>of(IceHorizontalSpike::new, MobCategory.MISC)

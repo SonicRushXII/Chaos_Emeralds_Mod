@@ -20,6 +20,10 @@ import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaRenderer;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazModel;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazRenderer;
+import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldModel;
+import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldRenderer;
+import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldModel;
+import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldRenderer;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.SuperEmeraldRenderModel;
@@ -103,21 +107,31 @@ public class ChaosEmerald
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             //Entity Setup
+            //Chaos Emerald
+            EntityRenderers.register(ModEntityTypes.CHAOS_EMERALD_ENTITY.get(), ChaosEmeraldRenderer::new);
 
-            //Aqua Emerald
+            //Aqua Chaos Emerald
             EntityRenderers.register(ModEntityTypes.ICE_CHAOS_SPIKE.get(), PointRenderer::new);
             EntityRenderers.register(ModEntityTypes.ICE_SUPER_SPIKE.get(), PointRenderer::new);
 
-            //Yellow Emerald
+            //Yellow Chaos Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR.get(), PointRenderer::new);
 
             //False Super Form
             EntityRenderers.register(ModEntityTypes.FALSE_SUPER_CHAOS_SPAZ.get(), ChaosSpazRenderer::new);
 
+
             //Super Emerald
+            EntityRenderers.register(ModEntityTypes.SUPER_EMERALD_ENTITY.get(), SuperEmeraldRenderer::new);
             EntityRenderers.register(ModEntityTypes.EMERALD_TRANSFORMER.get(), PointRenderer::new);
+
+            //Aqua Super Emerald
             EntityRenderers.register(ModEntityTypes.AQUA_BOOST_BUBBLE.get(), SuperAquaRenderer::new);
+
+            //Green Super Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_DIVE_RIPPLE.get(), PointRenderer::new);
+
+            //Purple Super Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SLICER.get(), PointRenderer::new);
 
             // Some client setup code
@@ -133,6 +147,12 @@ public class ChaosEmerald
         @SubscribeEvent
         public static void registerModelLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
         {
+            //Chaos Emerald
+            event.registerLayerDefinition(ChaosEmeraldModel.LAYER_LOCATION,ChaosEmeraldModel::createBodyLayer);
+
+            //Super Emerald
+            event.registerLayerDefinition(SuperEmeraldModel.LAYER_LOCATION,SuperEmeraldModel::createBodyLayer);
+
             //Chaos Bubble
             event.registerLayerDefinition(ChaosBubbleModel.LAYER_LOCATION,ChaosBubbleModel::createBodyLayer);
 

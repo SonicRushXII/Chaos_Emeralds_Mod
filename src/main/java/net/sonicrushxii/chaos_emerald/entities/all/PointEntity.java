@@ -27,13 +27,13 @@ public class PointEntity extends Entity {
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         if (tag.contains("Duration")) {
-            this.entityData.set(DURATION,tag.getInt("Duration"));
+            setDuration(tag.getInt("Duration"));
         }
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putInt("Duration", this.entityData.get(DURATION));
+        tag.putInt("Duration", getDuration());
     }
 
     public int getDuration() {return this.entityData.get(DURATION);}
@@ -46,8 +46,8 @@ public class PointEntity extends Entity {
         this.move(MoverType.SELF, this.getDeltaMovement());
 
         // Custom tick logic - Here, it just counts down the duration and removes the entity
-        if (this.entityData.get(DURATION) > 0) {
-            this.entityData.set(DURATION,this.entityData.get(DURATION)-1);
+        if (getDuration() > 0) {
+            setDuration(getDuration()-1);
         } else if(!this.level().isClientSide) {
             this.discard(); // Removes the entity from the world
         }
