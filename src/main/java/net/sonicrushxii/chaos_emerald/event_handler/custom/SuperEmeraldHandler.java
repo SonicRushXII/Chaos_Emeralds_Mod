@@ -62,7 +62,7 @@ public class SuperEmeraldHandler {
     public static byte CHAOS_DIVE_TIME = 115;                           //Time in Ticks
     public static byte CHAOS_DIVE_CD = 1;
 
-    public static byte CHAOS_GAMBIT_TIME = 115;                         //Time in Ticks
+    public static byte CHAOS_GAMBIT_TIME = 50;                         //Time in Ticks
     public static byte CHAOS_GAMBIT_CD = 1;
 
     public static int CHAOS_INFERNO_TIME = 300;                         //Time in Ticks
