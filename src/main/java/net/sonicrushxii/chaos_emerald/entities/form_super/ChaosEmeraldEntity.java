@@ -21,7 +21,7 @@ public class ChaosEmeraldEntity extends PointEntity
     public static final EntityDataAccessor<Float> THETA = SynchedEntityData.defineId(ChaosEmeraldEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTATION_SPEED = SynchedEntityData.defineId(ChaosEmeraldEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final int MAX_DURATION = 100;
+    public static int MAX_DURATION = 36;
 
     public ChaosEmeraldEntity(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
@@ -31,10 +31,10 @@ public class ChaosEmeraldEntity extends PointEntity
     protected void defineSynchedData() {
         this.entityData.define(DURATION, MAX_DURATION);
         this.entityData.define(EMERALD_COLOR, (byte)0);
-        this.entityData.define(RADIUS, 2.0F);
+        this.entityData.define(RADIUS, 2.5F);
         this.entityData.define(RADIAL_SPEED, 0.03F);
         this.entityData.define(THETA, 0F);
-        this.entityData.define(ROTATION_SPEED, (float)(Math.PI/30));
+        this.entityData.define(ROTATION_SPEED, (float)(Math.PI/20));
     }
 
     @Override
@@ -55,7 +55,6 @@ public class ChaosEmeraldEntity extends PointEntity
         tag.putFloat("RadialSpeed", getRadialSpeed());
         tag.putFloat("CurrPhase", getTheta());
         tag.putFloat("RotationSpeed", getRotationSpeed());
-
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ChaosEmeraldEntity extends PointEntity
 
         this.setDeltaMovement(circularMotionVec.scale(1.0));
 
-        if(!this.level().isClientSide && this.getCurrentRadius() < 0.0) {
+        if(!this.level().isClientSide && this.getCurrentRadius() < 0.15) {
             this.discard(); // Removes the entity from the world
         }
 
@@ -79,7 +78,14 @@ public class ChaosEmeraldEntity extends PointEntity
         setTheta(getTheta()+getRotationSpeed());
     }
 
-    public EmeraldType getEmeraldType() {
+    public void initializeDuration(int duration)
+    {
+        this.entityData.set(DURATION,duration);
+        MAX_DURATION = duration;
+    }
+
+    public EmeraldType getEmeraldType()
+    {
         try
         {
             return EmeraldType.values()[this.entityData.get(EMERALD_COLOR)];

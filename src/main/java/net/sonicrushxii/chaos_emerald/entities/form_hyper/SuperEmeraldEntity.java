@@ -20,7 +20,7 @@ public class SuperEmeraldEntity extends PointEntity
     public static final EntityDataAccessor<Float> THETA = SynchedEntityData.defineId(SuperEmeraldEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTATION_SPEED = SynchedEntityData.defineId(SuperEmeraldEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final int MAX_DURATION = 100;
+    public static int MAX_DURATION = 36;
 
     public SuperEmeraldEntity(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
@@ -69,7 +69,7 @@ public class SuperEmeraldEntity extends PointEntity
 
         this.setDeltaMovement(circularMotionVec.scale(1.0));
 
-        if(!this.level().isClientSide && this.getCurrentRadius() < 0.0) {
+        if(!this.level().isClientSide && this.getCurrentRadius() < 0.15) {
             this.discard(); // Removes the entity from the world
         }
 
@@ -78,7 +78,14 @@ public class SuperEmeraldEntity extends PointEntity
         setTheta(getTheta()+getRotationSpeed());
     }
 
-    public EmeraldType getEmeraldType() {
+    public void initializeDuration(int duration)
+    {
+        this.entityData.set(DURATION,duration);
+        MAX_DURATION = duration;
+    }
+
+    public EmeraldType getEmeraldType()
+    {
         try
         {
             return EmeraldType.values()[this.entityData.get(EMERALD_COLOR)];

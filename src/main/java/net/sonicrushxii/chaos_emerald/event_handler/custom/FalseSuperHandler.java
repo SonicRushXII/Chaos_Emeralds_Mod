@@ -73,7 +73,7 @@ public class FalseSuperHandler
                     player.setDeltaMovement(motionDir);
                     PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionDir));
 
-                    //Particle
+                    //Particle Flash
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                             ParticleTypes.FLASH,
                             player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
@@ -241,10 +241,12 @@ public class FalseSuperHandler
     public static void clientTick(LocalPlayer player, int clientTick)
     {
         //Master Emerald - Key Press Use
-        if(KeyBindings.INSTANCE.transformButton.consumeClick())
-        {
-            PacketHandler.sendToServer(new ActivateFalseSuper());
-            while(KeyBindings.INSTANCE.transformButton.consumeClick());
-        }
+        //Sends a Packet To Activate Super form if you have all Seven Emeralds.
+        player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+            //Transform
+            if (KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.falseSuperTimer == 0) {
+                PacketHandler.sendToServer(new ActivateFalseSuper());
+            }
+        });
     }
 }

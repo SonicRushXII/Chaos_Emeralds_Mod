@@ -8,6 +8,8 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 
 import java.util.function.Supplier;
@@ -42,6 +44,10 @@ public class ActivateFalseSuper
 
                             //Play the Sound
                             player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.ACTIVATE_FALSE_SUPER.get(), SoundSource.MASTER, 1.0f, 1.0f);
+
+                            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                                    player.getId(),chaosEmeraldCap
+                            ));
                         });
                     }
                 });

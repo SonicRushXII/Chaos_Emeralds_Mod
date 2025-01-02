@@ -70,6 +70,9 @@ public class ChaosEmeraldCap {
         this.greyChaosUse = source.greyChaosUse;
         this.purpleChaosUse = source.purpleChaosUse;
 
+        //Super Form Timer
+        this.superFormTimer = source.superFormTimer;
+
         //Manuscript
         this.manuscriptKey = source.manuscriptKey;
 
@@ -87,6 +90,10 @@ public class ChaosEmeraldCap {
 
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
+
+
+        //Hyper Form Timer
+        this.hyperFormTimer = source.hyperFormTimer;
     }
 
     public void saveNBTData(CompoundTag nbt){
