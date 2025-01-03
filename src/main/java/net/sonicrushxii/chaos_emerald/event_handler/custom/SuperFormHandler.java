@@ -9,23 +9,27 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.form_super.ActivateSuperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_super.DeactivateSuperForm;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
 
 public class SuperFormHandler
 {
-    public static final int SUPERFORM_DURATION = 20; //SECONDS
+    public static final int SUPERFORM_DURATION = 300; //SECONDS
+    public static final int SUPERFORM_COOLDOWN = 10; //SECONDS
 
     public static void serverTick(ServerPlayer player, int tick)
     {
@@ -61,44 +65,8 @@ public class SuperFormHandler
                                 player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
                                 0.001, 0.01F, 0.01F, 0.01F, 1, true));
 
-                        //Give Effects
-                        {
-                            //Speed
-                            if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-                            else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-
-                            //Jump
-                            if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-                            else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-
-                            //Haste
-                            if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-                            else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-
-                            //Strength
-                            if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-                            else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-
-                            //Saturation
-                            if(!player.hasEffect(MobEffects.SATURATION)) player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
-                            else player.getEffect(MobEffects.SATURATION).update(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
-
-                            //Resistance
-                            if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-                            else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-
-                            //Add Step Height
-                            if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.SUPER_STEP_ADDITION))
-                                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.SUPER_STEP_ADDITION);
-
-                            //Add Armor
-                            if (!player.getAttribute(Attributes.ARMOR).hasModifier(AttributeMultipliers.SUPER_ARMOR))
-                                player.getAttribute(Attributes.ARMOR).addTransientModifier(AttributeMultipliers.SUPER_ARMOR);
-
-                            //Add KB Resistance
-                            if (!player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).hasModifier(AttributeMultipliers.SUPER_KB_RESIST))
-                                player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addTransientModifier(AttributeMultipliers.SUPER_KB_RESIST);
-                        }
+                        //Give Potion Effects
+                        ActivateSuperForm.giveEffects(player);
                     }
 
                     //Flight Effects
@@ -133,7 +101,7 @@ public class SuperFormHandler
                     if(player.getAbilities().flying && player.isSprinting())
                     {
                         //Move in Direction you are looking
-                        Vec3 lookAngle = player.getLookAngle().scale(1.5);
+                        Vec3 lookAngle = player.getLookAngle().scale(1.75);
                         player.setDeltaMovement(lookAngle);
                         PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),lookAngle));
                     }
@@ -153,41 +121,7 @@ public class SuperFormHandler
                                 player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
                                 0.001,0.5F,player.getEyeHeight()/2,0.5F,3,false));
 
-                        //Speed
-                        if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-
-                        //Jump
-                        if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-                        else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-
-                        //Haste
-                        if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-
-                        //Strength
-                        if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-
-                        //Saturation
-                        if(!player.hasEffect(MobEffects.SATURATION)) player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
-                        else player.getEffect(MobEffects.SATURATION).update(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
-
-                        //Resistance
-                        if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 0, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 0, false, false));
-
-                        //Add Step Height
-                        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.SUPER_STEP_ADDITION))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.SUPER_STEP_ADDITION);
-
-                        //Add Armor
-                        if (!player.getAttribute(Attributes.ARMOR).hasModifier(AttributeMultipliers.SUPER_ARMOR))
-                            player.getAttribute(Attributes.ARMOR).addTransientModifier(AttributeMultipliers.SUPER_ARMOR);
-
-                        //Add KB Resistance
-                        if (!player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).hasModifier(AttributeMultipliers.SUPER_KB_RESIST))
-                            player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addTransientModifier(AttributeMultipliers.SUPER_KB_RESIST);
+                        ActivateSuperForm.giveEffects(player);
                     }
 
                     //Sprint Boost
@@ -204,55 +138,15 @@ public class SuperFormHandler
 
                 //Super Form End
                 if(chaosEmeraldCap.superFormTimer > 20*SUPERFORM_DURATION)
-                {
-                    chaosEmeraldCap.superFormTimer = 0;
+                    DeactivateSuperForm.performDeactivateSuper(player);
+            }
 
-                    //Return Flight Capability back to normal
-                    GameType currentGameMode = player.gameMode.getGameModeForPlayer();
-                    switch(currentGameMode)
-                    {
-                        case SPECTATOR:
-                        case CREATIVE: player.getAbilities().mayfly = true;
-                                       break;
-                        case SURVIVAL:
-                        case ADVENTURE:
-                        default: player.getAbilities().mayfly = false;
-                                 player.getAbilities().flying = false;
-                    }
-                    player.onUpdateAbilities();
-
-                    //Remove Effects
-                    {
-                        //Return Step Height back to normal
-                        if (player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.SUPER_STEP_ADDITION))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).removeModifier(AttributeMultipliers.SUPER_STEP_ADDITION);
-
-                        //Return Armor
-                        if (player.getAttribute(Attributes.ARMOR).hasModifier(AttributeMultipliers.SUPER_ARMOR))
-                            player.getAttribute(Attributes.ARMOR).removeModifier(AttributeMultipliers.SUPER_ARMOR);
-
-                        //Return Knockback Resistance
-                        if (player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).hasModifier(AttributeMultipliers.SUPER_KB_RESIST))
-                            player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).removeModifier(AttributeMultipliers.SUPER_KB_RESIST);
-
-                        //Return Speed
-                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_SPEED);
-
-                        //Remove Effects
-                        {
-                            player.removeEffect(MobEffects.MOVEMENT_SPEED);     //Speed
-                            player.removeEffect(MobEffects.JUMP);               //Jump
-                            player.removeEffect(MobEffects.DIG_SPEED);          //Haste
-                            player.removeEffect(MobEffects.DAMAGE_BOOST);       //Strength
-                            player.removeEffect(MobEffects.DAMAGE_RESISTANCE);  //Resistance
-                        }
-
-                        //Pad Effect
-                        if(!player.hasEffect(ModEffects.SUPER_FALLDMG_EFFECT.get())) player.addEffect(new MobEffectInstance(ModEffects.SUPER_FALLDMG_EFFECT.get(), 100, 0, false, false));
-                        else player.getEffect(ModEffects.SUPER_FALLDMG_EFFECT.get()).update(new MobEffectInstance(ModEffects.SUPER_FALLDMG_EFFECT.get(), 100, 0, false, false));
-                    }
-                }
+            //Decrement Super Cooldown
+            if(tick == 0)
+            {
+                //Give Back Chaos Emeralds
+                if(chaosEmeraldCap.superFormCooldown == 1)  DeactivateSuperForm.giveBackChaosEmeralds(player);
+                chaosEmeraldCap.superFormCooldown = Math.max(chaosEmeraldCap.superFormCooldown - 1, 0);
             }
 
             //Sync Data to Client
@@ -267,12 +161,18 @@ public class SuperFormHandler
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Transform
-            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.superFormTimer == 0)
+            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.superFormTimer == 0 && chaosEmeraldCap.superFormCooldown == 0)
             {
                 if(ActivateSuperForm.hasAllChaosEmeralds(player) && ActivateSuperForm.isPlayerNotWearingArmor(player)) {
                     PacketHandler.sendToServer(new ActivateSuperForm());
                     player.setDeltaMovement(0,0,0);
                 }
+            }
+
+            //DeTransform
+            if(KeyBindings.INSTANCE.transformButton.isDown() && (chaosEmeraldCap.superFormTimer > 0 && chaosEmeraldCap.superFormTimer < SUPERFORM_DURATION*20) && chaosEmeraldCap.superFormCooldown == 0)
+            {
+                PacketHandler.sendToServer(new DeactivateSuperForm());
             }
 
             //Lock Position

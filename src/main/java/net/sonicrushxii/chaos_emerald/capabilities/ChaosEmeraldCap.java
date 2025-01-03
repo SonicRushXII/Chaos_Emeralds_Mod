@@ -24,6 +24,7 @@ public class ChaosEmeraldCap {
 
     //Super Form
     public int superFormTimer = 0;
+    public int superFormCooldown = 0;
 
     //Super Emerald Usage
     public byte aquaSuperUse = 0;
@@ -38,6 +39,7 @@ public class ChaosEmeraldCap {
 
     //Hyper Form
     public int hyperFormTimer = 0;
+    public int hyperFormCooldown = 0;
 
     public void foundManuscript(byte index)
     {
@@ -72,6 +74,7 @@ public class ChaosEmeraldCap {
 
         //Super Form Timer
         this.superFormTimer = source.superFormTimer;
+        this.superFormCooldown = source.superFormCooldown;
 
         //Manuscript
         this.manuscriptKey = source.manuscriptKey;
@@ -91,9 +94,9 @@ public class ChaosEmeraldCap {
         if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
 
-
         //Hyper Form Timer
         this.hyperFormTimer = source.hyperFormTimer;
+        this.hyperFormCooldown = source.hyperFormCooldown;
     }
 
     public void saveNBTData(CompoundTag nbt){
@@ -116,6 +119,7 @@ public class ChaosEmeraldCap {
 
         //Super Form
         nbt.putInt("SuperDur",superFormTimer);
+        nbt.putInt("SuperCooldown",superFormCooldown);
 
         //Copy Super Cooldown
         if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
@@ -135,6 +139,7 @@ public class ChaosEmeraldCap {
 
         //Hyper Form
         nbt.putInt("HyperDur",hyperFormTimer);
+        nbt.putInt("HyperCooldown",hyperFormCooldown);
     }
 
     public void loadNBTData(CompoundTag nbt){
@@ -161,6 +166,7 @@ public class ChaosEmeraldCap {
 
         //Super Form
         superFormTimer = nbt.getInt("SuperDur");
+        superFormCooldown = nbt.getInt("SuperCooldown");
 
         //Super Emerald Times
         aquaSuperUse = nbt.getByte("BubbleBoost");
@@ -176,6 +182,7 @@ public class ChaosEmeraldCap {
 
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
+        hyperFormCooldown = nbt.getInt("HyperCooldown");
     }
 
     public boolean isUsingActiveAbility()

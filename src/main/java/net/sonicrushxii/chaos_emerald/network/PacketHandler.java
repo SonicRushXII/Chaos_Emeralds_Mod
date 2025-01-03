@@ -16,6 +16,7 @@ import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.network.transformations.form_super.ActivateSuperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_super.DeactivateSuperForm;
 
 public class PacketHandler {
     static int id = 0;
@@ -56,9 +57,9 @@ public class PacketHandler {
         INSTANCE.messageBuilder(ActivateFalseSuper.class, id++).encoder(ActivateFalseSuper::encode).decoder(ActivateFalseSuper::new).consumerMainThread(ActivateFalseSuper::handle).add();
         INSTANCE.messageBuilder(ChaosSpaz.class, id++).encoder(ChaosSpaz::encode).decoder(ChaosSpaz::new).consumerMainThread(ChaosSpaz::handle).add();
 
-        //ACTIVATE SUPER FORM
+        //SUPER FORM
         INSTANCE.messageBuilder(ActivateSuperForm.class, id++).encoder(ActivateSuperForm::encode).decoder(ActivateSuperForm::new).consumerMainThread(ActivateSuperForm::handle).add();
-
+        INSTANCE.messageBuilder(DeactivateSuperForm.class, id++).encoder(DeactivateSuperForm::encode).decoder(DeactivateSuperForm::new).consumerMainThread(DeactivateSuperForm::handle).add();
     }
 
     public static void sendToServer(Object msg) {

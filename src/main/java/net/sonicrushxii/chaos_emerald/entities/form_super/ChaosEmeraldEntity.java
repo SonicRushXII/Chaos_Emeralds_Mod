@@ -38,6 +38,27 @@ public class ChaosEmeraldEntity extends PointEntity
     }
 
     @Override
+    public boolean isPushable() {
+        return false; // Prevent the entity from being pushed
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return false; // Disable collision with this entity
+    }
+
+    @Override
+    public void push(double x, double y, double z) {
+        // Prevent the entity from being affected by pushes
+    }
+
+    @Override
+    public void move(MoverType type, Vec3 movement) {
+        // Allow movement through blocks by ignoring collisions
+        this.setPos(this.getX() + movement.x, this.getY() + movement.y, this.getZ() + movement.z);
+    }
+
+    @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(tag.contains("EmeraldType"))         this.entityData.set(EMERALD_COLOR,tag.getByte("EmeraldType"));

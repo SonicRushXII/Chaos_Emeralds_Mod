@@ -4,7 +4,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,6 +25,7 @@ import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
+import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 
 import java.util.function.Supplier;
 
@@ -107,6 +111,53 @@ public class ActivateSuperForm
         return noHelmet && noChestplate && noLeggings && noBoots;
     }
 
+    public static void giveEffects(ServerPlayer player)
+    {
+        //Speed
+        if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
+        else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
+
+        //Jump
+        if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 2, false, false));
+        else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 2, false, false));
+
+        //Haste
+        if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
+        else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
+
+        //Strength
+        if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
+        else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
+
+        //Saturation
+        if(!player.hasEffect(MobEffects.SATURATION)) player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
+        else player.getEffect(MobEffects.SATURATION).update(new MobEffectInstance(MobEffects.SATURATION, 20, 0, false, false));
+
+        //Hero Of the Village
+        if(!player.hasEffect(MobEffects.HERO_OF_THE_VILLAGE)) player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, -1, 0, false, false));
+        else player.getEffect(MobEffects.HERO_OF_THE_VILLAGE).update(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, -1, 0, false, false));
+
+        //Resistance
+        if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+        else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+
+        //Fire Resistance
+        if(!player.hasEffect(MobEffects.FIRE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, -1, 1, false, false));
+        else player.getEffect(MobEffects.FIRE_RESISTANCE).update(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, -1, 1, false, false));
+
+        //Add Step Height
+        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.SUPER_STEP_ADDITION))
+            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.SUPER_STEP_ADDITION);
+
+        //Add Armor
+        if (!player.getAttribute(Attributes.ARMOR).hasModifier(AttributeMultipliers.SUPER_ARMOR))
+            player.getAttribute(Attributes.ARMOR).addTransientModifier(AttributeMultipliers.SUPER_ARMOR);
+
+        //Add KB Resistance
+        if (!player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).hasModifier(AttributeMultipliers.SUPER_KB_RESIST))
+            player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addTransientModifier(AttributeMultipliers.SUPER_KB_RESIST);
+    }
+
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(
                 ()->{
@@ -118,19 +169,19 @@ public class ActivateSuperForm
                             //Don't Play if any other Transformations are going on
                             if(chaosEmeraldCap.falseSuperTimer < 0 || chaosEmeraldCap.hyperFormTimer != 0) return;
 
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.AQUA_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,0F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.BLUE_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,0.8975979F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.GREEN_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,1.7951958F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.GREY_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,2.6927937F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.PURPLE_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,3.5903916F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.RED_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,4.48798951F);
-                            //clearSpecificItem(player, new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem()));
+                            clearSpecificItem(player, new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem()));
                             spawnChaosEmerald(player, EmeraldType.YELLOW_EMERALD, new Vec3(player.getX(),player.getY()+1.0,player.getZ()) ,5.38558741F);
 
                             //Remove Gravity
