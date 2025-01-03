@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -92,6 +93,18 @@ public class ActivateSuperForm
 
         // Add the entity to the world
         pLevel.addFreshEntity(chaosEmeraldEntity);
+    }
+
+    // Method to check if the player is not wearing any armor
+    public static boolean isPlayerNotWearingArmor(Player player) {
+        // Check each armor slot
+        boolean noHelmet = player.getItemBySlot(EquipmentSlot.HEAD).isEmpty();
+        boolean noChestplate = player.getItemBySlot(EquipmentSlot.CHEST).isEmpty();
+        boolean noLeggings = player.getItemBySlot(EquipmentSlot.LEGS).isEmpty();
+        boolean noBoots = player.getItemBySlot(EquipmentSlot.FEET).isEmpty();
+
+        // Return true if all armor slots are empty
+        return noHelmet && noChestplate && noLeggings && noBoots;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){

@@ -2,8 +2,6 @@ package net.sonicrushxii.chaos_emerald.modded;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.common.ForgeMod;
@@ -30,6 +28,8 @@ public class ModEffects {
             "chaos_flame_jump",()->((new ChaosFlameEffect(MobEffectCategory.BENEFICIAL,0xFF0000))));
     public static final RegistryObject<MobEffect> SUPER_ICE_LAUNCH = MOB_EFFECTS.register(
             "super_ice_launch",()->((new SuperIcePadEffect(MobEffectCategory.BENEFICIAL,0x0000FF))));
+    public static final RegistryObject<MobEffect> SUPER_FALLDMG_EFFECT = MOB_EFFECTS.register(
+            "super_falldmg_effect",()->((new SuperFormPadEffect(MobEffectCategory.BENEFICIAL,0xFFFF00))));
 
     public static final RegistryObject<MobEffect> SUPER_CHAOS_DIVE = MOB_EFFECTS.register(
             "super_chaos_dive",()->((new SuperDivePadEffect(MobEffectCategory.BENEFICIAL,0x00FF00))));

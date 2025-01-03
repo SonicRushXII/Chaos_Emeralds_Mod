@@ -24,6 +24,7 @@ import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldModel;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldRenderer;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldModel;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldRenderer;
+import net.sonicrushxii.chaos_emerald.entities.form_super.SuperFormFlightModel;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.SuperEmeraldRenderModel;
@@ -56,6 +57,7 @@ public class ChaosEmerald
         MinecraftForge.EVENT_BUS.register(new LoginHandler());
         MinecraftForge.EVENT_BUS.register(new InteractionHandler());
         MinecraftForge.EVENT_BUS.register(new FallDamageHandler());
+        MinecraftForge.EVENT_BUS.register(new ArmorRestrictionHandler());
         MinecraftForge.EVENT_BUS.register(new Scheduler());
 
         // Register the item to a creative tab
@@ -150,14 +152,18 @@ public class ChaosEmerald
             //Chaos Emerald
             event.registerLayerDefinition(ChaosEmeraldModel.LAYER_LOCATION,ChaosEmeraldModel::createBodyLayer);
 
-            //Super Emerald
-            event.registerLayerDefinition(SuperEmeraldModel.LAYER_LOCATION,SuperEmeraldModel::createBodyLayer);
-
             //Chaos Bubble
             event.registerLayerDefinition(ChaosBubbleModel.LAYER_LOCATION,ChaosBubbleModel::createBodyLayer);
 
             //Chaos Spaz
             event.registerLayerDefinition(ChaosSpazModel.LAYER_LOCATION,ChaosSpazModel::createBodyLayer);
+
+            //Super Form
+                //Flight Model
+                event.registerLayerDefinition(SuperFormFlightModel.LAYER_LOCATION,SuperFormFlightModel::createBodyLayer);
+
+            //Super Emerald
+            event.registerLayerDefinition(SuperEmeraldModel.LAYER_LOCATION,SuperEmeraldModel::createBodyLayer);
 
             //Chaos Dive
             event.registerLayerDefinition(ChaosDivePlayerModel.LAYER_LOCATION,ChaosDivePlayerModel::createBodyLayer);

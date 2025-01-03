@@ -2,6 +2,7 @@ package net.sonicrushxii.chaos_emerald.event_handler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -12,9 +13,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
+import net.sonicrushxii.chaos_emerald.entities.form_super.SuperFormFlightModel;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = ChaosEmerald.MOD_ID, value= Dist.CLIENT)
 public class RenderHandler {
@@ -87,10 +92,35 @@ public class RenderHandler {
                     poseStack.popPose();
                     event.setCanceled(true);
                 }
+
+                //Super Form Flight
+                if(chaosEmeraldCap.superFormTimer > 0 && player.isSprinting())
+                {
+                    poseStack.pushPose();
+
+                    // Scale
+                    poseStack.scale(1.0f, 1.0f, 1.0f);
+
+                    //Apply Rotation & Translation
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-player.getYRot()));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                    poseStack.translate(0D, -1.5D, 0D);
+
+                    //Create a Custom Transform
+                    Consumer<ModelPart> customTransform = SuperFormFlightModel.getCustomTransform(player);
+
+                    //Render The Custom Model
+                    ModModelRenderer.renderPlayerModel(SuperFormFlightModel.class, event, poseStack, customTransform);
+
+                    poseStack.popPose();
+                    event.setCanceled(true);
+                }
             });
         }
 
     }
+
+
 
     @SubscribeEvent
     public static void onPostRenderLiving(RenderLivingEvent.Post<?, ?> event)
@@ -98,7 +128,7 @@ public class RenderHandler {
         LivingEntity targetEntity = event.getEntity();
         PoseStack poseStack = event.getPoseStack();
 
-        //Aqua Emerald
+        //Aqua Chaos Emerald
         {
             if(targetEntity.hasEffect(ModEffects.CHAOS_BIND.get()) && targetEntity.getEffect(ModEffects.CHAOS_BIND.get()).getDuration() > 0)
             {
