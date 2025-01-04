@@ -15,6 +15,7 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldEntity;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldEntity;
+import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosSpearEX;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
@@ -24,6 +25,7 @@ import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosSpear;
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ChaosEmerald.MOD_ID);
 
+    //Chaos Emeralds
     public static final RegistryObject<EntityType<ChaosEmeraldEntity>> CHAOS_EMERALD_ENTITY = ENTITY_TYPES.register("chaos_emerald_entity",
             () -> EntityType.Builder.<ChaosEmeraldEntity>of(ChaosEmeraldEntity::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
@@ -37,6 +39,31 @@ public class ModEntityTypes {
             () -> EntityType.Builder.<IceHorizontalSpike>of(IceHorizontalSpike::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("ice_chaos_spike"));
+
+    public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
+            () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("chaos_spear"));
+
+    //False Super
+    public static final RegistryObject<EntityType<ChaosSpaz>> FALSE_SUPER_CHAOS_SPAZ = ENTITY_TYPES.register("false_super_chaos_spaz",
+            () -> EntityType.Builder.<ChaosSpaz>of(ChaosSpaz::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("false_super_chaos_spaz"));
+
+
+    //Super Form
+    public static final RegistryObject<EntityType<ChaosSpearEX>> CHAOS_SPEAR_EX = ENTITY_TYPES.register("chaos_spear_ex",
+            () -> EntityType.Builder.<ChaosSpearEX>of(ChaosSpearEX::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("chaos_spear_ex"));
+
+    //Super Emeralds
+    public static final RegistryObject<EntityType<EmeraldTransformer>> EMERALD_TRANSFORMER = ENTITY_TYPES.register("emerald_transformer",
+            () -> EntityType.Builder.<EmeraldTransformer>of(EmeraldTransformer::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("emerald_transformer"));
+
     public static final RegistryObject<EntityType<IceVerticalSpike>> ICE_SUPER_SPIKE = ENTITY_TYPES.register("ice_super_spike",
             () -> EntityType.Builder.<IceVerticalSpike>of(IceVerticalSpike::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
@@ -60,18 +87,8 @@ public class ModEntityTypes {
                     .setTrackingRange(32)
                     .build("super_chaos_slicer"));
 
-    public static final RegistryObject<EntityType<ChaosSpear>> CHAOS_SPEAR = ENTITY_TYPES.register("chaos_spear",
-            () -> EntityType.Builder.<ChaosSpear>of(ChaosSpear::new, MobCategory.MISC)
-                    .sized(0.2F, 0.2F)  // Define the size of the entity
-                    .build("chaos_spear"));
-    public static final RegistryObject<EntityType<ChaosSpaz>> FALSE_SUPER_CHAOS_SPAZ = ENTITY_TYPES.register("false_super_chaos_spaz",
-            () -> EntityType.Builder.<ChaosSpaz>of(ChaosSpaz::new, MobCategory.MISC)
-                    .sized(0.2F, 0.2F)  // Define the size of the entity
-                    .build("false_super_chaos_spaz"));
-    public static final RegistryObject<EntityType<EmeraldTransformer>> EMERALD_TRANSFORMER = ENTITY_TYPES.register("emerald_transformer",
-            () -> EntityType.Builder.<EmeraldTransformer>of(EmeraldTransformer::new, MobCategory.MISC)
-                    .sized(0.2F, 0.2F)  // Define the size of the entity
-                    .build("emerald_transformer"));
+
+
 
 
     public static void register(IEventBus eventBus){ ENTITY_TYPES.register(eventBus);}

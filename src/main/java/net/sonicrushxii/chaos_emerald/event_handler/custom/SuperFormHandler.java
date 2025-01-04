@@ -3,21 +3,27 @@ package net.sonicrushxii.chaos_emerald.event_handler.custom;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
+import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
+import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
+import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_super.ActivateSuperForm;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_super.DeactivateSuperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_super.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
 
@@ -94,29 +100,55 @@ public class SuperFormHandler
                             player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
                             0.001,0.5F,player.getEyeHeight()/2,0.5F,2,true));
                     //Handle Flight
-                    if(player.getAbilities().flying && player.isSprinting())
                     {
-                        //Move in Direction you are looking
-                        Vec3 lookAngle = player.getLookAngle().scale(1.75);
-                        player.setDeltaMovement(lookAngle);
-                        PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),lookAngle));
-                    }
-                    //Re-enable Flight if it isn't enabled
-                    if(tick == 0 && !player.getAbilities().mayfly)
-                    {
-                        player.getAbilities().mayfly = true;
-                        player.onUpdateAbilities();
+                        if (player.getAbilities().flying && player.isSprinting()) {
+                            //Move in Direction you are looking
+                            Vec3 lookAngle = player.getLookAngle().scale(1.75);
+                            player.setDeltaMovement(lookAngle);
+                            PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), lookAngle));
+                        }
+                        //Re-enable Flight if it isn't enabled
+                        if (tick == 0 && !player.getAbilities().mayfly) {
+                            player.getAbilities().mayfly = true;
+                            player.onUpdateAbilities();
+                        }
+
+                        //Brakes
+                        if (!player.isSprinting() && player.getAbilities().flying) {
+                            Vec3 movementSpeed = player.getDeltaMovement();
+                            double movementCoefficient = Math.abs(movementSpeed.x) + Math.abs(movementSpeed.y) + Math.abs(movementSpeed.z);
+
+                            if (movementCoefficient > 1.5) {
+                                Vec3 motionSlow = movementSpeed.scale(0.1);
+                                player.setDeltaMovement(motionSlow);
+                                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), motionSlow));
+                            }
+                        }
                     }
 
-                    if(!player.isSprinting())
+                    //Water Running
                     {
-                        Vec3 movementSpeed = player.getDeltaMovement();
-                        double movementCoefficient = Math.abs(movementSpeed.x) + Math.abs(movementSpeed.y) + Math.abs(movementSpeed.z);
+                        if (player.isSprinting() && !player.isInWater())
+                        {
+                            try {
+                                if (ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
+                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
+                                    //Get Motion
+                                    Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
 
-                        if(movementCoefficient > 1.5) {
-                            Vec3 motionSlow = movementSpeed.scale(0.1);
-                            player.setDeltaMovement(motionSlow);
-                            PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionSlow));
+                                    if (chaosEmeraldCap.isWaterBoosting == false) {
+                                        player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                                        chaosEmeraldCap.isWaterBoosting = true;
+
+                                        //Slight upward
+                                        playerDirection = Utilities.calculateViewVector(-1,player.getYRot());
+                                    }
+
+                                    //Move Forward
+                                    player.setDeltaMovement(playerDirection.scale(2.0));
+                                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
+                                }
+                            } catch (NullPointerException ignored) {}
                         }
                     }
 
@@ -157,7 +189,8 @@ public class SuperFormHandler
                 chaosEmeraldCap.superFormCooldown = Math.max(chaosEmeraldCap.superFormCooldown - 1, 0);
 
                 //Cooldown Management
-                try {
+                try
+                {
                     SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
                     {
                         byte[] allCooldowns = superFormProperties.getAllCooldowns();
@@ -191,12 +224,25 @@ public class SuperFormHandler
 
             //DeTransform
             if(KeyBindings.INSTANCE.transformButton.isDown() && (chaosEmeraldCap.superFormTimer > 0 && chaosEmeraldCap.superFormTimer < SUPERFORM_DURATION*20) && chaosEmeraldCap.superFormCooldown == 0)
-            {
                 PacketHandler.sendToServer(new DeactivateSuperForm());
-            }
 
             //Lock Position
             if(chaosEmeraldCap.superFormTimer < 0)  player.setDeltaMovement(0,0,0);
+
+            //Super Form Duration
+            if(chaosEmeraldCap.superFormTimer > 0)
+            {
+                SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+
+                if (KeyBindings.INSTANCE.useAbility1.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_SPEAR_EX) == 0)
+                    PacketHandler.sendToServer(new ChaosSpearEX());
+
+                if (KeyBindings.INSTANCE.useAbility2.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_CONTROL_EX) == 0)
+                    PacketHandler.sendToServer(new ChaosControlEX());
+
+                if (KeyBindings.INSTANCE.useAbility3.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_PORTAL) == 0)
+                    PacketHandler.sendToServer(new ChaosPortal());
+            }
         });
     }
 }

@@ -372,7 +372,7 @@ public class ChaosEmeraldHandler {
                 ChaosSpear chaosSpear = new ChaosSpear(ModEntityTypes.CHAOS_SPEAR.get(), pLevel);
 
                 chaosSpear.setPos(spawnPos);
-                chaosSpear.setDuration(120);
+                chaosSpear.initializeDuration(120);
                 chaosSpear.setMovementDirection(pPlayer.getLookAngle());
                 chaosSpear.setDestroyBlocks(pPlayer.isShiftKeyDown());
                 chaosSpear.setOwner(pPlayer.getUUID());

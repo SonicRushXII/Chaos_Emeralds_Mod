@@ -125,6 +125,8 @@ public class ChaosEmerald
             //False Super Form
             EntityRenderers.register(ModEntityTypes.FALSE_SUPER_CHAOS_SPAZ.get(), ChaosSpazRenderer::new);
 
+            //Super Form
+            EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR_EX.get(), PointRenderer::new);
 
             //Super Emerald
             EntityRenderers.register(ModEntityTypes.SUPER_EMERALD_ENTITY.get(), SuperEmeraldRenderer::new);

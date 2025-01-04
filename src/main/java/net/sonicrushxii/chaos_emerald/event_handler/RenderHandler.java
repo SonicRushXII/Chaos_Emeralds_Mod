@@ -6,6 +6,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -96,24 +97,30 @@ public class RenderHandler {
                 //Super Form Flight
                 if(chaosEmeraldCap.superFormTimer > 0 && player.isSprinting())
                 {
-                    poseStack.pushPose();
+                    Vec3 deltaMovement = player.getDeltaMovement();
+                    double movementCoefficient = Math.abs(deltaMovement.x) + Math.abs(deltaMovement.y) + Math.abs(deltaMovement.z);
 
-                    // Scale
-                    poseStack.scale(1.0f, 1.0f, 1.0f);
+                    if(movementCoefficient > 2.0 || player.getAbilities().flying)
+                    {
+                        poseStack.pushPose();
 
-                    //Apply Rotation & Translation
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-player.getYRot()));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-                    poseStack.translate(0D, -1.5D, 0D);
+                        // Scale
+                        poseStack.scale(1.0f, 1.0f, 1.0f);
 
-                    //Create a Custom Transform
-                    Consumer<ModelPart> customTransform = SuperFormFlightModel.getCustomTransform(player);
+                        //Apply Rotation & Translation
+                        poseStack.mulPose(Axis.YP.rotationDegrees(-player.getYRot()));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                        poseStack.translate(0D, -1.5D, 0D);
 
-                    //Render The Custom Model
-                    ModModelRenderer.renderPlayerModel(SuperFormFlightModel.class, event, poseStack, customTransform);
+                        //Create a Custom Transform
+                        Consumer<ModelPart> customTransform = SuperFormFlightModel.getCustomTransform(player);
 
-                    poseStack.popPose();
-                    event.setCanceled(true);
+                        //Render The Custom Model
+                        ModModelRenderer.renderPlayerModel(SuperFormFlightModel.class, event, poseStack, customTransform);
+
+                        poseStack.popPose();
+                        event.setCanceled(true);
+                    }
                 }
             });
         }

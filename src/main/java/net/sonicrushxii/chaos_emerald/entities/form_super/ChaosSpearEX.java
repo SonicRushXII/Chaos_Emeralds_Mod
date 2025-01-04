@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.entities.yellow;
+package net.sonicrushxii.chaos_emerald.entities.form_super;
 
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,6 +16,7 @@ import net.minecraft.world.phys.AABB;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.entities.all.LinearMovingEntity;
 import net.sonicrushxii.chaos_emerald.entities.all.PointEntity;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_super.ChaosControlEX;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -23,14 +24,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ChaosSpear extends LinearMovingEntity {
-    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpear.class, EntityDataSerializers.OPTIONAL_UUID);
+public class ChaosSpearEX extends LinearMovingEntity {
+    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpearEX.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpearEX.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
-    private static final float STRENGTH = 1.5f;
-    private static final float DAMAGE = 4.0F;
+    private static final float STRENGTH = 1.85F;
+    private static final float DAMAGE = 8.0F;
 
-    public ChaosSpear(EntityType<? extends PointEntity> type, Level world) {
+    public ChaosSpearEX(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
     }
 
@@ -112,13 +113,13 @@ public class ChaosSpear extends LinearMovingEntity {
 
             // Check for entity collisions and apply damage
             List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
-                    new AABB(this.getX() - 1.0, this.getY() - 1.0, this.getZ() - 1.0,
-                            this.getX() + 1.0, this.getY() + 1.0, this.getZ() + 1.0),
-                    enemy -> !(enemy.is(this))
+                    new AABB(this.getX() - 1.5, this.getY() - 1.5, this.getZ() - 1.5,
+                            this.getX() + 1.5, this.getY() + 1.5, this.getZ() + 1.5),
+                    enemy -> !(enemy instanceof ChaosSpearEX)
             );
-
-            if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4) {
-                try {// Synchronize on server only
+            if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4)
+            {
+                try {
                     for (Entity enemy : enemies) {
                         if(enemy instanceof LivingEntity)
                             enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);

@@ -114,8 +114,8 @@ public class VirtualSlotData {
             {
                 String slotName = "Super";
                 List<Ability> iconTextures = (Arrays.asList(
-                        new Ability(CHAOS_SPEAR_EX_SLOT, cooldownArray[SuperFormAbility.CHAOS_CONTROL_EX.ordinal()]),
-                        new Ability(CHAOS_CONTROL_EX_SLOT, cooldownArray[SuperFormAbility.CHAOS_SPEAR_EX.ordinal()]),
+                        new Ability(CHAOS_SPEAR_EX_SLOT, cooldownArray[SuperFormAbility.CHAOS_SPEAR_EX.ordinal()]),
+                        new Ability(CHAOS_CONTROL_EX_SLOT, cooldownArray[SuperFormAbility.CHAOS_CONTROL_EX.ordinal()]),
                         new Ability(CHAOS_PORTAL_SLOT, cooldownArray[SuperFormAbility.CHAOS_PORTAL.ordinal()]))
                 );
 
