@@ -13,15 +13,17 @@ public class AttributeMultipliers {
     public static final AttributeModifier BUBBLE_BOOST_SPEED = new AttributeModifier(new UUID(0x4321767890AB6DEFL, 0xFEBCBA09F7654C12L),
             "bubble_boost_speed", 1.0F, AttributeModifier.Operation.ADDITION);
 
-    public static final AttributeModifier SUPER_SPEED = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C13L),
+    public static final AttributeModifier SUPER_WALK_SPEED = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C14L),
+            "super_speed", 0.05F, AttributeModifier.Operation.ADDITION);
+    public static final AttributeModifier SUPER_BOOST_SPEED = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C15L),
             "super_speed", 0.75F, AttributeModifier.Operation.ADDITION);
-    public static final AttributeModifier SUPER_STEP_ADDITION = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C14L),
+    public static final AttributeModifier SUPER_STEP_ADDITION = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C16L),
             "super_step", 1.0F, AttributeModifier.Operation.ADDITION);
-    public static final AttributeModifier SUPER_ARMOR = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C15L),
+    public static final AttributeModifier SUPER_ARMOR = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C17L),
             "super_armor", 20.0F, AttributeModifier.Operation.ADDITION);
-    public static final AttributeModifier SUPER_KB_RESIST = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C16L),
+    public static final AttributeModifier SUPER_KB_RESIST = new AttributeModifier(new UUID(0x4321167890AB6DEFL, 0xFEBCBA01F7654C18L),
             "super_kb_resist", 0.85F, AttributeModifier.Operation.ADDITION);
 
-    public static final AttributeModifier GAMBIT_SLOW = new AttributeModifier(new UUID(0x4321767890AB6DEFL, 0xFEBCBA09F7654C17L),
+    public static final AttributeModifier GAMBIT_SLOW = new AttributeModifier(new UUID(0x4321767890AB6DEFL, 0xFEBCBA09F7654C19L),
             "chaos_gambit_slow", -1.0F, AttributeModifier.Operation.ADDITION);
 }

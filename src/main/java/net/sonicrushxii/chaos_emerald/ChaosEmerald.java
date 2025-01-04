@@ -5,7 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -15,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sonicrushxii.chaos_emerald.client.VirtualSlotData;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
 import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaRenderer;
@@ -139,6 +142,13 @@ public class ChaosEmerald
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+
+        @SubscribeEvent
+        public static void registerGUIOverlays(RegisterGuiOverlaysEvent event) {
+            event.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(),
+                    "ability_hud",
+                    VirtualSlotData.ABILITY_HUD);
         }
 
         @SubscribeEvent

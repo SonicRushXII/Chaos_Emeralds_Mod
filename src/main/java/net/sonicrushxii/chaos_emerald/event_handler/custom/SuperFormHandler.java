@@ -6,17 +6,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
-import net.sonicrushxii.chaos_emerald.modded.ModEffects;
+import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -85,7 +80,8 @@ public class SuperFormHandler
                 if(chaosEmeraldCap.superFormTimer == 0)
                 {
                     chaosEmeraldCap.superFormTimer = 1;
-
+                    //Change Data
+                    chaosEmeraldCap.formProperties = new SuperFormProperties();
 
                 }
 
@@ -112,6 +108,18 @@ public class SuperFormHandler
                         player.onUpdateAbilities();
                     }
 
+                    if(!player.isSprinting())
+                    {
+                        Vec3 movementSpeed = player.getDeltaMovement();
+                        double movementCoefficient = Math.abs(movementSpeed.x) + Math.abs(movementSpeed.y) + Math.abs(movementSpeed.z);
+
+                        if(movementCoefficient > 1.5) {
+                            Vec3 motionSlow = movementSpeed.scale(0.1);
+                            player.setDeltaMovement(motionSlow);
+                            PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),motionSlow));
+                        }
+                    }
+
                     //Give the Player the Effects every Second
                     if(tick == 0)
                     {
@@ -126,12 +134,12 @@ public class SuperFormHandler
 
                     //Sprint Boost
                     if(player.isSprinting()) {
-                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.SUPER_SPEED);
+                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
                     }
                     else {
-                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_SPEED);
+                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
                     }
 
                 }
@@ -147,6 +155,18 @@ public class SuperFormHandler
                 //Give Back Chaos Emeralds
                 if(chaosEmeraldCap.superFormCooldown == 1)  DeactivateSuperForm.giveBackChaosEmeralds(player);
                 chaosEmeraldCap.superFormCooldown = Math.max(chaosEmeraldCap.superFormCooldown - 1, 0);
+
+                //Cooldown Management
+                try {
+                    SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+                    {
+                        byte[] allCooldowns = superFormProperties.getAllCooldowns();
+                        for (int i = 0; i < allCooldowns.length; ++i) {
+                            if (allCooldowns[i] != (byte) -1)
+                                allCooldowns[i] = (byte) Math.max(0, allCooldowns[i] - 1);
+                        }
+                    }
+                }catch (ClassCastException ignored) {}
             }
 
             //Sync Data to Client

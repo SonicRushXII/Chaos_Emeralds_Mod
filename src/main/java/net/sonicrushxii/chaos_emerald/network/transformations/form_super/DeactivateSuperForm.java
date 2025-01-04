@@ -3,26 +3,19 @@ package net.sonicrushxii.chaos_emerald.network.transformations.form_super;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
-import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldEntity;
+import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperFormHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
-import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -79,8 +72,10 @@ public class DeactivateSuperForm
                     player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).removeModifier(AttributeMultipliers.SUPER_KB_RESIST);
 
                 //Return Speed
-                if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_SPEED))
-                    player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_SPEED);
+                if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
+                    player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
+                if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_WALK_SPEED))
+                    player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_WALK_SPEED);
 
                 //Remove Effects
                 {
@@ -102,6 +97,9 @@ public class DeactivateSuperForm
 
             //Cooldown
             chaosEmeraldCap.superFormCooldown = SuperFormHandler.SUPERFORM_COOLDOWN;
+
+            //Reset Data
+            chaosEmeraldCap.formProperties = new FormProperties();
         });
     }
 

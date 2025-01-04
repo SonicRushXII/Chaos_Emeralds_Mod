@@ -153,6 +153,10 @@ public class ActivateSuperForm
         if (!player.getAttribute(Attributes.ARMOR).hasModifier(AttributeMultipliers.SUPER_ARMOR))
             player.getAttribute(Attributes.ARMOR).addTransientModifier(AttributeMultipliers.SUPER_ARMOR);
 
+        //Add Walk Speed
+        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_WALK_SPEED))
+            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.SUPER_WALK_SPEED);
+
         //Add KB Resistance
         if (!player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).hasModifier(AttributeMultipliers.SUPER_KB_RESIST))
             player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addTransientModifier(AttributeMultipliers.SUPER_KB_RESIST);

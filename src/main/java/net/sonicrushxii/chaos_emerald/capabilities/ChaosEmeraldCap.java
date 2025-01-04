@@ -3,9 +3,12 @@ package net.sonicrushxii.chaos_emerald.capabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
+import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
+import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
 
 public class ChaosEmeraldCap {
-
+    public FormProperties formProperties = new FormProperties();
     public float atkRotPhaseX = 0.0f;
     public float atkRotPhaseY = 0.0f;
     public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
@@ -75,6 +78,7 @@ public class ChaosEmeraldCap {
         //Super Form Timer
         this.superFormTimer = source.superFormTimer;
         this.superFormCooldown = source.superFormCooldown;
+        this.formProperties = source.formProperties;
 
         //Manuscript
         this.manuscriptKey = source.manuscriptKey;
@@ -120,6 +124,7 @@ public class ChaosEmeraldCap {
         //Super Form
         nbt.putInt("SuperDur",superFormTimer);
         nbt.putInt("SuperCooldown",superFormCooldown);
+        nbt.put("FormAbilities", formProperties.serialize());
 
         //Copy Super Cooldown
         if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
@@ -142,7 +147,10 @@ public class ChaosEmeraldCap {
         nbt.putInt("HyperCooldown",hyperFormCooldown);
     }
 
-    public void loadNBTData(CompoundTag nbt){
+    public void loadNBTData(CompoundTag nbt)
+    {
+        CompoundTag formDetails = nbt.getCompound("FormAbilities");
+
         //Attack Rotation Phase
         this.atkRotPhaseX = nbt.getFloat("AtkRotPhaseX");
         this.atkRotPhaseY = nbt.getFloat("AtkRotPhaseY");
@@ -168,6 +176,7 @@ public class ChaosEmeraldCap {
         superFormTimer = nbt.getInt("SuperDur");
         superFormCooldown = nbt.getInt("SuperCooldown");
 
+
         //Super Emerald Times
         aquaSuperUse = nbt.getByte("BubbleBoost");
         isWaterBoosting = nbt.getBoolean("isWaterBoosting");
@@ -183,6 +192,11 @@ public class ChaosEmeraldCap {
         //Hyper Form
         hyperFormTimer = nbt.getInt("HyperDur");
         hyperFormCooldown = nbt.getInt("HyperCooldown");
+
+        //Form Property Details
+        if(superFormTimer > 0) formProperties = new SuperFormProperties(formDetails);
+        else if(hyperFormTimer > 0) formProperties = new HyperFormProperties(formDetails);
+        else formProperties = new FormProperties(formDetails);
     }
 
     public boolean isUsingActiveAbility()
