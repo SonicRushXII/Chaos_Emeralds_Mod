@@ -15,6 +15,7 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldEntity;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldEntity;
+import net.sonicrushxii.chaos_emerald.entities.form_super.PortalRingEntity;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosSpearEX;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
@@ -57,6 +58,10 @@ public class ModEntityTypes {
             () -> EntityType.Builder.<ChaosSpearEX>of(ChaosSpearEX::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("chaos_spear_ex"));
+    public static final RegistryObject<EntityType<PortalRingEntity>> PORTAL_RING = ENTITY_TYPES.register("portal_ring",
+            () -> EntityType.Builder.<PortalRingEntity>of(PortalRingEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("portal_ring"));
 
     //Super Emeralds
     public static final RegistryObject<EntityType<EmeraldTransformer>> EMERALD_TRANSFORMER = ENTITY_TYPES.register("emerald_transformer",

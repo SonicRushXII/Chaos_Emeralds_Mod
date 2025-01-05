@@ -16,6 +16,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
+import net.sonicrushxii.chaos_emerald.event_handler.custom.HyperFormHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperFormHandler;
 
 import java.util.Arrays;
@@ -195,9 +196,9 @@ public class VirtualSlotData {
             {
                 String slotName = "Hyper";
                 List<Ability> iconTextures = (Arrays.asList(
-                        new Ability(SUPER_SPEAR_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_CONTROL_EX.ordinal()]),
-                        new Ability(SUPER_CONTROL_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_SPEAR_EX.ordinal()]),
-                        new Ability(SUPER_BLAST_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_PORTAL.ordinal()]),
+                        new Ability(SUPER_SPEAR_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_SPEAR_EX.ordinal()]),
+                        new Ability(SUPER_CONTROL_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_CONTROL_EX.ordinal()]),
+                        new Ability(SUPER_BLAST_EX_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_BLAST_EX.ordinal()]),
                         new Ability(SUPER_PORTAL_SLOT, cooldownArray[HyperFormAbility.SUPER_CHAOS_PORTAL.ordinal()]))
                 );
 
@@ -238,10 +239,10 @@ public class VirtualSlotData {
                 int noOfHealthBars = (int)Math.ceil(((int)Math.ceil(player.getAbsorptionAmount())+(int)Math.ceil(player.getMaxHealth()))/20.0);
                 final int barY = screenHeight - Math.min(2*screenHeight/5,((5+noOfHealthBars)*screenHeight/24));
 
-                int barWidth = (int) ( (1.0/(SuperFormHandler.SUPERFORM_DURATION*20)) * (SuperFormHandler.SUPERFORM_DURATION*20-chaosEmeraldCap.superFormTimer) * ULT_BAR_WIDTH);
+                int barWidth = (int) ( (1.0/(HyperFormHandler.HYPERFORM_DURATION*20)) * (HyperFormHandler.HYPERFORM_DURATION*20-chaosEmeraldCap.hyperFormTimer) * ULT_BAR_WIDTH);
                 guiComponent.fill(barX+1,barY+1, barX+ULT_BAR_WIDTH+1, barY-ULT_BAR_HEIGHT,0xFF000000);
                 guiComponent.fill(barX,barY, barX+ULT_BAR_WIDTH, barY-ULT_BAR_HEIGHT,0xFF444444);
-                guiComponent.fill(barX,barY, barX+barWidth, barY-ULT_BAR_HEIGHT,0xFFDDDD00);
+                guiComponent.fill(barX,barY, barX+barWidth, barY-ULT_BAR_HEIGHT,0xFFDDFFFF);
 
                 // Draw the image
                 int imageX = barX - imageWidth - 5; // Image is to the left of the bar

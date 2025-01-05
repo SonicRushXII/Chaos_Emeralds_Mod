@@ -15,6 +15,8 @@ import net.sonicrushxii.chaos_emerald.network.transformations.false_super.Activa
 import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ChaosSpaz;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.ActivateHyperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm;
 import net.sonicrushxii.chaos_emerald.network.transformations.form_super.*;
 
 public class PacketHandler {
@@ -62,6 +64,11 @@ public class PacketHandler {
         INSTANCE.messageBuilder(ChaosSpearEX.class, id++).encoder(ChaosSpearEX::encode).decoder(ChaosSpearEX::new).consumerMainThread(ChaosSpearEX::handle).add();
         INSTANCE.messageBuilder(ChaosControlEX.class, id++).encoder(ChaosControlEX::encode).decoder(ChaosControlEX::new).consumerMainThread(ChaosControlEX::handle).add();
         INSTANCE.messageBuilder(ChaosPortal.class, id++).encoder(ChaosPortal::encode).decoder(ChaosPortal::new).consumerMainThread(ChaosPortal::handle).add();
+
+        //HYPER FORM
+        INSTANCE.messageBuilder(ActivateHyperForm.class, id++).encoder(ActivateHyperForm::encode).decoder(ActivateHyperForm::new).consumerMainThread(ActivateHyperForm::handle).add();
+        INSTANCE.messageBuilder(DeactivateHyperForm.class, id++).encoder(DeactivateHyperForm::encode).decoder(DeactivateHyperForm::new).consumerMainThread(DeactivateHyperForm::handle).add();
+
     }
 
     public static void sendToServer(Object msg) {

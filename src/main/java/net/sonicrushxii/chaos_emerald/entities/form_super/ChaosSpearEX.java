@@ -35,11 +35,6 @@ public class ChaosSpearEX extends LinearMovingEntity {
         super(type, world);
     }
 
-    @Override
-    public void setDuration(int duration) {
-        super.setDuration(duration);
-    }
-
     public void initializeDuration(int duration)
     {
         super.setDuration(duration);

@@ -36,6 +36,9 @@ public class FallDamageHandler {
 
                 if(player.hasEffect(ModEffects.SUPER_FALLDMG_EFFECT.get()) && player.getEffect(ModEffects.SUPER_FALLDMG_EFFECT.get()).getDuration() > 0)
                     event.setDistance(0.0f);
+
+                if(player.hasEffect(ModEffects.HYPER_FALLDMG_EFFECT.get()) && player.getEffect(ModEffects.HYPER_FALLDMG_EFFECT.get()).getDuration() > 0)
+                    event.setDistance(0.0f);
             });
         }
     }

@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 public class ChaosEmeraldRenderer extends EntityRenderer<ChaosEmeraldEntity> {
     private final EntityModel<ChaosEmeraldEntity> model;
 
-
     public ChaosEmeraldRenderer(EntityRendererProvider.Context context) {
         super(context);
         ModelPart modelPart = context.bakeLayer(new ModelLayerLocation(new ResourceLocation(ChaosEmerald.MOD_ID, "chaos_emerald_model"), "main"));

@@ -15,35 +15,34 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
-import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
-import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_super.*;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.ActivateHyperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
 
-public class SuperFormHandler
+public class HyperFormHandler
 {
-    public static final int SUPERFORM_DURATION = 300; //SECONDS
-    public static final int SUPERFORM_COOLDOWN = 10; //SECONDS
+    public static final int HYPERFORM_DURATION = 300; //SECONDS
+    public static final int HYPERFORM_COOLDOWN = 10; //SECONDS
 
     public static void serverTick(ServerPlayer player, int tick)
     {
         //Server Tick
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            //Super Form Handler
-            if (chaosEmeraldCap.superFormTimer != 0)
+            //Hyper Form Handler
+            if (chaosEmeraldCap.hyperFormTimer != 0)
             {
                 //Increase Timer
-                chaosEmeraldCap.superFormTimer += 1;
+                chaosEmeraldCap.hyperFormTimer += 1;
 
                 //Transformation Animation
-                if(chaosEmeraldCap.superFormTimer < 0)
+                if(chaosEmeraldCap.hyperFormTimer < 0)
                 {
                     //Lock in Place
                     player.setDeltaMovement(0,0,0);
@@ -52,10 +51,10 @@ public class SuperFormHandler
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                             ParticleTypes.ELECTRIC_SPARK,
                             player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
-                            0.001,0.5F,player.getEyeHeight()/2,0.5F,1,false));
+                            0.001,0.5F,player.getEyeHeight()/2,0.5F,2,false));
 
                     //Activation Point
-                    if(chaosEmeraldCap.superFormTimer == -4)
+                    if(chaosEmeraldCap.hyperFormTimer == -4)
                     {
                         //Play the Sound
                         player.level().playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 0.75f, 1.0f);
@@ -67,7 +66,7 @@ public class SuperFormHandler
                                 0.001, 0.01F, 0.01F, 0.01F, 1, true));
 
                         //Give Potion Effects
-                        ActivateSuperForm.giveEffects(player);
+                        ActivateHyperForm.giveEffects(player);
                     }
 
                     //Flight Effects
@@ -82,28 +81,28 @@ public class SuperFormHandler
                     player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
                 }
 
-                //Activate Super Form
-                if(chaosEmeraldCap.superFormTimer == 0)
+                //Activate Hyper Form
+                if(chaosEmeraldCap.hyperFormTimer == 0)
                 {
-                    chaosEmeraldCap.superFormTimer = 1;
+                    chaosEmeraldCap.hyperFormTimer = 1;
                     //Change Data
-                    chaosEmeraldCap.formProperties = new SuperFormProperties();
+                    chaosEmeraldCap.formProperties = new HyperFormProperties();
 
                 }
 
-                //Super Form Duration
-                if(chaosEmeraldCap.superFormTimer > 0)
+                //Hyper Form Duration
+                if(chaosEmeraldCap.hyperFormTimer > 0)
                 {
                     //Display Particle Every Tick
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                            new DustParticleOptions(new Vector3f(1.0F, 1.0F, 0.0F),1.0F),
+                            new DustParticleOptions(new Vector3f(0.9F, 1.0F, 1.0F),1.0F),
                             player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
                             0.001,0.5F,player.getEyeHeight()/2,0.5F,2,true));
                     //Handle Flight
                     {
                         if (player.getAbilities().flying && player.isSprinting()) {
                             //Move in Direction you are looking
-                            Vec3 lookAngle = player.getLookAngle().scale(1.75);
+                            Vec3 lookAngle = player.getLookAngle().scale(1.95);
                             player.setDeltaMovement(lookAngle);
                             PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), lookAngle));
                         }
@@ -118,8 +117,8 @@ public class SuperFormHandler
                             Vec3 movementSpeed = player.getDeltaMovement();
                             double movementCoefficient = Math.abs(movementSpeed.x) + Math.abs(movementSpeed.y) + Math.abs(movementSpeed.z);
 
-                            if (movementCoefficient > 1.5) {
-                                Vec3 motionSlow = movementSpeed.scale(0.1);
+                            if (movementCoefficient > 1.8) {
+                                Vec3 motionSlow = movementSpeed.scale(0.05);
                                 player.setDeltaMovement(motionSlow);
                                 PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(), motionSlow));
                             }
@@ -132,7 +131,8 @@ public class SuperFormHandler
                         {
                             try {
                                 if (ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
+                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER)) || ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
+                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.LAVA))) {
                                     //Get Motion
                                     Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
 
@@ -145,7 +145,7 @@ public class SuperFormHandler
                                     }
 
                                     //Move Forward
-                                    player.setDeltaMovement(playerDirection.scale(3.0));
+                                    player.setDeltaMovement(playerDirection.scale(3.5));
                                     player.connection.send(new ClientboundSetEntityMotionPacket(player));
                                 }
                             } catch (NullPointerException ignored) {}
@@ -161,39 +161,39 @@ public class SuperFormHandler
                                 player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
                                 0.001,0.5F,player.getEyeHeight()/2,0.5F,3,false));
 
-                        ActivateSuperForm.giveEffects(player);
+                        ActivateHyperForm.giveEffects(player);
                     }
 
                     //Sprint Boost
                     if(player.isSprinting()) {
-                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
+                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
                     }
                     else {
-                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
+                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
+                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
                     }
 
                 }
 
-                //Super Form End
-                if(chaosEmeraldCap.superFormTimer > 20*SUPERFORM_DURATION)
-                    DeactivateSuperForm.performDeactivateSuper(player);
+                //Hyper Form End
+                if(chaosEmeraldCap.hyperFormTimer > 20*HYPERFORM_DURATION)
+                    DeactivateHyperForm.performDeactivateHyper(player);
             }
 
-            //Decrement Super Cooldown
+            //Decrement Hyper Cooldown
             if(tick == 0)
             {
                 //Give Back Chaos Emeralds
-                if(chaosEmeraldCap.superFormCooldown == 1)  DeactivateSuperForm.giveBackChaosEmeralds(player);
-                chaosEmeraldCap.superFormCooldown = Math.max(chaosEmeraldCap.superFormCooldown - 1, 0);
+                if(chaosEmeraldCap.hyperFormCooldown == 1)  DeactivateHyperForm.giveBackSuperEmeralds(player);
+                chaosEmeraldCap.hyperFormCooldown = Math.max(chaosEmeraldCap.hyperFormCooldown - 1, 0);
 
                 //Cooldown Management
                 try
                 {
-                    SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+                    HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
                     {
-                        byte[] allCooldowns = superFormProperties.getAllCooldowns();
+                        byte[] allCooldowns = hyperFormProperties.getAllCooldowns();
                         for (int i = 0; i < allCooldowns.length; ++i) {
                             if (allCooldowns[i] != (byte) -1)
                                 allCooldowns[i] = (byte) Math.max(0, allCooldowns[i] - 1);
@@ -201,7 +201,6 @@ public class SuperFormHandler
                     }
                 }catch (ClassCastException ignored) {}
             }
-
             //Sync Data to Client
             PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                     player.getId(),chaosEmeraldCap
@@ -211,37 +210,41 @@ public class SuperFormHandler
 
     public static void clientTick(LocalPlayer player, int clientTick)
     {
-        //Sends a Packet To Activate Super form if you have all Seven Emeralds.
+        //Sends a Packet To Activate Hyper form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Transform
-            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.superFormTimer == 0 && chaosEmeraldCap.superFormCooldown == 0)
+            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.hyperFormTimer == 0 && chaosEmeraldCap.hyperFormCooldown == 0)
             {
-                if(ActivateSuperForm.hasAllChaosEmeralds(player) && ActivateSuperForm.isPlayerNotWearingArmor(player)) {
-                    PacketHandler.sendToServer(new ActivateSuperForm());
+                if(ActivateHyperForm.hasAllSuperEmeralds(player) && ActivateHyperForm.isPlayerNotWearingArmor(player)) {
+                    PacketHandler.sendToServer(new ActivateHyperForm());
                     player.setDeltaMovement(0,0,0);
                 }
             }
 
             //DeTransform
-            if(KeyBindings.INSTANCE.transformButton.isDown() && (chaosEmeraldCap.superFormTimer > 0 && chaosEmeraldCap.superFormTimer < SUPERFORM_DURATION*20) && chaosEmeraldCap.superFormCooldown == 0)
-                PacketHandler.sendToServer(new DeactivateSuperForm());
+            if(KeyBindings.INSTANCE.transformButton.isDown() && (chaosEmeraldCap.hyperFormTimer > 0 && chaosEmeraldCap.hyperFormTimer < HYPERFORM_DURATION *20) && chaosEmeraldCap.hyperFormCooldown == 0) {
+                PacketHandler.sendToServer(new DeactivateHyperForm());
+            }
 
             //Lock Position
-            if(chaosEmeraldCap.superFormTimer < 0)  player.setDeltaMovement(0,0,0);
+            if(chaosEmeraldCap.hyperFormTimer < 0)  player.setDeltaMovement(0,0,0);
 
-            //Super Form Duration
-            if(chaosEmeraldCap.superFormTimer > 0)
+            //Hyper Form Duration
+            if(chaosEmeraldCap.hyperFormTimer > 0)
             {
-                SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+                HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
 
-                if (KeyBindings.INSTANCE.useAbility1.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_SPEAR_EX) == 0)
-                    PacketHandler.sendToServer(new ChaosSpearEX());
+                /*if (KeyBindings.INSTANCE.useAbility1.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_SPEAR_EX) == 0)
+                    PacketHandler.sendToServer(new SuperChaosSpearEX());
 
-                if (KeyBindings.INSTANCE.useAbility2.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_CONTROL_EX) == 0)
-                    PacketHandler.sendToServer(new ChaosControlEX());
+                if (KeyBindings.INSTANCE.useAbility2.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_CONTROL_EX) == 0)
+                    PacketHandler.sendToServer(new SuperChaosControlEX());
 
-                if (KeyBindings.INSTANCE.useAbility3.isDown() && superFormProperties.getCooldown(SuperFormAbility.CHAOS_PORTAL) == 0)
-                    PacketHandler.sendToServer(new ChaosPortal());
+                if (KeyBindings.INSTANCE.useAbility3.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_BLAST_EX) == 0)
+                    PacketHandler.sendToServer(new SuperChaosBlastEX());
+
+                if (KeyBindings.INSTANCE.useAbility4.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_PORTAL) == 0)
+                    PacketHandler.sendToServer(new SuperPortal());*/
             }
         });
     }

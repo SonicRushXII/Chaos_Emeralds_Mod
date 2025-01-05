@@ -122,6 +122,35 @@ public class RenderHandler {
                         event.setCanceled(true);
                     }
                 }
+
+                //Super Form Flight
+                if(chaosEmeraldCap.hyperFormTimer > 0 && player.isSprinting())
+                {
+                    Vec3 deltaMovement = player.getDeltaMovement();
+                    double movementCoefficient = Math.abs(deltaMovement.x) + Math.abs(deltaMovement.y) + Math.abs(deltaMovement.z);
+
+                    if(movementCoefficient > 2.1 || player.getAbilities().flying)
+                    {
+                        poseStack.pushPose();
+
+                        // Scale
+                        poseStack.scale(1.0f, 1.0f, 1.0f);
+
+                        //Apply Rotation & Translation
+                        poseStack.mulPose(Axis.YP.rotationDegrees(-player.getYRot()));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                        poseStack.translate(0D, -1.5D, 0D);
+
+                        //Create a Custom Transform
+                        Consumer<ModelPart> customTransform = SuperFormFlightModel.getCustomTransform(player);
+
+                        //Render The Custom Model
+                        ModModelRenderer.renderPlayerModel(SuperFormFlightModel.class, event, poseStack, customTransform);
+
+                        poseStack.popPose();
+                        event.setCanceled(true);
+                    }
+                }
             });
         }
 

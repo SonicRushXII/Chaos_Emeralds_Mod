@@ -10,7 +10,7 @@ public class HyperFormProperties extends FormProperties
 
     public HyperFormProperties()
     {
-        abilityCooldowns = new byte[SuperFormAbility.values().length];
+        abilityCooldowns = new byte[HyperFormAbility.values().length];
     }
 
     public HyperFormProperties(CompoundTag nbt)
@@ -30,6 +30,6 @@ public class HyperFormProperties extends FormProperties
 
     //Cooldown Manager
     public byte[] getAllCooldowns() {return abilityCooldowns;}
-    public byte getCooldown(SuperFormAbility ability){return abilityCooldowns[ability.ordinal()];}
-    public void setCooldown(SuperFormAbility ability, byte seconds){abilityCooldowns[ability.ordinal()] = seconds;}
+    public byte getCooldown(HyperFormAbility ability){return abilityCooldowns[ability.ordinal()];}
+    public void setCooldown(HyperFormAbility ability, byte seconds){abilityCooldowns[ability.ordinal()] = seconds;}
 }

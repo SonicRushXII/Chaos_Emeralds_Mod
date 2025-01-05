@@ -25,9 +25,7 @@ import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazModel;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpazRenderer;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldModel;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldRenderer;
-import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldModel;
-import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldRenderer;
-import net.sonicrushxii.chaos_emerald.entities.form_super.SuperFormFlightModel;
+import net.sonicrushxii.chaos_emerald.entities.form_super.*;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDivePlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.ChaosGambitPlayerModel;
 import net.sonicrushxii.chaos_emerald.entities.yellow.SuperEmeraldRenderModel;
@@ -127,6 +125,7 @@ public class ChaosEmerald
 
             //Super Form
             EntityRenderers.register(ModEntityTypes.CHAOS_SPEAR_EX.get(), PointRenderer::new);
+            EntityRenderers.register(ModEntityTypes.PORTAL_RING.get(), PortalRingRenderer::new);
 
             //Super Emerald
             EntityRenderers.register(ModEntityTypes.SUPER_EMERALD_ENTITY.get(), SuperEmeraldRenderer::new);
@@ -173,6 +172,8 @@ public class ChaosEmerald
             //Super Form
                 //Flight Model
                 event.registerLayerDefinition(SuperFormFlightModel.LAYER_LOCATION,SuperFormFlightModel::createBodyLayer);
+                //Chaos Portal Ring Model
+                event.registerLayerDefinition(PortalRingModel.LAYER_LOCATION,PortalRingModel::createBodyLayer);
 
             //Super Emerald
             event.registerLayerDefinition(SuperEmeraldModel.LAYER_LOCATION,SuperEmeraldModel::createBodyLayer);

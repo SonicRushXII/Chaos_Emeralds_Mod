@@ -7,10 +7,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.FalseSuperHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperFormHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.custom.*;
 
 public class PlayerTickHandler {
     private static final int TICKS_PER_SEC = 20;
@@ -51,6 +48,9 @@ public class PlayerTickHandler {
 
         //Super Form
         SuperFormHandler.clientTick(player,clientTick);
+
+        //Hyper Form
+        HyperFormHandler.clientTick(player,clientTick);
     }
 
     public void onServerPlayerTick(ServerPlayer player)
@@ -67,8 +67,11 @@ public class PlayerTickHandler {
         //Handle Super Emeralds
         SuperEmeraldHandler.serverTick(player,serverTick);
 
-        //Activate Super Form
+        //Super Form
         SuperFormHandler.serverTick(player,serverTick);
+
+        //Hyper Form
+        HyperFormHandler.serverTick(player,serverTick);
 
     }
 }

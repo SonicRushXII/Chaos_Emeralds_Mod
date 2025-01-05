@@ -34,6 +34,9 @@ public class ModEffects {
     public static final RegistryObject<MobEffect> SUPER_CHAOS_DIVE = MOB_EFFECTS.register(
             "super_chaos_dive",()->((new SuperDivePadEffect(MobEffectCategory.BENEFICIAL,0x00FF00))));
 
+    public static final RegistryObject<MobEffect> HYPER_FALLDMG_EFFECT = MOB_EFFECTS.register(
+            "hyper_falldmg_effect",()->((new HyperFormPadEffect(MobEffectCategory.BENEFICIAL,0xFFFF00))));
+
     public static void register(IEventBus eventBus)
     {
         MOB_EFFECTS.register(eventBus);
