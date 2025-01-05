@@ -103,12 +103,10 @@ public class PortalRingEntity extends LinearMovingEntity {
     {
         //Drawing Vector
         float portalRot = quantizePortalRotation(this.getYRot());
-        System.err.println(portalRot);
         float portalPerpendicularRot = portalRot + 90F;
 
         Vec3 drawingVector = Utilities.calculateViewVector(0f,portalPerpendicularRot);
         Vec3 portalPos = new Vec3(this.getX(),this.getY(),this.getZ());
-        System.err.println(drawingVector);
 
         //Draw in the Border
         Block PORTAL_BORDER = (getPortalType() == (byte)0)? Blocks.YELLOW_STAINED_GLASS : Blocks.WHITE_STAINED_GLASS;
@@ -226,13 +224,11 @@ public class PortalRingEntity extends LinearMovingEntity {
 
         if(getDuration() == PORTAL_DURATION)
         {
-            System.err.println("Spawn Portal at, "+this.getPosition(0f));
             if(!this.level().isClientSide()) createPortal();
         }
 
         if(getDuration() == 1)
         {
-            System.err.println("Closed Portal at, "+this.getPosition(0f));
             if(!this.level().isClientSide()) destroyPortal();
         }
     }

@@ -1,12 +1,16 @@
 package net.sonicrushxii.chaos_emerald.network.transformations.form_super;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.common.ForgeMod;
@@ -103,22 +107,43 @@ public class DeactivateSuperForm
         });
     }
 
-    public static void giveBackChaosEmeralds(Player player)
+    private static void spawnItem(ServerLevel serverLevel, BlockPos pos, ItemStack itemStack) {
+        // Create an ItemEntity at the player's position
+        ItemEntity itemEntity = new ItemEntity(
+                serverLevel,
+                pos.getX() + 0.5, // Center on block
+                pos.getY() + 1,   // Slightly above the ground
+                pos.getZ() + 0.5, // Center on block
+                itemStack
+        );
+
+        // Add some random motion for a natural drop effect
+        itemEntity.setDeltaMovement(
+                serverLevel.random.nextGaussian() * 0.05,
+                0.2,
+                serverLevel.random.nextGaussian() * 0.05
+        );
+
+        // Spawn the entity in the world
+        serverLevel.addFreshEntity(itemEntity);
+    }
+
+    public static void giveBackChaosEmeralds(ServerPlayer player)
     {
         if (!player.getInventory().add(new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem()));
         if (!player.getInventory().add(new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem())))
-            player.drop(new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem()), false);
+            spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem()));
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){

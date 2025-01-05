@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -23,6 +24,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
+import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -30,6 +32,8 @@ import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
+
+import static net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm.spawnItem;
 
 public class HyperFormHandler
 {
@@ -237,6 +241,8 @@ public class HyperFormHandler
                 //Hyper Form End
                 if(chaosEmeraldCap.hyperFormTimer > 20*HYPERFORM_DURATION)
                     DeactivateHyperForm.performDeactivateHyper(player);
+
+
             }
 
             //Decrement Hyper Cooldown

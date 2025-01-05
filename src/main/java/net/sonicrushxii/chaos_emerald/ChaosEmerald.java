@@ -59,6 +59,7 @@ public class ChaosEmerald
         MinecraftForge.EVENT_BUS.register(new InteractionHandler());
         MinecraftForge.EVENT_BUS.register(new FallDamageHandler());
         MinecraftForge.EVENT_BUS.register(new ArmorRestrictionHandler());
+        MinecraftForge.EVENT_BUS.register(new DeathEventHandler());
         MinecraftForge.EVENT_BUS.register(new Scheduler());
 
         // Register the item to a creative tab

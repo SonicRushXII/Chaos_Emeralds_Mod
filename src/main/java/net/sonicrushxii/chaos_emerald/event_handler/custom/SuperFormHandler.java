@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -17,13 +18,17 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
+import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm;
 import net.sonicrushxii.chaos_emerald.network.transformations.form_super.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
+
+import static net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm.spawnItem;
 
 public class SuperFormHandler
 {
@@ -177,6 +182,23 @@ public class SuperFormHandler
                 //Super Form End
                 if(chaosEmeraldCap.superFormTimer > 20*SUPERFORM_DURATION)
                     DeactivateSuperForm.performDeactivateSuper(player);
+
+                //Super Form Interrupt
+                if(player.deathTime != 0)
+                {
+                    System.err.println("SUPER FORM DEAD");
+
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREY_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.PURPLE_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.RED_CHAOS_EMERALD.get().asItem()));
+                    spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.YELLOW_CHAOS_EMERALD.get().asItem()));
+
+                    DeactivateHyperForm.performDeactivateHyper(player);
+                    chaosEmeraldCap.hyperFormCooldown = 0;
+                }
             }
 
             //Decrement Super Cooldown
