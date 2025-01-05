@@ -25,10 +25,11 @@ import java.util.UUID;
 
 public class ChaosSpaz extends LinearMovingEntity {
     public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpaz.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(ChaosSpaz.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpaz.class, EntityDataSerializers.OPTIONAL_UUID);
+
     private int MAX_DURATION = 200;
     private static final float STRENGTH = 3.0f;
-    private static final float DAMAGE = 6.0F;
 
     public ChaosSpaz(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
@@ -44,6 +45,7 @@ public class ChaosSpaz extends LinearMovingEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DESTROY_BLOCKS, true);
+        this.entityData.define(DAMAGE, 6.0F);
         this.entityData.define(OWNER,Optional.empty());
     }
 
@@ -52,6 +54,8 @@ public class ChaosSpaz extends LinearMovingEntity {
         super.readAdditionalSaveData(tag);
         // Destroy Blocks
         if(tag.contains("DestroyBlocks")) setDestroyBlocks(tag.getBoolean("DestroyBlocks"));
+        //Damage
+        if(tag.contains("Damage")) setSpazDamage(tag.getFloat("Damage"));
         // Load the owner's UUID
         if (tag.hasUUID("OwnerUUID")) this.setOwner(tag.getUUID("OwnerUUID"));
     }
@@ -63,6 +67,7 @@ public class ChaosSpaz extends LinearMovingEntity {
         UUID ownerUuid = getOwnerUUID();
         if (ownerUuid != null) tag.putUUID("OwnerUUID", ownerUuid);
         tag.putBoolean("DestroyBlocks", isDestroyBlocks());
+        tag.putFloat("Damage", getSpazDamage());
     }
 
     // Sets the owner by UUID
@@ -87,9 +92,15 @@ public class ChaosSpaz extends LinearMovingEntity {
     public boolean isDestroyBlocks() {
         return this.entityData.get(DESTROY_BLOCKS);
     }
-
     public void setDestroyBlocks(boolean destroyBlocks) {
         this.entityData.set(DESTROY_BLOCKS, destroyBlocks);
+    }
+
+    public float getSpazDamage() {
+        return this.entityData.get(DAMAGE);
+    }
+    public void setSpazDamage(float damage) {
+        this.entityData.set(DAMAGE, damage);
     }
 
     @Override
@@ -115,7 +126,7 @@ public class ChaosSpaz extends LinearMovingEntity {
                 try {// Synchronize on server only
                     for (Entity enemy : enemies) {
                         if(enemy instanceof LivingEntity)
-                            enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),DAMAGE);
+                            enemy.hurt(this.damageSources().playerAttack((Player) this.getOwner()),getSpazDamage());
                     }
                 }catch(NullPointerException ignored){}
                 explode();

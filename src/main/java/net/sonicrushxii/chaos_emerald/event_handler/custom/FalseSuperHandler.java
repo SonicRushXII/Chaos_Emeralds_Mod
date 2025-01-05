@@ -177,6 +177,12 @@ public class FalseSuperHandler
                             chaosSpaz.setDuration(120);
                             chaosSpaz.setMovementDirection(player.getLookAngle());
                             chaosSpaz.setDestroyBlocks(player.isShiftKeyDown());
+                            //Increase Damage Based on Form
+                            {
+                                if(chaosEmeraldCap.hyperFormTimer > 0)      chaosSpaz.setSpazDamage(60.0F);
+                                else if(chaosEmeraldCap.superFormTimer > 0) chaosSpaz.setSpazDamage(24.0F);
+                                else                                        chaosSpaz.setSpazDamage(6.0F);
+                            }
                             chaosSpaz.setOwner(player.getUUID());
 
                             // Add the entity to the world

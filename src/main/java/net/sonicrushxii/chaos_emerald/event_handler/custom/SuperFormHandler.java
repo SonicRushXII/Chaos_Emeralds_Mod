@@ -86,7 +86,6 @@ public class SuperFormHandler
                     chaosEmeraldCap.superFormTimer = 1;
                     //Change Data
                     chaosEmeraldCap.formProperties = new SuperFormProperties();
-
                 }
 
                 //Super Form Duration

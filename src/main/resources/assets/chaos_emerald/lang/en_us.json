@@ -29,6 +29,9 @@
   "block.chaos_emerald.super_emerald.red_emerald": "Super Emerald",
   "block.chaos_emerald.super_emerald.yellow_emerald": "Super Emerald",
 
+  "block.chaos_emerald.chaos_nether_portal_block": "Nether Portal Block",
+  "block.chaos_emerald.chaos_end_portal_block": "End Portal Block",
+
   "block.chaos_emerald.master_emerald": "Master Emerald",
 
   "creativetab.chaos_emerald": "Chaos Emerald Tab",

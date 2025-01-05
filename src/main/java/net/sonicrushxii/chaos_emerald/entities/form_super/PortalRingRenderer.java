@@ -36,16 +36,21 @@ public class PortalRingRenderer extends EntityRenderer<PortalRingEntity> {
     @Override
     public void render(@NotNull PortalRingEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         // Translate and rotate the pose stack as needed
-        poseStack.pushPose();
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity)));
+        if(entity.getDuration() >= PortalRingEntity.PORTAL_DURATION)
+        {
+            poseStack.pushPose();
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity)));
 
-        //poseStack.scale(1.0F,1.0F,1.0F);
-        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-        poseStack.translate(0D,-1.4D,0D);
+            //poseStack.scale(1.0F,1.0F,1.0F);
+            poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot()));
+            poseStack.translate(0D, -1.4D, 0D);
 
-        this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        poseStack.popPose();
+            poseStack.popPose();
+        }
+
         super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
     }
 }

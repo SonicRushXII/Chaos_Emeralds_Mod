@@ -40,9 +40,10 @@ public class SuperChaosPortal
         PortalRingEntity portalRingEntity = new PortalRingEntity(ModEntityTypes.PORTAL_RING.get(), pLevel);
 
         portalRingEntity.setPos(spawnPos);
-        portalRingEntity.initializeDuration(40);
+        portalRingEntity.initializeDuration(30);
         portalRingEntity.setMovementDirection(Utilities.calculateViewVector(player.getXRot()/2,player.getYRot()).scale(0.15));
-        portalRingEntity.setPortalType((player.isShiftKeyDown())?(byte)0:(byte)1);
+        portalRingEntity.setYRot(player.getYRot());
+        portalRingEntity.setPortalType((player.isShiftKeyDown() || String.valueOf(player.level().dimension().location()).equals("minecraft:the_end"))?(byte)0:(byte)1);
 
         // Add the entity to the world
         pLevel.addFreshEntity(portalRingEntity);

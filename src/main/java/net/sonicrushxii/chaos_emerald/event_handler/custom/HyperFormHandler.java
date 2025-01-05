@@ -187,16 +187,16 @@ public class HyperFormHandler
                             Vec3 playerPos = new Vec3(player.getX(),player.getY(),player.getZ());
 
                             //Perform 9 Blasts all around The Player
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,0));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,1,0));
 
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(3,0,0));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-3,0,0));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,3));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,-3));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,0,2.121));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,0,-2.121));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,0,2.121));
-                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,0,-2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(3,1,0));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-3,1,0));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,1,3));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,1,-3));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,1,2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,1,-2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,1,2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,1,-2.121));
 
 
                             //Sync Set Motion to Zero

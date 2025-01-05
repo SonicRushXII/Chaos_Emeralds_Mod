@@ -1,6 +1,7 @@
 package net.sonicrushxii.chaos_emerald.modded;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.util.ITeleporter;
 
 public class ModTeleporter implements ITeleporter {
