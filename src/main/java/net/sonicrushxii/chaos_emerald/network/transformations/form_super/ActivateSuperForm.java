@@ -61,6 +61,7 @@ public class ActivateSuperForm
             // Check if the current stack matches the target item
             if (ItemStack.isSameItemSameTags(stack, targetItem)) {
                 player.getInventory().setItem(i, ItemStack.EMPTY); // Clear the slot
+                break;
             }
         }
     }

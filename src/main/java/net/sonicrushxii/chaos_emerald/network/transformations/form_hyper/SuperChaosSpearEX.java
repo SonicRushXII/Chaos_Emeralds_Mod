@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.network.transformations.form_super;
+package net.sonicrushxii.chaos_emerald.network.transformations.form_hyper;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,20 +8,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
-import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosSpearEXEntity;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
+import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperSpearEXEntity;
 import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 
 import java.util.function.Supplier;
 
-public class ChaosSpearEX
+public class SuperChaosSpearEX
 {
-    public ChaosSpearEX() {}
+    public SuperChaosSpearEX() {}
 
-    public ChaosSpearEX(FriendlyByteBuf buffer){}
+    public SuperChaosSpearEX(FriendlyByteBuf buffer){}
 
     public void encode(FriendlyByteBuf buffer){}
 
@@ -34,16 +34,16 @@ public class ChaosSpearEX
                 SoundEvents.EGG_THROW, SoundSource.MASTER, 1.0f, 1.0f);
 
         //Spawning
-        ChaosSpearEXEntity chaosSpearEXEntity = new ChaosSpearEXEntity(ModEntityTypes.CHAOS_SPEAR_EX.get(), pLevel);
+        SuperSpearEXEntity superSpearEXEntity = new SuperSpearEXEntity(ModEntityTypes.SUPER_CHAOS_SPEAR_EX.get(), pLevel);
 
-        chaosSpearEXEntity.setPos(spawnPos);
-        chaosSpearEXEntity.initializeDuration(120);
-        chaosSpearEXEntity.setMovementDirection(player.getLookAngle().scale(1.5));
-        chaosSpearEXEntity.setDestroyBlocks(player.isShiftKeyDown());
-        chaosSpearEXEntity.setOwner(player.getUUID());
+        superSpearEXEntity.setPos(spawnPos);
+        superSpearEXEntity.initializeDuration(120);
+        superSpearEXEntity.setMovementDirection(player.getLookAngle().scale(1.5));
+        superSpearEXEntity.setDestroyBlocks(player.isShiftKeyDown());
+        superSpearEXEntity.setOwner(player.getUUID());
 
         // Add the entity to the world
-        pLevel.addFreshEntity(chaosSpearEXEntity);
+        pLevel.addFreshEntity(superSpearEXEntity);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
@@ -56,10 +56,10 @@ public class ChaosSpearEX
                         Level pLevel = player.level();
 
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                            SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+                            HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
 
                             //Set Cooldown
-                            superFormProperties.setCooldown(SuperFormAbility.CHAOS_SPEAR_EX,(byte)10);
+                            hyperFormProperties.setCooldown(HyperFormAbility.SUPER_CHAOS_SPEAR_EX,(byte)10);
                             
                             //Throw Spear
                             {
@@ -73,6 +73,7 @@ public class ChaosSpearEX
                                 //Spawn Left and Right
                                 spawnChaosSpear(player,spawnPos.add(rightAngle));
                                 spawnChaosSpear(player,spawnPos.add(rightAngle.reverse()));
+
                             }
 
                             //Emerald Data

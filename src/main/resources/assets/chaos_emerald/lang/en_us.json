@@ -1,6 +1,13 @@
 {
   "key.categories.chaos_emerald": "Chaos Emerald Key Binds",
   "key.chaos_emerald.Transform": "Transform",
+  "key.chaos_emerald.AbilitySlot_1": "Super/Hyper Ability 1",
+  "key.chaos_emerald.AbilitySlot_2": "Super/Hyper Ability 2",
+  "key.chaos_emerald.AbilitySlot_3": "Super/Hyper Ability 3",
+  "key.chaos_emerald.AbilitySlot_4": "Super/Hyper Ability 4",
+  "key.chaos_emerald.AbilitySlot_5": "Super/Hyper Ability 5",
+  "key.chaos_emerald.AbilitySlot_6": "Super/Hyper Ability 6",
+  "key.chaos_emerald.HyperDoubleJump": "Double Jump (Keep same as Jump)",
 
   "block.chaos_emerald.chaos_emerald.aqua_emerald": "Chaos Emerald",
   "block.chaos_emerald.chaos_emerald.blue_emerald": "Chaos Emerald",
@@ -31,8 +38,9 @@
 
   "effect.chaos_emerald.super_chaos_dive" : "Chaos Dive",
   "effect.chaos_emerald.super_ice_launch" : "Chaos Ice Spiked",
-  "effect.chaos_emerald.super_falldmg_effect" : "No Fall Dmg",
   "effect.chaos_emerald.chaos_flame_jump" : "Chaos Flame Jump",
   "effect.chaos_emerald.chaos_dash" : "Chaos Dash",
-  "effect.chaos_emerald.chaos_bind" : "Chaos Aqua Bind"
+  "effect.chaos_emerald.chaos_bind" : "Chaos Aqua Bind",
+  "effect.chaos_emerald.super_falldmg_effect" : "No Fall Dmg",
+  "effect.chaos_emerald.hyper_falldmg_effect" : "No Fall Dmg"
 }

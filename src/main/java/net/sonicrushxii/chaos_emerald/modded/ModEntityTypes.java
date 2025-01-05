@@ -14,9 +14,10 @@ import net.sonicrushxii.chaos_emerald.entities.blue.IceHorizontalSpike;
 import net.sonicrushxii.chaos_emerald.entities.blue.IceVerticalSpike;
 import net.sonicrushxii.chaos_emerald.entities.false_super.ChaosSpaz;
 import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperEmeraldEntity;
+import net.sonicrushxii.chaos_emerald.entities.form_hyper.SuperSpearEXEntity;
 import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosEmeraldEntity;
 import net.sonicrushxii.chaos_emerald.entities.form_super.PortalRingEntity;
-import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosSpearEX;
+import net.sonicrushxii.chaos_emerald.entities.form_super.ChaosSpearEXEntity;
 import net.sonicrushxii.chaos_emerald.entities.green.ChaosDiveRipple;
 import net.sonicrushxii.chaos_emerald.entities.master_emerald.EmeraldTransformer;
 import net.sonicrushxii.chaos_emerald.entities.purple.SuperChaosSlicer;
@@ -54,8 +55,8 @@ public class ModEntityTypes {
 
 
     //Super Form
-    public static final RegistryObject<EntityType<ChaosSpearEX>> CHAOS_SPEAR_EX = ENTITY_TYPES.register("chaos_spear_ex",
-            () -> EntityType.Builder.<ChaosSpearEX>of(ChaosSpearEX::new, MobCategory.MISC)
+    public static final RegistryObject<EntityType<ChaosSpearEXEntity>> CHAOS_SPEAR_EX = ENTITY_TYPES.register("chaos_spear_ex",
+            () -> EntityType.Builder.<ChaosSpearEXEntity>of(ChaosSpearEXEntity::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)  // Define the size of the entity
                     .build("chaos_spear_ex"));
     public static final RegistryObject<EntityType<PortalRingEntity>> PORTAL_RING = ENTITY_TYPES.register("portal_ring",
@@ -92,6 +93,11 @@ public class ModEntityTypes {
                     .setTrackingRange(32)
                     .build("super_chaos_slicer"));
 
+    //Hyper Form
+    public static final RegistryObject<EntityType<SuperSpearEXEntity>> SUPER_CHAOS_SPEAR_EX = ENTITY_TYPES.register("super_chaos_spear_ex",
+            () -> EntityType.Builder.<SuperSpearEXEntity>of(SuperSpearEXEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)  // Define the size of the entity
+                    .build("super_chaos_spear_ex"));
 
 
 

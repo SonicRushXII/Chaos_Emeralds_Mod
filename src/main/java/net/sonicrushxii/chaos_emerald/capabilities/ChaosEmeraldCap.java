@@ -1,10 +1,7 @@
 package net.sonicrushxii.chaos_emerald.capabilities;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
 import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
-import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
 
 public class ChaosEmeraldCap {
@@ -195,7 +192,7 @@ public class ChaosEmeraldCap {
 
         //Form Property Details
         if(superFormTimer > 0) formProperties = new SuperFormProperties(formDetails);
-        else if(hyperFormTimer > 0) formProperties = new HyperFormProperties(formDetails);
+        else if(hyperFormTimer > 0) formProperties = new net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties(formDetails);
         else formProperties = new FormProperties(formDetails);
     }
 

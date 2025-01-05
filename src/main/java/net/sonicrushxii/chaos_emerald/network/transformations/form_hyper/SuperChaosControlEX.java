@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.network.transformations.form_super;
+package net.sonicrushxii.chaos_emerald.network.transformations.form_hyper;
 
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,8 +14,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
+import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -26,11 +27,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ChaosControlEX
+public class SuperChaosControlEX
 {
-    public ChaosControlEX() {}
+    public SuperChaosControlEX() {}
 
-    public ChaosControlEX(FriendlyByteBuf buffer){}
+    public SuperChaosControlEX(FriendlyByteBuf buffer){}
 
     public void encode(FriendlyByteBuf buffer){}
 
@@ -112,12 +113,12 @@ public class ChaosControlEX
                     if(player != null)
                     {
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                            SuperFormProperties superFormProperties = (SuperFormProperties) chaosEmeraldCap.formProperties;
+                            HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
 
                             //Chaos Control
                             if(performChaosControlEX(player))
                                 //Set Cooldown IF move succeeds
-                                superFormProperties.setCooldown(SuperFormAbility.CHAOS_CONTROL_EX,(byte)15);
+                                hyperFormProperties.setCooldown(HyperFormAbility.SUPER_CHAOS_CONTROL_EX,(byte)10);
 
                             //Emerald Data
                             PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(

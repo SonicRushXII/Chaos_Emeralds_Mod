@@ -13,7 +13,6 @@ import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.HyperFormHandler;
@@ -190,7 +189,7 @@ public class VirtualSlotData {
         int y = 0;
 
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            byte[] cooldownArray = ((HyperFormProperties)chaosEmeraldCap.formProperties).getAllCooldowns();
+            byte[] cooldownArray = ((net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties)chaosEmeraldCap.formProperties).getAllCooldowns();
 
             //Render Slot Ability
             {

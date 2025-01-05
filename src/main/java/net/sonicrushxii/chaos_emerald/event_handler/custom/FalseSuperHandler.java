@@ -244,7 +244,7 @@ public class FalseSuperHandler
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Transform
-            if (KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.falseSuperTimer == 0) {
+            if (KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.falseSuperTimer == 0 && !player.isShiftKeyDown()) {
                 PacketHandler.sendToServer(new ActivateFalseSuper());
             }
         });

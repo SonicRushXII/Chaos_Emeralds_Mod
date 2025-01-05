@@ -17,8 +17,6 @@ import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormProperties;
-import net.sonicrushxii.chaos_emerald.entities.aqua.SuperAquaBubbleEntity;
-import net.sonicrushxii.chaos_emerald.modded.ModEntityTypes;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -97,8 +95,9 @@ public class SuperFormHandler
                     //Display Particle Every Tick
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                             new DustParticleOptions(new Vector3f(1.0F, 1.0F, 0.0F),1.0F),
-                            player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
-                            0.001,0.5F,player.getEyeHeight()/2,0.5F,2,true));
+                            player.getX(),player.getY()+player.getEyeHeight()/3,player.getZ(),
+                            0.001,0.5F,player.getEyeHeight()/3,0.5F,2,true));
+
                     //Handle Flight
                     {
                         if (player.getAbilities().flying && player.isSprinting()) {
@@ -214,7 +213,7 @@ public class SuperFormHandler
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Transform
-            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.superFormTimer == 0 && chaosEmeraldCap.superFormCooldown == 0)
+            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.superFormTimer == 0 && chaosEmeraldCap.superFormCooldown == 0 && !player.isShiftKeyDown())
             {
                 if(ActivateSuperForm.hasAllChaosEmeralds(player) && ActivateSuperForm.isPlayerNotWearingArmor(player)) {
                     PacketHandler.sendToServer(new ActivateSuperForm());

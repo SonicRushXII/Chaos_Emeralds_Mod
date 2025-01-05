@@ -3,8 +3,6 @@ package net.sonicrushxii.chaos_emerald.capabilities.superform;
 import net.minecraft.nbt.CompoundTag;
 import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
 
-import java.util.UUID;
-
 public class SuperFormProperties extends FormProperties
 {
     private final byte[] abilityCooldowns;

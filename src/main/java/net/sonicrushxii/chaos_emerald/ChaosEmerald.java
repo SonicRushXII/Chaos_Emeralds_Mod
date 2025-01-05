@@ -140,6 +140,9 @@ public class ChaosEmerald
             //Purple Super Emerald
             EntityRenderers.register(ModEntityTypes.CHAOS_SLICER.get(), PointRenderer::new);
 
+            //Hyper Form
+            EntityRenderers.register(ModEntityTypes.SUPER_CHAOS_SPEAR_EX.get(), PointRenderer::new);
+
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());

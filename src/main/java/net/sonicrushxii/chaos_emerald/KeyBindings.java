@@ -54,4 +54,11 @@ public class KeyBindings {
             InputConstants.getKey(InputConstants.KEY_B,-1),
             CATEGORY
     );
+
+    public final KeyMapping doubleJump = new KeyMapping(
+            "key."+ ChaosEmerald.MOD_ID+".HyperDoubleJump",
+            KeyConflictContext.IN_GAME,
+            InputConstants.getKey(InputConstants.KEY_SPACE,-1),
+            CATEGORY
+    );
 }

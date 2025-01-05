@@ -16,7 +16,6 @@ import net.minecraft.world.phys.AABB;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.entities.all.LinearMovingEntity;
 import net.sonicrushxii.chaos_emerald.entities.all.PointEntity;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_super.ChaosControlEX;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -24,14 +23,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ChaosSpearEX extends LinearMovingEntity {
-    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpearEX.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpearEX.class, EntityDataSerializers.OPTIONAL_UUID);
+public class ChaosSpearEXEntity extends LinearMovingEntity {
+    public static final EntityDataAccessor<Boolean> DESTROY_BLOCKS = SynchedEntityData.defineId(ChaosSpearEXEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(ChaosSpearEXEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private int MAX_DURATION = 200;
     private static final float STRENGTH = 1.85F;
     private static final float DAMAGE = 8.0F;
 
-    public ChaosSpearEX(EntityType<? extends PointEntity> type, Level world) {
+    public ChaosSpearEXEntity(EntityType<? extends PointEntity> type, Level world) {
         super(type, world);
     }
 
@@ -110,7 +109,7 @@ public class ChaosSpearEX extends LinearMovingEntity {
             List<Entity> enemies = this.level().getEntitiesOfClass(Entity.class,
                     new AABB(this.getX() - 1.5, this.getY() - 1.5, this.getZ() - 1.5,
                             this.getX() + 1.5, this.getY() + 1.5, this.getZ() + 1.5),
-                    enemy -> !(enemy instanceof ChaosSpearEX)
+                    enemy -> !(enemy instanceof ChaosSpearEXEntity)
             );
             if (!enemies.isEmpty() && this.getDuration() < this.MAX_DURATION-4)
             {

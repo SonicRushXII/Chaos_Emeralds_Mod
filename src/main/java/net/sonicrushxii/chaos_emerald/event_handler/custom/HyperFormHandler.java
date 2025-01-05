@@ -1,28 +1,33 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.ActivateHyperForm;
-import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm;
+import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
 
@@ -93,11 +98,14 @@ public class HyperFormHandler
                 //Hyper Form Duration
                 if(chaosEmeraldCap.hyperFormTimer > 0)
                 {
+                    //Get Hyperform specific data
+                    HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
+
                     //Display Particle Every Tick
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                             new DustParticleOptions(new Vector3f(0.9F, 1.0F, 1.0F),1.0F),
-                            player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
-                            0.001,0.5F,player.getEyeHeight()/2,0.5F,2,true));
+                            player.getX(),player.getY()+player.getEyeHeight()/3,player.getZ(),
+                            0.001,0.5F,player.getEyeHeight()/3,0.5F,2,true));
                     //Handle Flight
                     {
                         if (player.getAbilities().flying && player.isSprinting()) {
@@ -152,15 +160,65 @@ public class HyperFormHandler
                         }
                     }
 
+                    //Double Jump
+                    {
+                        if(!hyperFormProperties.hasHyperDoubleJump && player.onGround())
+                            hyperFormProperties.hasHyperDoubleJump = true;
+                    }
+
+                    //Chaos Blast EX
+                    {
+                        //Increase The Purple Emerald Use
+                        if(hyperFormProperties.chaosBlastEXTimer > 0)
+                        {
+                            //Play Purple Effect
+                            PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                    new DustParticleOptions(new Vector3f(1.0f, 0.8f, 1f), 1),
+                                    player.getX(), player.getY() + 1, player.getZ(),
+                                    0.01, 1f, 1f,
+                                    1f, 30, false
+                            ));
+                            hyperFormProperties.chaosBlastEXTimer += 1;
+                        }
+
+                        //Perform Blast
+                        if(hyperFormProperties.chaosBlastEXTimer == 20)
+                        {
+                            Vec3 playerPos = new Vec3(player.getX(),player.getY(),player.getZ());
+
+                            //Perform 9 Blasts all around The Player
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,0));
+
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(3,0,0));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-3,0,0));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,3));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,0,-3));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,0,2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,0,-2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(-2.121,0,2.121));
+                            SuperChaosBlastEX.singularChaosBlast(player,new Vec3(2.121,0,-2.121));
+
+
+                            //Sync Set Motion to Zero
+                            player.setDeltaMovement(0,0,0);
+                            PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(player.getId(),player.getDeltaMovement()));
+                        }
+
+                        //End Blast
+                        if(hyperFormProperties.chaosBlastEXTimer > 30)
+                            hyperFormProperties.chaosBlastEXTimer = 0;
+                    }
+
                     //Give the Player the Effects every Second
                     if(tick == 0)
                     {
                         //Display The Particle
                         PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
-                                ParticleTypes.END_ROD,
+                                ParticleTypes.FIREWORK,
                                 player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
                                 0.001,0.5F,player.getEyeHeight()/2,0.5F,3,false));
 
+                        //Activate Hyper Form
                         ActivateHyperForm.giveEffects(player);
                     }
 
@@ -213,7 +271,7 @@ public class HyperFormHandler
         //Sends a Packet To Activate Hyper form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Transform
-            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.hyperFormTimer == 0 && chaosEmeraldCap.hyperFormCooldown == 0)
+            if(KeyBindings.INSTANCE.transformButton.isDown() && chaosEmeraldCap.hyperFormTimer == 0 && chaosEmeraldCap.hyperFormCooldown == 0 && !player.isShiftKeyDown())
             {
                 if(ActivateHyperForm.hasAllSuperEmeralds(player) && ActivateHyperForm.isPlayerNotWearingArmor(player)) {
                     PacketHandler.sendToServer(new ActivateHyperForm());
@@ -234,17 +292,25 @@ public class HyperFormHandler
             {
                 HyperFormProperties hyperFormProperties = (HyperFormProperties) chaosEmeraldCap.formProperties;
 
-                /*if (KeyBindings.INSTANCE.useAbility1.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_SPEAR_EX) == 0)
+                //Double Jump
+                if (KeyBindings.INSTANCE.doubleJump.isDown() && hyperFormProperties.hasHyperDoubleJump)
+                    PacketHandler.sendToServer(new HyperDoubleJump());
+
+                //Chaos Spear
+                if (KeyBindings.INSTANCE.useAbility1.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_SPEAR_EX) == 0)
                     PacketHandler.sendToServer(new SuperChaosSpearEX());
 
+                //Chaos Control
                 if (KeyBindings.INSTANCE.useAbility2.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_CONTROL_EX) == 0)
                     PacketHandler.sendToServer(new SuperChaosControlEX());
 
+                //Chaos Blast
                 if (KeyBindings.INSTANCE.useAbility3.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_BLAST_EX) == 0)
                     PacketHandler.sendToServer(new SuperChaosBlastEX());
 
+                //Chaos Portal
                 if (KeyBindings.INSTANCE.useAbility4.isDown() && hyperFormProperties.getCooldown(HyperFormAbility.SUPER_CHAOS_PORTAL) == 0)
-                    PacketHandler.sendToServer(new SuperPortal());*/
+                    PacketHandler.sendToServer(new SuperChaosPortal());
             }
         });
     }

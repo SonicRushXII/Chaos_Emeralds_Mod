@@ -37,7 +37,6 @@ import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.grey.SyncDigPacketS2C;
-import net.sonicrushxii.chaos_emerald.network.purple.SyncBlastPacketS2C;
 import net.sonicrushxii.chaos_emerald.network.red.FireSyncPacketS2C;
 import org.joml.Vector3f;
 
@@ -467,20 +466,16 @@ public class ChaosEmeraldHandler {
                 if(chaosEmeraldCap.purpleChaosUse == -1 && player.onGround())
                 {
                     chaosEmeraldCap.purpleChaosUse = 0;
-                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleChaosUse));
                 }
 
                 //Increase The Purple Emerald Use
                 if(chaosEmeraldCap.purpleChaosUse > 0)
                 {
-                    if(chaosEmeraldCap.purpleChaosUse == 1)
-                        PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(), chaosEmeraldCap.purpleChaosUse));
-
                     //Play Purple Effect
                     PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                             new DustParticleOptions(new Vector3f(0.8f, 0.0f, 1f), 1),
                             player.getX(), player.getY() + 1, player.getZ(),
-                            0.01, 1.5f, 1f,
+                            0.01, 1f, 1f,
                             1f, 30, false
                     ));
                     chaosEmeraldCap.purpleChaosUse += 1;
@@ -519,7 +514,6 @@ public class ChaosEmeraldHandler {
 
                     //Blast Cooldowns
                     chaosEmeraldCap.purpleChaosUse = -1;
-                    PacketHandler.sendToALLPlayers(new SyncBlastPacketS2C(player.getId(),chaosEmeraldCap.purpleChaosUse));
                     chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
                 }
 

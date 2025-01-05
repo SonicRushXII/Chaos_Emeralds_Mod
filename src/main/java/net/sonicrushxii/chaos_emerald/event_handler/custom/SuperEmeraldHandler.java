@@ -692,6 +692,10 @@ public class SuperEmeraldHandler {
                                     player.getY()+player.getLookAngle().y+1.0,
                                     player.getZ()+player.getLookAngle().z).add(sideDir);
 
+                            //Sound
+                            player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                                    SoundEvents.EGG_THROW, SoundSource.MASTER, 1.0f, 1.0f);
+
                             superChaosSlicer.setPos(spawnPos);
                             superChaosSlicer.setDuration(120);
                             superChaosSlicer.setMovementDirection(player.getLookAngle().scale(1.5));

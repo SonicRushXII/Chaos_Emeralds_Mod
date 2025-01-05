@@ -7,16 +7,21 @@ import net.sonicrushxii.chaos_emerald.capabilities.superform.SuperFormAbility;
 public class HyperFormProperties extends FormProperties
 {
     private final byte[] abilityCooldowns;
+    public int chaosBlastEXTimer;
+    public boolean hasHyperDoubleJump;
 
     public HyperFormProperties()
     {
         abilityCooldowns = new byte[HyperFormAbility.values().length];
+        chaosBlastEXTimer = 0;
+        hasHyperDoubleJump = true;
     }
 
     public HyperFormProperties(CompoundTag nbt)
     {
-        //Common
         abilityCooldowns = nbt.getByteArray("AbilityCooldowns");
+        chaosBlastEXTimer = nbt.getInt("ChaosBlastEXTimer");
+        hasHyperDoubleJump = nbt.getBoolean("hasDoubleJump");
     }
 
     @Override
@@ -25,6 +30,8 @@ public class HyperFormProperties extends FormProperties
         CompoundTag nbt = new CompoundTag();
 
         nbt.putByteArray("AbilityCooldowns",abilityCooldowns);
+        nbt.putInt("ChaosBlastEXTimer",chaosBlastEXTimer);
+        nbt.putBoolean("hasDoubleJump",hasHyperDoubleJump);
         return nbt;
     }
 

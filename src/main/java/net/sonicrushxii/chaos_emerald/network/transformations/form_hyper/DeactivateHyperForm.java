@@ -91,9 +91,9 @@ public class DeactivateHyperForm
 
                 //Pad Effect
                 if (!player.hasEffect(ModEffects.HYPER_FALLDMG_EFFECT.get()))
-                    player.addEffect(new MobEffectInstance(ModEffects.HYPER_FALLDMG_EFFECT.get(), 100, 0, false, false));
+                    player.addEffect(new MobEffectInstance(ModEffects.HYPER_FALLDMG_EFFECT.get(), 300, 0, false, false));
                 else
-                    player.getEffect(ModEffects.HYPER_FALLDMG_EFFECT.get()).update(new MobEffectInstance(ModEffects.HYPER_FALLDMG_EFFECT.get(), 100, 0, false, false));
+                    player.getEffect(ModEffects.HYPER_FALLDMG_EFFECT.get()).update(new MobEffectInstance(ModEffects.HYPER_FALLDMG_EFFECT.get(), 300, 0, false, false));
             }
 
             //Cooldown
