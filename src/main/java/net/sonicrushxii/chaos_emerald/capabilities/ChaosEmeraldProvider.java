@@ -20,7 +20,6 @@ public class ChaosEmeraldProvider implements ICapabilityProvider, INBTSerializab
     private ChaosEmeraldCap createChaosEmeraldCap() {
         if(this.chaosEmeraldCap == null) {
             this.chaosEmeraldCap = new ChaosEmeraldCap();
-            System.err.println("CHANGED CAPABILITY");
         }
 
         return this.chaosEmeraldCap;

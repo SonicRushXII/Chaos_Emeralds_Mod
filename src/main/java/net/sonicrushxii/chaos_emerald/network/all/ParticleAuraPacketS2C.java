@@ -14,6 +14,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.Utilities;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
@@ -115,25 +116,11 @@ public class ParticleAuraPacketS2C {
         ctx.get().enqueueWork(() -> {
             // This code is run on the client side
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                Minecraft mc = Minecraft.getInstance();
-                ClientLevel world = mc.level;
-                LocalPlayer player = mc.player;
-
-                if (player != null && world != null) {
-                    ParticleType<?> particleType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(this.particleType));
-                    ParticleOptions particleOptions;
-
-                    if (particleType == ParticleTypes.DUST) {
-                        particleOptions = new DustParticleOptions(new Vector3f(this.red, this.green, this.blue), this.scale);
-                    } else {
-                        particleOptions = (ParticleOptions) particleType;
-                    }
-
-                    assert particleOptions != null;
-                    Utilities.displayParticle(player.level(), particleOptions, this.absX, this.absY, this.absZ,
-                            this.radiusX, this.radiusY, this.radiusZ,
-                            this.speed, this.count, this.force);
-                }
+                ClientPacketHandler.clientParticleAura(this.particleType,
+                        this.absX,this.absY,this.absZ,this.speed,
+                        this.radiusX,this.radiusY,this.radiusZ,
+                        this.count,this.force,
+                        this.red,this.green,this.blue,this.scale);
             });
         });
 

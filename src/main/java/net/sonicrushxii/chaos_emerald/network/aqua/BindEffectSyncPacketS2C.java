@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.event_handler.LoginHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 
 import java.util.function.Supplier;
@@ -39,24 +40,7 @@ public class BindEffectSyncPacketS2C {
         ctx.get().enqueueWork(
                 ()->{
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                        try {
-                            LivingEntity livingEntity = (LivingEntity) Minecraft.getInstance().level.getEntity(entityId);
-
-                            if (effectDur > 0)
-                            {
-                                if(livingEntity.hasEffect(ModEffects.CHAOS_BIND.get()))
-                                    livingEntity.getEffect(ModEffects.CHAOS_BIND.get()).
-                                        update(new MobEffectInstance(ModEffects.CHAOS_BIND.get(), effectDur,
-                                                0, false, false,false));
-                                else
-                                    livingEntity.addEffect(new MobEffectInstance(ModEffects.CHAOS_BIND.get(), effectDur,
-                                            0, false, false,false));
-                            }
-                            else if(livingEntity.hasEffect(ModEffects.CHAOS_BIND.get()))
-                            {
-                                livingEntity.removeEffect(ModEffects.CHAOS_BIND.get());
-                            }
-                        }catch (NullPointerException|ClassCastException ignored) {}
+                        ClientPacketHandler.bindEffectSync(this.entityId,this.effectDur);
                     });
                 });
         ctx.get().setPacketHandled(true);

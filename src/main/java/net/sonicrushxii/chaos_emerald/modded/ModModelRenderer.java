@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientTickHandler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +32,7 @@ public class ModModelRenderer {
         if(animationLength > 20 || 20%animationLength != 0)
             throw new RuntimeException("Incorrect Animation Length, Must be a divisor of 20");
 
-        byte frame = (byte)(PlayerTickHandler.clientTick%animationLength);
+        byte frame = (byte)(ClientTickHandler.clientTick%animationLength);
         while(true)
         {
             for(int i=0;i<textures.length;++i)

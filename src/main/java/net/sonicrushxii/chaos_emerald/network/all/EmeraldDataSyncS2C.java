@@ -9,6 +9,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldCap;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -40,18 +41,7 @@ public class EmeraldDataSyncS2C {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(
                 ()-> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                    // This code is run on the client side
-                    Minecraft mc = Minecraft.getInstance();
-                    if (mc.level == null) return;
-
-                    // Get the player entity by ID
-                    Player player = (Player) mc.level.getEntity(this.playerId);
-                    if (player == null) return;
-
-                    // Update the player's capability data on the client side
-                    player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                        chaosEmeraldCap.copyFrom(this.chaosEmeraldCap);
-                    });
+                    ClientPacketHandler.clientDataSync(this.playerId,this.chaosEmeraldCap);
                 }));
         ctx.get().setPacketHandled(true);
     }

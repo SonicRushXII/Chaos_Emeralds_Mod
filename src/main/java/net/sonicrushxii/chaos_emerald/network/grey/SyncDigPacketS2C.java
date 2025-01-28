@@ -1,14 +1,11 @@
 package net.sonicrushxii.chaos_emerald.network.grey;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -41,16 +38,7 @@ public class SyncDigPacketS2C {
         ctx.get().enqueueWork(
                 ()->{
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                        try {
-                            Level world = Minecraft.getInstance().level;
-                            Player player = (Player) world.getEntity(entityId);
-
-                            player.setDeltaMovement(this.entityMotion);
-                            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                               chaosEmeraldCap.greyChaosUse = this.digTime;
-                            });
-
-                        }catch (NullPointerException|ClassCastException ignored) {}
+                        ClientPacketHandler.digSyncEffect(entityId,digTime,entityMotion);
                     });
                 });
         ctx.get().setPacketHandled(true);

@@ -6,8 +6,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientLoginHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
@@ -29,8 +32,8 @@ public class LoginHandler
         bindEntityDur.clear();
 
         //Perform Login functions
-        if(!player.level().isClientSide()) onServerLogin((ServerPlayer) player);
-        else onClientLogin((LocalPlayer) player);
+        if(FMLEnvironment.dist == Dist.CLIENT && player.level().isClientSide()) ClientLoginHandler.onClientLogin(player);
+        else onServerLogin((ServerPlayer) player);
     }
 
     private void onServerLogin(ServerPlayer player)
@@ -49,7 +52,5 @@ public class LoginHandler
         }
     }
 
-    private void onClientLogin(LocalPlayer player)
-    {
-    }
+
 }

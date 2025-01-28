@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -33,10 +34,7 @@ public class FireSyncPacketS2C {
         ctx.get().enqueueWork(
                 ()->{
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                        try {
-                            Level world = Minecraft.getInstance().level;
-                            world.setBlock(blockPos, Blocks.FIRE.defaultBlockState(), 3);
-                        }catch (NullPointerException|ClassCastException ignored) {}
+                        ClientPacketHandler.fireSyncEffect(blockPos);
                     });
                 });
         ctx.get().setPacketHandled(true);

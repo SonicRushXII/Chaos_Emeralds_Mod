@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -30,15 +31,7 @@ public class PlayerStopSoundPacketS2C {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(
                 ()-> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                    // This code is run on the client side
-                    Minecraft mc = Minecraft.getInstance();
-                    ClientLevel world = mc.level;
-                    LocalPlayer player = mc.player;
-
-                    if(player != null && world != null) {
-                        for(SoundSource soundSource : SoundSource.values())
-                            mc.getSoundManager().stop(this.soundLocation, soundSource);
-                    }
+                    ClientPacketHandler.clientStopSound(this.soundLocation);
                 }));
         ctx.get().setPacketHandled(true);
     }

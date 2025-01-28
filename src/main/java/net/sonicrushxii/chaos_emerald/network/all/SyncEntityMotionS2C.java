@@ -1,14 +1,12 @@
 package net.sonicrushxii.chaos_emerald.network.all;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
-import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -34,17 +32,9 @@ public class SyncEntityMotionS2C {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(
-                ()->{
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                        try {
-                            Level world = Minecraft.getInstance().level;
-                            Player player = (Player) world.getEntity(entityId);
-
-                            player.setDeltaMovement(this.entityMotion);
-                        }catch (NullPointerException|ClassCastException ignored) {}
-                    });
-                });
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            ClientPacketHandler.clientMotionSync(entityId,entityMotion);
+        }));
         ctx.get().setPacketHandled(true);
     }
 }

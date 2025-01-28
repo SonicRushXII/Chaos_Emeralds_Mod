@@ -12,8 +12,10 @@ public class ArmorRestrictionHandler {
 
     @SubscribeEvent
     public void onArmorChange(LivingEquipmentChangeEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+        if (event.getEntity() instanceof Player player)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
+            {
                 if(chaosEmeraldCap.superFormTimer == 0) return;
 
                 // Check if the slot is an armor slot

@@ -186,8 +186,6 @@ public class SuperFormHandler
                 //Super Form Interrupt
                 if(player.deathTime != 0)
                 {
-                    System.err.println("SUPER FORM DEAD");
-
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));

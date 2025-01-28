@@ -50,8 +50,6 @@ public class DeathEventHandler {
                 //Hyper Form Interrupt
                 if(chaosEmeraldCap.hyperFormTimer != 0)
                 {
-                    System.err.println("HYPER FORM DEAD");
-
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.AQUA_SUPER_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.BLUE_SUPER_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREEN_SUPER_EMERALD.get().asItem()));
@@ -64,8 +62,6 @@ public class DeathEventHandler {
                 //Super Form Interrupt
                 if(chaosEmeraldCap.superFormTimer != 0)
                 {
-                    System.err.println("SUPER FORM DEAD");
-
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.AQUA_CHAOS_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.BLUE_CHAOS_EMERALD.get().asItem()));
                     spawnItem(player.serverLevel(),player.blockPosition(),new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get().asItem()));
