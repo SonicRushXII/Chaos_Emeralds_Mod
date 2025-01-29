@@ -1,6 +1,7 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -227,7 +228,7 @@ public class SuperFormHandler
         });
     }
 
-    public static void clientTick(LocalPlayer player, int clientTick)
+    public static void clientTick(AbstractClientPlayer player, int clientTick)
     {
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {

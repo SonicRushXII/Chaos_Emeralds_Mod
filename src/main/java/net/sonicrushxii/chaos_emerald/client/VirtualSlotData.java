@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -92,7 +92,7 @@ public class VirtualSlotData {
 
     //Register the Main Overlay
     public static final IGuiOverlay ABILITY_HUD = ((ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)-> {
-        LocalPlayer player = Minecraft.getInstance().player;
+        AbstractClientPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
@@ -101,7 +101,7 @@ public class VirtualSlotData {
         });
     });
 
-    public static void renderSuperFormAbilities(LocalPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)
+    public static void renderSuperFormAbilities(AbstractClientPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)
     {
         final int[] textureDimensions = {22,22};
         int x = textureDimensions[0]; //screenWidth  - (int)(textureDimensions[0]*1.5);
@@ -182,7 +182,7 @@ public class VirtualSlotData {
 
     }
 
-    public static void renderHyperFormAbilities(LocalPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)
+    public static void renderHyperFormAbilities(AbstractClientPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)
     {
         final int[] textureDimensions = {22,22};
         int x = textureDimensions[0]; //screenWidth  - (int)(textureDimensions[0]*1.5);

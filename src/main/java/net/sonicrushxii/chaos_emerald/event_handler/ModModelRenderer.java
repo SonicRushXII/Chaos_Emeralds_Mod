@@ -7,7 +7,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -75,7 +75,7 @@ public class ModModelRenderer {
 
     public static void renderPlayerModel(Class<? extends EntityModel> modelClass, RenderLivingEvent<?, ?> event, PoseStack poseStack, Consumer<ModelPart> customTransform) {
         MultiBufferSource buffer = event.getMultiBufferSource();
-        LocalPlayer player = (LocalPlayer) event.getEntity();
+        AbstractClientPlayer player = (AbstractClientPlayer) event.getEntity();
         int packedLight = event.getPackedLight();
 
         // Render the custom model

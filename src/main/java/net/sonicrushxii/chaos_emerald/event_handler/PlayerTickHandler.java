@@ -1,6 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +21,7 @@ public class PlayerTickHandler {
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
         if (event.phase == TickEvent.Phase.END || event.player == null) return;
-        if (FMLEnvironment.dist == Dist.CLIENT && event.player.level().isClientSide()) ClientTickHandler.onLocalPlayerTick(event.player);
+        if (FMLEnvironment.dist == Dist.CLIENT && event.player.level().isClientSide()) ClientTickHandler.clientPlayerTick(event.player);
         else onServerPlayerTick((ServerPlayer)event.player);
 
         Player player = event.player;

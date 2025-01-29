@@ -2,7 +2,7 @@ package net.sonicrushxii.chaos_emerald.event_handler.client_specific;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
@@ -60,7 +60,7 @@ public class ClientPacketHandler
     public static void clientParticleAura(String particle_Type, double absX, double absY, double absZ, double speed, float radiusX, float radiusY, float radiusZ, short count, boolean force, float red, float green, float blue, float scale) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = mc.level;
-        LocalPlayer player = mc.player;
+        AbstractClientPlayer player = mc.player;
 
         if (player != null && world != null) {
             ParticleType<?> particleType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(particle_Type));
@@ -83,7 +83,7 @@ public class ClientPacketHandler
     {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = mc.level;
-        LocalPlayer player = mc.player;
+        AbstractClientPlayer player = mc.player;
 
         if (player != null && world != null) {
             ParticleType<?> particleType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(particle_Type));
@@ -108,7 +108,7 @@ public class ClientPacketHandler
         // This code is run on the client side
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = mc.level;
-        LocalPlayer player = mc.player;
+        AbstractClientPlayer player = mc.player;
 
         if(player != null && world != null) {
             for(SoundSource soundSource : SoundSource.values())
@@ -180,7 +180,7 @@ public class ClientPacketHandler
     {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = mc.level;
-        LocalPlayer player = mc.player;
+        AbstractClientPlayer player = mc.player;
 
         if (player != null && world != null)
         {

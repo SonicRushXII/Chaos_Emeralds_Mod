@@ -1,6 +1,7 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -827,7 +828,7 @@ public class SuperEmeraldHandler {
         });
     }
 
-    public static void clientTick(LocalPlayer player, int tick)
+    public static void clientTick(AbstractClientPlayer player, int tick)
     {
     }
 }
