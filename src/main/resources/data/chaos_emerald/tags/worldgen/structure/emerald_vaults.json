@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "chaos_emerald:aqua_vault",
+    "chaos_emerald:blue_vault",
+    "chaos_emerald:green_vault",
+    "chaos_emerald:grey_vault",
+    "chaos_emerald:purple_vault",
+    "chaos_emerald:red_vault",
+    "chaos_emerald:yellow_vault"
+  ]
+}

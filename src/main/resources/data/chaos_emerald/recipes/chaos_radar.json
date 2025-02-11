@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "rRr",
+    "gOg",
+    "eGe"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone_torch"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "e": {
+      "item": "minecraft:emerald"
+    },
+    "O": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "item": "chaos_emerald:chaos_radar"
+  }
+}

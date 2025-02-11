@@ -15,16 +15,32 @@ public class ModCreativeModeTabs
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ChaosEmerald.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> CHAOS_EMERALD_TAB = CREATIVE_MODE_TABS.register("chaos_emerald_tab",
-            ()-> CreativeModeTab.builder().icon(()->new ItemStack(ModBlocks.GREEN_EMERALD.get()))
+            ()-> CreativeModeTab.builder().icon(()->new ItemStack(ModBlocks.GREEN_CHAOS_EMERALD.get()))
                     .title(Component.translatable("creativetab.chaos_emerald"))
                     .displayItems((pParameters,pOutput)->{
-                        pOutput.accept(ModBlocks.AQUA_EMERALD.get());
-                        pOutput.accept(ModBlocks.BLUE_EMERALD.get());
-                        pOutput.accept(ModBlocks.GREEN_EMERALD.get());
-                        pOutput.accept(ModBlocks.GREY_EMERALD.get());
-                        pOutput.accept(ModBlocks.PURPLE_EMERALD.get());
-                        pOutput.accept(ModBlocks.RED_EMERALD.get());
-                        pOutput.accept(ModBlocks.YELLOW_EMERALD.get());
+                        pOutput.accept(ModItems.CHAOS_RADAR.get());
+
+                        pOutput.accept(ModBlocks.AQUA_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.BLUE_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.GREEN_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.GREY_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.PURPLE_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.RED_CHAOS_EMERALD.get());
+                        pOutput.accept(ModBlocks.YELLOW_CHAOS_EMERALD.get());
+
+                        /*
+                        pOutput.accept(ModBlocks.AQUA_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.BLUE_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.GREEN_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.GREY_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.PURPLE_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.RED_SUPER_EMERALD.get());
+                        pOutput.accept(ModBlocks.YELLOW_SUPER_EMERALD.get());
+                         */
+
+                        pOutput.accept(ModItems.SUPER_RADAR.get());
+
+                        pOutput.accept(ModBlocks.MASTER_EMERALD.get());
                     })
                     .build());
 

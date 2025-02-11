@@ -4,7 +4,7 @@
   "elements": [{
       "weight": 1,
       "element": {
-        "location":"chaos_emerald:vaults/chaos/red_vault",
+        "location":"chaos_emerald:vaults/red_emerald_vault",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
