@@ -1,6 +1,5 @@
 package net.sonicrushxii.chaos_emerald.block;
 
-import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.common.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.common.UpdateMainhandItem;
+import net.sonicrushxii.chaos_emerald.network.common.UpdateHandItem;
 import org.jetbrains.annotations.Nullable;
 
 public class ChaosEmeraldBlock extends Block {
@@ -56,7 +55,7 @@ public class ChaosEmeraldBlock extends Block {
 
             //Update Player Item
             pPlayer.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(pState.getBlock().asItem()));
-            PacketHandler.sendToServer(new UpdateMainhandItem(new ItemStack(pState.getBlock().asItem())));
+            PacketHandler.sendToServer(new UpdateHandItem(new ItemStack(pState.getBlock().asItem()),InteractionHand.MAIN_HAND));
 
             return InteractionResult.CONSUME;
         }

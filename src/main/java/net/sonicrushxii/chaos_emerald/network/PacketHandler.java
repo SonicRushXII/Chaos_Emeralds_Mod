@@ -10,7 +10,8 @@ import net.minecraftforge.network.SimpleChannel;
 import net.minecraftforge.network.ChannelBuilder;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.network.common.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.common.UpdateMainhandItem;
+import net.sonicrushxii.chaos_emerald.network.common.ParticleRaycastPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.common.UpdateHandItem;
 
 public class PacketHandler {
     private static final int PROTOCOL_VERSION = 1;
@@ -21,7 +22,9 @@ public class PacketHandler {
 
     public static void register() {
         INSTANCE.messageBuilder(BreakBlock.class, NetworkDirection.PLAY_TO_SERVER).encoder(BreakBlock::encode).decoder(BreakBlock::new).consumerMainThread(BreakBlock::handle).add();
-        INSTANCE.messageBuilder(UpdateMainhandItem.class, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateMainhandItem::encode).decoder(UpdateMainhandItem::new).consumerMainThread(UpdateMainhandItem::handle).add();
+        INSTANCE.messageBuilder(UpdateHandItem.class, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateHandItem::encode).decoder(UpdateHandItem::new).consumerMainThread(UpdateHandItem::handle).add();
+
+        INSTANCE.messageBuilder(ParticleRaycastPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(ParticleRaycastPacketS2C::encode).decoder(ParticleRaycastPacketS2C::new).consumerMainThread(ParticleRaycastPacketS2C::handle).add();
     }
 
     public static void sendToServer(Object msg) {
