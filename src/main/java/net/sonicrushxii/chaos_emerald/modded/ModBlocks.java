@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, ChaosEmerald.MOD_ID);
-    public static final RegistryObject<Block> AQUA_EMERALD = registerBlock("aqua_emerald",
+    public static final RegistryObject<Block> AQUA_EMERALD = registerBlock("chaos/aqua_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -25,7 +25,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> BLUE_EMERALD = registerBlock("blue_emerald",
+    public static final RegistryObject<Block> BLUE_EMERALD = registerBlock("chaos/blue_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -33,7 +33,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> GREEN_EMERALD = registerBlock("green_emerald",
+    public static final RegistryObject<Block> GREEN_EMERALD = registerBlock("chaos/green_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -41,7 +41,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> GREY_EMERALD = registerBlock("grey_emerald",
+    public static final RegistryObject<Block> GREY_EMERALD = registerBlock("chaos/grey_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -49,7 +49,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> PURPLE_EMERALD = registerBlock("purple_emerald",
+    public static final RegistryObject<Block> PURPLE_EMERALD = registerBlock("chaos/purple_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -57,7 +57,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> RED_EMERALD = registerBlock("red_emerald",
+    public static final RegistryObject<Block> RED_EMERALD = registerBlock("chaos/red_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
@@ -65,7 +65,7 @@ public class ModBlocks {
                     .lightLevel((pProperites) -> {
                         return 13;
                     })));
-    public static final RegistryObject<Block> YELLOW_EMERALD = registerBlock("yellow_emerald",
+    public static final RegistryObject<Block> YELLOW_EMERALD = registerBlock("chaos/yellow_emerald",
             ()->new ChaosEmeraldBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 3600000.0F)
                     .noLootTable()
