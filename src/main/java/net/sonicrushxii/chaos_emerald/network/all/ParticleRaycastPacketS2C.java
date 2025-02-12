@@ -1,20 +1,15 @@
-package net.sonicrushxii.chaos_emerald.network.common;
+package net.sonicrushxii.chaos_emerald.network.all;
 
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.sonicrushxii.chaos_emerald.event_handler.client_handlers.ClientPacketHandler;
+import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientPacketHandler;
 import org.joml.Vector3f;
 
 public class ParticleRaycastPacketS2C {

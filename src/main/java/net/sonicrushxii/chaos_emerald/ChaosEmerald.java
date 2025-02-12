@@ -3,6 +3,7 @@ package net.sonicrushxii.chaos_emerald;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sonicrushxii.chaos_emerald.event_handler.DeathEventHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
@@ -39,6 +41,7 @@ public class ChaosEmerald
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
+        MinecraftForge.EVENT_BUS.register(new DeathEventHandler());
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
@@ -83,6 +86,12 @@ public class ChaosEmerald
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+
+        @SubscribeEvent
+        public static void registerKeys(RegisterKeyMappingsEvent event){
+            event.register(KeyBindings.INSTANCE.chaosTimeStop);
+            event.register(KeyBindings.INSTANCE.chaosTeleport);
         }
     }
 }

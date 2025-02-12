@@ -25,8 +25,8 @@ import net.minecraft.world.phys.Vec3;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
-import net.sonicrushxii.chaos_emerald.network.common.ParticleRaycastPacketS2C;
-import net.sonicrushxii.chaos_emerald.network.common.UpdateHandItem;
+import net.sonicrushxii.chaos_emerald.network.all.ParticleRaycastPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.all.UpdateHandItem;
 
 public class ChaosLocatorItem extends Item {
 

@@ -20,8 +20,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
-import net.sonicrushxii.chaos_emerald.network.common.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.common.UpdateHandItem;
+import net.sonicrushxii.chaos_emerald.network.all.BreakBlock;
+import net.sonicrushxii.chaos_emerald.network.all.UpdateHandItem;
 import org.jetbrains.annotations.Nullable;
 
 public class ChaosEmeraldBlock extends Block {

@@ -1,5 +1,6 @@
 package net.sonicrushxii.chaos_emerald.block;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,6 +17,11 @@ public class ChaosBlockItem extends BlockItem {
 
     public ChaosBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
+    }
+
+    public static boolean isHoldingChaosEmerald(ServerPlayer player)
+    {
+        return (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ChaosBlockItem || player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ChaosBlockItem);
     }
 
     private static boolean useEmerald(String itemString, Level pLevel, Player pPlayer)

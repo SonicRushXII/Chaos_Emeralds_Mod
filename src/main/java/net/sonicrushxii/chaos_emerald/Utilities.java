@@ -1,5 +1,6 @@
 package net.sonicrushxii.chaos_emerald;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.KeyPress;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

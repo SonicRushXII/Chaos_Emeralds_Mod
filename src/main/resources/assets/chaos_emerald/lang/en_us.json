@@ -1,4 +1,8 @@
 {
+  "key.categories.chaos_emerald": "Chaos Emerald Key Binds",
+  "key.chaos_emerald.TimeStop": "TimeStop with Chaos Emerald",
+  "key.chaos_emerald.Teleport": "Teleport with Chaos Emerald",
+
   "block.chaos_emerald.chaos_emerald.aqua_emerald": "Chaos Emerald",
   "block.chaos_emerald.chaos_emerald.blue_emerald": "Chaos Emerald",
   "block.chaos_emerald.chaos_emerald.green_emerald": "Chaos Emerald",

@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.event_handler.client_handlers;
+package net.sonicrushxii.chaos_emerald.event_handler.client_specific;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
