@@ -20,6 +20,7 @@ public class PacketHandler {
 
     public static void register() {
         //Client
+        INSTANCE.messageBuilder(ParticleAuraPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(ParticleAuraPacketS2C::encode).decoder(ParticleAuraPacketS2C::new).consumerMainThread(ParticleAuraPacketS2C::handle).add();
         INSTANCE.messageBuilder(ParticleRaycastPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(ParticleRaycastPacketS2C::encode).decoder(ParticleRaycastPacketS2C::new).consumerMainThread(ParticleRaycastPacketS2C::handle).add();
         INSTANCE.messageBuilder(UpdatePositionPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdatePositionPacketS2C::encode).decoder(UpdatePositionPacketS2C::new).consumerMainThread(UpdatePositionPacketS2C::handle).add();
         INSTANCE.messageBuilder(SyncEntityMotionS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncEntityMotionS2C::encode).decoder(SyncEntityMotionS2C::new).consumerMainThread(SyncEntityMotionS2C::handle).add();

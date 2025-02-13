@@ -23,6 +23,7 @@ import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.timehandler.TimeHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -45,6 +46,7 @@ public class ChaosEmerald
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
         MinecraftForge.EVENT_BUS.register(new DeathEventHandler());
+        MinecraftForge.EVENT_BUS.register(new TimeHandler());
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

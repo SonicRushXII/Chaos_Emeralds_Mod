@@ -1,10 +1,12 @@
 package net.sonicrushxii.chaos_emerald;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -441,5 +443,10 @@ public class Utilities {
         boolean z = Math.abs(playerDeltaMovement.z()) < threshold;
 
         return !(x && y && z);
+    }
+
+    //Run only on Client Side
+    public static void showActionBarMessage(String message) {
+        Minecraft.getInstance().player.displayClientMessage(Component.literal(message), true);
     }
 }

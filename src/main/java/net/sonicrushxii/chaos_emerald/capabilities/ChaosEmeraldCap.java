@@ -7,18 +7,28 @@ public class ChaosEmeraldCap
 {
     public FormProperties formProperties = new FormProperties();
 
+    public byte[] chaosCooldownKey = new byte[EmeraldAbility.values().length];
+
     public float atkRotPhaseX = 0.0f;
     public float atkRotPhaseY = 0.0f;
+
+    //Time Stop
+    public byte timeStop = 0;
     public boolean playerIsFrozen;
     public double playerFrozenX = 0.0;
     public double playerFrozenY = 0.0;
     public double playerFrozenZ = 0.0;
 
-    public byte timeStop = 0;
+    //Teleport
     public byte teleport = 0;
+    public byte prevGameMode = 0;
 
     public void copyDeathFrom(ChaosEmeraldCap source)
     {
+        //Chaos Emerald Usage
+        if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldAbility.values().length];
+        else this.chaosCooldownKey = source.chaosCooldownKey;
+
         //Attack Phase Rotation
         this.atkRotPhaseX = source.atkRotPhaseX;
         this.atkRotPhaseY = source.atkRotPhaseY;
@@ -35,30 +45,21 @@ public class ChaosEmeraldCap
 
         //Teleport
         this.teleport = source.teleport;
+        this.prevGameMode = source.prevGameMode;
     }
 
     public void copyPerfectFrom(ChaosEmeraldCap source)
     {
-        //Attack Phase Rotation
-        this.atkRotPhaseX = source.atkRotPhaseX;
-        this.atkRotPhaseY = source.atkRotPhaseY;
-
-        //Chaos Emerald Usage
-        this.formProperties = source.formProperties;
-
-        //Time Stop
-        this.timeStop = source.timeStop;
+        this.copyDeathFrom(source);
         this.playerIsFrozen = source.playerIsFrozen;
-        this.playerFrozenX = source.playerFrozenX;
-        this.playerFrozenY = source.playerFrozenY;
-        this.playerFrozenZ = source.playerFrozenZ;
-
-        //Teleport
-        this.teleport = source.teleport;
     }
 
+    public void saveNBTData(CompoundTag nbt)
+    {
+        //Copy Chaos Cooldown
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldAbility.values().length];
+        nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
 
-    public void saveNBTData(CompoundTag nbt){
         //Attack Rotation Phase
         nbt.putFloat("AtkRotPhaseX",this.atkRotPhaseX);
         nbt.putFloat("AtkRotPhaseY",this.atkRotPhaseY);
@@ -79,11 +80,16 @@ public class ChaosEmeraldCap
         //Teleport
         {
             nbt.putByte("Teleport", this.teleport);
+            nbt.putByte("PrevGameMode",this.prevGameMode);
         }
     }
 
     public void loadNBTData(CompoundTag nbt)
     {
+        //Load Chaos Emerald Cooldown
+        chaosCooldownKey = nbt.getByteArray("ChaosEmeraldCooldown");
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldAbility.values().length];
+
         CompoundTag formDetails = nbt.getCompound("FormAbilities");
 
         //Attack Rotation Phase
@@ -106,6 +112,7 @@ public class ChaosEmeraldCap
         //Teleport
         {
             this.teleport = nbt.getByte("Teleport");
+            this.prevGameMode = nbt.getByte("PrevGameMode");
         }
     }
 }
