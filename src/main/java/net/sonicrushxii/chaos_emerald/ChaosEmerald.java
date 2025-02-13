@@ -3,6 +3,7 @@ package net.sonicrushxii.chaos_emerald;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -14,10 +15,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sonicrushxii.chaos_emerald.capabilities.models.FlatPlayerModel;
 import net.sonicrushxii.chaos_emerald.event_handler.DeathEventHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
+import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModItems;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import org.slf4j.Logger;
@@ -49,6 +52,7 @@ public class ChaosEmerald
         //Mod Stuff
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModEffects.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
@@ -92,6 +96,13 @@ public class ChaosEmerald
         public static void registerKeys(RegisterKeyMappingsEvent event){
             event.register(KeyBindings.INSTANCE.chaosTimeStop);
             event.register(KeyBindings.INSTANCE.chaosTeleport);
+        }
+
+        @SubscribeEvent
+        public static void registerModelLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
+        {
+            //Frozen Player Model
+            event.registerLayerDefinition(FlatPlayerModel.LAYER_LOCATION,FlatPlayerModel::createBodyLayer);
         }
     }
 }

@@ -12,7 +12,7 @@ import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 public class PlayerTickHandler {
 
     private static final int TICKS_PER_SEC = 20;
-    private static int serverTick = 0;
+    public static int serverTick = 0;
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent.Pre event)

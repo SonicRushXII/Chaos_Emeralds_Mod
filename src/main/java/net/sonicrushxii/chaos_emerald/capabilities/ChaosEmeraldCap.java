@@ -3,16 +3,22 @@ package net.sonicrushxii.chaos_emerald.capabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
 
-public class ChaosEmeraldCap {
+public class ChaosEmeraldCap
+{
     public FormProperties formProperties = new FormProperties();
+
     public float atkRotPhaseX = 0.0f;
     public float atkRotPhaseY = 0.0f;
+    public boolean playerIsFrozen;
+    public double playerFrozenX = 0.0;
+    public double playerFrozenY = 0.0;
+    public double playerFrozenZ = 0.0;
 
     public byte timeStop = 0;
     public byte teleport = 0;
 
-
-    public void copyFrom(ChaosEmeraldCap source) {
+    public void copyDeathFrom(ChaosEmeraldCap source)
+    {
         //Attack Phase Rotation
         this.atkRotPhaseX = source.atkRotPhaseX;
         this.atkRotPhaseY = source.atkRotPhaseY;
@@ -22,6 +28,30 @@ public class ChaosEmeraldCap {
 
         //Time Stop
         this.timeStop = source.timeStop;
+        this.playerIsFrozen = false;
+        this.playerFrozenX = source.playerFrozenX;
+        this.playerFrozenY = source.playerFrozenY;
+        this.playerFrozenZ = source.playerFrozenZ;
+
+        //Teleport
+        this.teleport = source.teleport;
+    }
+
+    public void copyPerfectFrom(ChaosEmeraldCap source)
+    {
+        //Attack Phase Rotation
+        this.atkRotPhaseX = source.atkRotPhaseX;
+        this.atkRotPhaseY = source.atkRotPhaseY;
+
+        //Chaos Emerald Usage
+        this.formProperties = source.formProperties;
+
+        //Time Stop
+        this.timeStop = source.timeStop;
+        this.playerIsFrozen = source.playerIsFrozen;
+        this.playerFrozenX = source.playerFrozenX;
+        this.playerFrozenY = source.playerFrozenY;
+        this.playerFrozenZ = source.playerFrozenZ;
 
         //Teleport
         this.teleport = source.teleport;
@@ -37,8 +67,19 @@ public class ChaosEmeraldCap {
         nbt.put("FormAbilities", formProperties.serialize());
 
         //Common Abilities
-        nbt.putByte("TimeStop", this.timeStop);
-        nbt.putByte("Teleport", this.teleport);
+        //TimeStop
+        {
+            nbt.putByte("TimeStop", this.timeStop);
+            nbt.putBoolean("isFrozenInTime",this.playerIsFrozen);
+            nbt.putDouble("frozenPlayerX",this.playerFrozenX);
+            nbt.putDouble("frozenPlayerY",this.playerFrozenY);
+            nbt.putDouble("frozenPlayerZ",this.playerFrozenZ);
+        }
+
+        //Teleport
+        {
+            nbt.putByte("Teleport", this.teleport);
+        }
     }
 
     public void loadNBTData(CompoundTag nbt)
@@ -53,7 +94,18 @@ public class ChaosEmeraldCap {
         formProperties = new FormProperties(formDetails);
 
         //Common Abilities
-        this.timeStop = nbt.getByte("TimeStop");
-        this.teleport = nbt.getByte("Teleport");
+        //TimeStop
+        {
+            this.timeStop = nbt.getByte("TimeStop");
+            this.playerIsFrozen = nbt.getBoolean("isFrozenInTime");
+            this.playerFrozenX = nbt.getDouble("frozenPlayerX");
+            this.playerFrozenY = nbt.getDouble("frozenPlayerY");
+            this.playerFrozenZ = nbt.getDouble("frozenPlayerZ");
+        }
+
+        //Teleport
+        {
+            this.teleport = nbt.getByte("Teleport");
+        }
     }
 }

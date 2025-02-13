@@ -25,5 +25,7 @@
 
   "block.chaos_emerald.master_emerald": "Master Emerald",
 
-  "creativetab.chaos_emerald": "Chaos Emerald Tab"
+  "creativetab.chaos_emerald": "Chaos Emerald Tab",
+
+  "effect.chaos_emerald.player_time_freeze": "Frozen in Time"
 }

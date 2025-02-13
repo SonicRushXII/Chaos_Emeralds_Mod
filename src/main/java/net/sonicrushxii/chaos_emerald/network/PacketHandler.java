@@ -9,10 +9,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.SimpleChannel;
 import net.minecraftforge.network.ChannelBuilder;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
-import net.sonicrushxii.chaos_emerald.network.all.BreakBlock;
-import net.sonicrushxii.chaos_emerald.network.all.KeyPress;
-import net.sonicrushxii.chaos_emerald.network.all.ParticleRaycastPacketS2C;
-import net.sonicrushxii.chaos_emerald.network.all.UpdateHandItem;
+import net.sonicrushxii.chaos_emerald.network.all.*;
 
 public class PacketHandler {
     private static final int PROTOCOL_VERSION = 1;
@@ -24,6 +21,9 @@ public class PacketHandler {
     public static void register() {
         //Client
         INSTANCE.messageBuilder(ParticleRaycastPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(ParticleRaycastPacketS2C::encode).decoder(ParticleRaycastPacketS2C::new).consumerMainThread(ParticleRaycastPacketS2C::handle).add();
+        INSTANCE.messageBuilder(UpdatePositionPacketS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdatePositionPacketS2C::encode).decoder(UpdatePositionPacketS2C::new).consumerMainThread(UpdatePositionPacketS2C::handle).add();
+        INSTANCE.messageBuilder(SyncEntityMotionS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncEntityMotionS2C::encode).decoder(SyncEntityMotionS2C::new).consumerMainThread(SyncEntityMotionS2C::handle).add();
+        INSTANCE.messageBuilder(EmeraldDataSyncS2C.class, NetworkDirection.PLAY_TO_CLIENT).encoder(EmeraldDataSyncS2C::encode).decoder(EmeraldDataSyncS2C::new).consumerMainThread(EmeraldDataSyncS2C::handle).add();
 
         //Common
         INSTANCE.messageBuilder(BreakBlock.class, NetworkDirection.PLAY_TO_SERVER).encoder(BreakBlock::encode).decoder(BreakBlock::new).consumerMainThread(BreakBlock::handle).add();

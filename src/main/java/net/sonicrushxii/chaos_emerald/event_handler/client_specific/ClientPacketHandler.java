@@ -11,9 +11,15 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.Utilities;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldCap;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import org.joml.Vector3f;
 
 import java.util.Objects;
@@ -88,6 +94,22 @@ public class ClientPacketHandler
         }
     }
 
+    public static void clientDataSync(int player_Id, ChaosEmeraldCap chaos_EmeraldCap)
+    {
+        // This code is run on the client side
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return;
+
+        // Get the player entity by ID
+        Player player = (Player) mc.level.getEntity(player_Id);
+        if (player == null) return;
+
+        // Update the player's capability data on the client side
+        player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+            chaosEmeraldCap.copyPerfectFrom(chaos_EmeraldCap);
+        });
+    }
+
     public static void clientPlaysound(ResourceLocation soundLocation, BlockPos emitterPosition, float volume, float pitch)
     {
         // This code is run on the client side
@@ -114,6 +136,32 @@ public class ClientPacketHandler
             for(SoundSource soundSource : SoundSource.values())
                 mc.getSoundManager().stop(soundLocation, soundSource);
         }
+    }
+
+    public static void updateClientPosition(Vec3 pos, float yaw, float pitch, int entityId)
+    {
+        // This code is run on the client side
+        Minecraft mc = Minecraft.getInstance();
+        ClientLevel world = mc.level;
+        AbstractClientPlayer player = mc.player;
+
+        if(player != null && world != null) {
+            LivingEntity entity = (LivingEntity) world.getEntity(entityId);
+            entity.setPos(pos);
+            if(yaw > - 990.0F)      entity.setYRot(yaw);
+            if(pitch > - 990.0F)    entity.setXRot(pitch);
+
+        }
+    }
+
+    public static void clientMotionSync(int entityId, Vec3 entityMotion)
+    {
+        try {
+            Level world = Minecraft.getInstance().level;
+            Player player = (Player) world.getEntity(entityId);
+
+            player.setDeltaMovement(entityMotion);
+        }catch (NullPointerException|ClassCastException ignored) {}
     }
 
 }

@@ -29,7 +29,7 @@ public class DeathEventHandler {
             //Add Other Capabilities from here
             event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(oldStore->{
                 event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
-                    newStore.copyFrom(oldStore);
+                    newStore.copyDeathFrom(oldStore);
                 });
             });
         }
