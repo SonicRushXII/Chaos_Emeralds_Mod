@@ -66,6 +66,8 @@ public class SuperEmeraldHandler {
     public static byte CHAOS_GAMBIT_TIME = 50;                         //Time in Ticks
     public static byte CHAOS_GAMBIT_CD = 1;
 
+    public static byte CHAOS_SLICER_CD = 1;
+
     public static int CHAOS_INFERNO_TIME = 300;                         //Time in Ticks
     public static byte CHAOS_INFERNO_CD = 1;
 
@@ -711,7 +713,7 @@ public class SuperEmeraldHandler {
                         if(chaosEmeraldCap.purpleSuperUse > 15) {
                             chaosEmeraldCap.purpleSuperUse = 0;
                             //Set Cooldown(in Seconds)
-                            chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 1;
+                            chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = CHAOS_SLICER_CD;
                         }
                     }
                 }
