@@ -10,6 +10,7 @@ import net.minecraft.world.TickRateManager;
 import net.minecraft.world.level.GameType;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
@@ -21,26 +22,31 @@ public class ChaosTeleport
     {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
+            //Fetch Ability Properties
+            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+
             //Activate Teleport
-            if (chaosEmeraldCap.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.TELEPORT.ordinal()] == 0) {
-                chaosEmeraldCap.teleport = -ChaosEmeraldHandler.TELEPORT_BUILDUP;
-                player.displayClientMessage(Component.translatable("Teleport!").withStyle(Style.EMPTY.withColor(0xFFFFFF)),true);
+            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0) {
+                chaosAbilities.teleport = -ChaosEmeraldHandler.TELEPORT_BUILDUP;
+                player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
 
             //Deactivate Teleport
-            else if (chaosEmeraldCap.teleport > 0) {
+            else if (chaosAbilities.teleport > 0) {
                 endTeleport(player);
             }
 
             //Cooldown not set
-            else if(chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.TELEPORT.ordinal()] > 0){
-                player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFFFFFF)),true);
+            else if(chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] > 0){
+                player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
+                chaosAbilities.useColor = Integer.MIN_VALUE;
             }
 
             //Error Handling
             else
             {
-                player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(0xFFFFFF)),true);
+                player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
+                chaosAbilities.useColor = Integer.MIN_VALUE;
             }
 
             //Sync Data
@@ -69,8 +75,11 @@ public class ChaosTeleport
     {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
+            //Fetch Ability Properties
+            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+
             //Reset Data
-            chaosEmeraldCap.teleport = 0;
+            chaosAbilities.teleport = 0;
 
             //Particle Effects
             player.level().playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_DEACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
@@ -79,17 +88,20 @@ public class ChaosTeleport
             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
                     ParticleTypes.FLASH,
                     player.getX(),player.getY()+player.getEyeHeight()/2,player.getZ(),
-                    0.001,0.01F,player.getEyeHeight()/2,0.01F,
+                    0.001,0.01F,0.01F,0.01F,
                     1,true));
 
             //Reset World
             player.serverLevel().tickRateManager().setFrozen(false);
 
             //Cooldown
-            chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.TELEPORT.ordinal()] = ChaosEmeraldHandler.TELEPORT_COOLDOWN;
+            chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] = ChaosEmeraldHandler.TELEPORT_COOLDOWN;
 
             //Change Gamemode back
             player.setGameMode(GameType.byId(chaosEmeraldCap.prevGameMode));
+
+            //Reset Color
+            chaosAbilities.useColor = Integer.MIN_VALUE;
 
             //Sync Data
             PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(),chaosEmeraldCap));

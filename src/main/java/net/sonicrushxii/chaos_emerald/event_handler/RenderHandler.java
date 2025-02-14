@@ -25,7 +25,7 @@ public class RenderHandler {
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                 //Time stop
-                if (chaosEmeraldCap.playerIsFrozen)
+                if (chaosEmeraldCap.playerFrozenDetails.isFrozen())
                 {
                     poseStack.pushPose();
 
@@ -33,7 +33,7 @@ public class RenderHandler {
                     poseStack.scale(1.0f, 1.0f, 1.0f);
 
                     //Apply Rotation & Translation
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-chaosEmeraldCap.atkRotPhaseY));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-chaosEmeraldCap.playerFrozenDetails.frozenRotY));
                     poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                     poseStack.translate(0D, -1.5D, 0D);
 

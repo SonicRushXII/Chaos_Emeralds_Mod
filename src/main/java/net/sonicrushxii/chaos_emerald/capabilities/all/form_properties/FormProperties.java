@@ -1,4 +1,4 @@
-package net.sonicrushxii.chaos_emerald.capabilities.all;
+package net.sonicrushxii.chaos_emerald.capabilities.all.form_properties;
 
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;

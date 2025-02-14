@@ -7,6 +7,8 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
 
@@ -36,6 +38,10 @@ public class KeyPress {
                         if(!ChaosBlockItem.isHoldingChaosEmerald(player)) return;
 
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                            //Set Color
+                            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+                            chaosAbilities.useColor = ChaosBlockItem.getEmeraldColorInHand(player);
+
                             //Time Stop
                             if (this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue())
                                 TimeStop.keyPress(player);
@@ -44,6 +50,11 @@ public class KeyPress {
                             else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue())
                                 ChaosTeleport.keyPress(player);
 
+                            //Put Color back to normal
+                            else chaosAbilities.useColor = Integer.MIN_VALUE;
+
+                            //Sync with all Clients
+                            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(),chaosEmeraldCap));
                         });
 
                     }

@@ -4,7 +4,9 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -16,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sonicrushxii.chaos_emerald.capabilities.models.FlatPlayerModel;
+import net.sonicrushxii.chaos_emerald.client.VirtualOverlay;
 import net.sonicrushxii.chaos_emerald.event_handler.DeathEventHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
@@ -98,6 +101,13 @@ public class ChaosEmerald
         public static void registerKeys(RegisterKeyMappingsEvent event){
             event.register(KeyBindings.INSTANCE.chaosTimeStop);
             event.register(KeyBindings.INSTANCE.chaosTeleport);
+        }
+
+        @SubscribeEvent
+        public static void registerGUIOverlays(RegisterGuiOverlaysEvent event) {
+            event.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(),
+                    "chaos_ability_hud",
+                    VirtualOverlay.CHAOS_ABILITY_HUD);
         }
 
         @SubscribeEvent

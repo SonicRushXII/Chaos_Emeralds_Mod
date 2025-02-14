@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.KeyPress;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -448,5 +449,15 @@ public class Utilities {
     //Run only on Client Side
     public static void showActionBarMessage(String message) {
         Minecraft.getInstance().player.displayClientMessage(Component.literal(message), true);
+    }
+
+    public static Vector3f hexToVector3f(int hex) {
+        // Extract the red, green, and blue components
+        float red = ((hex >> 16) & 0xFF) / 255.0f;   // Extract red
+        float green = ((hex >> 8) & 0xFF) / 255.0f; // Extract green
+        float blue = (hex & 0xFF) / 255.0f;         // Extract blue
+
+        // Create and return the Vector3f object
+        return new Vector3f(red, green, blue);
     }
 }

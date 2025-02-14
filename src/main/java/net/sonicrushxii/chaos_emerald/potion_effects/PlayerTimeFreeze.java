@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.all.PlayerFrozenDetails;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
@@ -18,6 +19,24 @@ public class PlayerTimeFreeze extends MobEffect {
         super(mobEffectCategory,color);
     }
 
+    public static void removeEffect(LivingEntity pLivingEntity)
+    {
+        //Reset Capability Details
+        if(pLivingEntity instanceof Player player && !player.level().isClientSide)
+        {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //If Duration is ending then reset the thing to false
+                chaosEmeraldCap.playerFrozenDetails = new PlayerFrozenDetails();
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(), chaosEmeraldCap));
+            });
+        }
+
+        //Remove The Effect
+        if(pLivingEntity.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
+            pLivingEntity.removeEffect(ModEffects.PLAYER_TIME_FREEZE.get());
+    }
+
+
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier)
     {
@@ -25,27 +44,31 @@ public class PlayerTimeFreeze extends MobEffect {
         if(pLivingEntity instanceof Player player && !player.level().isClientSide)
         {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                //Get Frozen Details
+                PlayerFrozenDetails playerFrozenDetails = chaosEmeraldCap.playerFrozenDetails;
+
                 //If player hasn't been frozen yet Return
-                if(!chaosEmeraldCap.playerIsFrozen) return;
+                if(!playerFrozenDetails.isFrozen()) return;
 
                 //If Frozen Set Positions
-                player.setPos(chaosEmeraldCap.playerFrozenX,chaosEmeraldCap.playerFrozenY,chaosEmeraldCap.playerFrozenZ);
-                player.setYRot(chaosEmeraldCap.atkRotPhaseY);
-                player.setXRot(chaosEmeraldCap.atkRotPhaseX);
+                player.setPos(playerFrozenDetails.frozenPosX,playerFrozenDetails.frozenPosY,playerFrozenDetails.frozenPosZ);
+                player.setYRot(playerFrozenDetails.frozenRotY);
+                player.setXRot(playerFrozenDetails.frozenRotX);
 
                 //Update on Clientside
                 PacketHandler.sendToALLPlayers(
                         new UpdatePositionPacketS2C(
-                                new Vec3(chaosEmeraldCap.playerFrozenX,chaosEmeraldCap.playerFrozenY,chaosEmeraldCap.playerFrozenZ),
-                                chaosEmeraldCap.atkRotPhaseY,
-                                chaosEmeraldCap.atkRotPhaseX,
+                                new Vec3(playerFrozenDetails.frozenPosX,playerFrozenDetails.frozenPosY,playerFrozenDetails.frozenPosZ),
+                                playerFrozenDetails.frozenRotY,
+                                playerFrozenDetails.frozenRotX,
                                 player.getId()
                         )
                 );
 
                 //If Duration is ending then reset the thing to false
-                if(player.getEffect(ModEffects.PLAYER_TIME_FREEZE.get()).getDuration() == 1) {
-                    chaosEmeraldCap.playerIsFrozen = false;
+                if(player.getEffect(ModEffects.PLAYER_TIME_FREEZE.get()).getDuration() == 1)
+                {
+                    chaosEmeraldCap.playerFrozenDetails = new PlayerFrozenDetails();
                     PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(),chaosEmeraldCap));
                 }
             });
@@ -60,12 +83,14 @@ public class PlayerTimeFreeze extends MobEffect {
         {
             //Initialize the Data
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                chaosEmeraldCap.playerFrozenX = player.getX();
-                chaosEmeraldCap.playerFrozenY = player.getY();
-                chaosEmeraldCap.playerFrozenZ = player.getZ();
-                chaosEmeraldCap.atkRotPhaseX = player.getXRot();
-                chaosEmeraldCap.atkRotPhaseY = player.getYRot();
-                chaosEmeraldCap.playerIsFrozen = true;
+                //Get Frozen Details
+                PlayerFrozenDetails playerFrozenDetails = chaosEmeraldCap.playerFrozenDetails;
+
+                playerFrozenDetails.frozenPosX = player.getX();
+                playerFrozenDetails.frozenPosY = player.getY();
+                playerFrozenDetails.frozenPosZ = player.getZ();
+                playerFrozenDetails.frozenRotX = player.getXRot();
+                playerFrozenDetails.frozenRotY = player.getYRot();
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(),chaosEmeraldCap));
             });

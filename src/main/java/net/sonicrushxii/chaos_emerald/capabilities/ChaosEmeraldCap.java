@@ -1,7 +1,9 @@
 package net.sonicrushxii.chaos_emerald.capabilities;
 
 import net.minecraft.nbt.CompoundTag;
-import net.sonicrushxii.chaos_emerald.capabilities.all.FormProperties;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.PlayerFrozenDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.form_properties.FormProperties;
 
 public class ChaosEmeraldCap
 {
@@ -9,49 +11,42 @@ public class ChaosEmeraldCap
 
     public byte[] chaosCooldownKey = new byte[EmeraldAbility.values().length];
 
+    //Previous Game Mode
+    public byte prevGameMode = 0;
+
     public float atkRotPhaseX = 0.0f;
     public float atkRotPhaseY = 0.0f;
 
-    //Time Stop
-    public byte timeStop = 0;
-    public boolean playerIsFrozen;
-    public double playerFrozenX = 0.0;
-    public double playerFrozenY = 0.0;
-    public double playerFrozenZ = 0.0;
+    //Details used for the Frozen Effect
+    public PlayerFrozenDetails playerFrozenDetails = new PlayerFrozenDetails();
 
-    //Teleport
-    public byte teleport = 0;
-    public byte prevGameMode = 0;
+    //Chaos Emerald Usage
+    public ChaosUseDetails chaosUseDetails = new ChaosUseDetails();
 
     public void copyDeathFrom(ChaosEmeraldCap source)
     {
         //Chaos Emerald Usage
         if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldAbility.values().length];
-        else this.chaosCooldownKey = source.chaosCooldownKey;
+        else                                    this.chaosCooldownKey = source.chaosCooldownKey;
+
+        //Previous Gamemode
+        this.prevGameMode = source.prevGameMode;
 
         //Attack Phase Rotation
         this.atkRotPhaseX = source.atkRotPhaseX;
         this.atkRotPhaseY = source.atkRotPhaseY;
 
-        //Chaos Emerald Usage
+        //Chaos Form Properties
         this.formProperties = source.formProperties;
 
-        //Time Stop
-        this.timeStop = source.timeStop;
-        this.playerIsFrozen = false;
-        this.playerFrozenX = source.playerFrozenX;
-        this.playerFrozenY = source.playerFrozenY;
-        this.playerFrozenZ = source.playerFrozenZ;
-
-        //Teleport
-        this.teleport = source.teleport;
-        this.prevGameMode = source.prevGameMode;
+        //Chaos Emerald Ability Usage
+        this.chaosUseDetails = source.chaosUseDetails;
     }
 
     public void copyPerfectFrom(ChaosEmeraldCap source)
     {
         this.copyDeathFrom(source);
-        this.playerIsFrozen = source.playerIsFrozen;
+        this.playerFrozenDetails = source.playerFrozenDetails;
     }
 
     public void saveNBTData(CompoundTag nbt)
@@ -60,28 +55,21 @@ public class ChaosEmeraldCap
         if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldAbility.values().length];
         nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
 
+        //Previous Gamemode
+        nbt.putByte("previousGameMode",prevGameMode);
+
         //Attack Rotation Phase
         nbt.putFloat("AtkRotPhaseX",this.atkRotPhaseX);
         nbt.putFloat("AtkRotPhaseY",this.atkRotPhaseY);
 
+        //Serialize Player Frozen Details
+        nbt.put("PlayerFrozenDetails", playerFrozenDetails.serialize());
+
         //Serialize Form Abilities
         nbt.put("FormAbilities", formProperties.serialize());
 
-        //Common Abilities
-        //TimeStop
-        {
-            nbt.putByte("TimeStop", this.timeStop);
-            nbt.putBoolean("isFrozenInTime",this.playerIsFrozen);
-            nbt.putDouble("frozenPlayerX",this.playerFrozenX);
-            nbt.putDouble("frozenPlayerY",this.playerFrozenY);
-            nbt.putDouble("frozenPlayerZ",this.playerFrozenZ);
-        }
-
-        //Teleport
-        {
-            nbt.putByte("Teleport", this.teleport);
-            nbt.putByte("PrevGameMode",this.prevGameMode);
-        }
+        //Chaos Emerald Abilities
+        nbt.put("ChaosAbilities", chaosUseDetails.serialize());
     }
 
     public void loadNBTData(CompoundTag nbt)
@@ -92,6 +80,12 @@ public class ChaosEmeraldCap
 
         CompoundTag formDetails = nbt.getCompound("FormAbilities");
 
+        //Previous Gamemode
+        this.prevGameMode = nbt.getByte("previousGameMode");
+
+        //Serialize Player Frozen Details
+        this.playerFrozenDetails = new PlayerFrozenDetails(nbt.getCompound("PlayerFrozenDetails"));
+
         //Attack Rotation Phase
         this.atkRotPhaseX = nbt.getFloat("AtkRotPhaseX");
         this.atkRotPhaseY = nbt.getFloat("AtkRotPhaseY");
@@ -99,20 +93,7 @@ public class ChaosEmeraldCap
         //Load Form Properties Tag
         formProperties = new FormProperties(formDetails);
 
-        //Common Abilities
-        //TimeStop
-        {
-            this.timeStop = nbt.getByte("TimeStop");
-            this.playerIsFrozen = nbt.getBoolean("isFrozenInTime");
-            this.playerFrozenX = nbt.getDouble("frozenPlayerX");
-            this.playerFrozenY = nbt.getDouble("frozenPlayerY");
-            this.playerFrozenZ = nbt.getDouble("frozenPlayerZ");
-        }
-
-        //Teleport
-        {
-            this.teleport = nbt.getByte("Teleport");
-            this.prevGameMode = nbt.getByte("PrevGameMode");
-        }
+        //Chaos Emerald Abilities
+        this.chaosUseDetails = new ChaosUseDetails(nbt.getCompound("ChaosAbilities"));
     }
 }

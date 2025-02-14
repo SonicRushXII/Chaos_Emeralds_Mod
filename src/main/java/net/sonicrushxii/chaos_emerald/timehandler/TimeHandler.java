@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,18 +29,19 @@ public class TimeHandler {
                 if (entity instanceof Player player)
                 {
                     player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-                        if(chaosEmeraldCap.timeStop > 0 || chaosEmeraldCap.teleport > 0) {
+                        //Fetch Ability Properties
+                        ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+
+                        if(chaosAbilities.timeStop > 0 || chaosAbilities.teleport > 0) {
                             world.tickRateManager().setFrozen(true);
                             foundTimeStopper.set(true);
-
-                            System.out.println("Found Time Stopper");
                         }
                     });
                     if(foundTimeStopper.get()) break;
                 }
             }
 
-            //If no one is found Then return world to normal time
+            //If someone  is found Then prevent the world from returning to normal time
             if(foundTimeStopper.get())
                 break;
 
