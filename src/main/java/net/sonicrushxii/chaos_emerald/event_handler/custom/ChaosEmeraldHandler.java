@@ -1,7 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -45,6 +44,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class ChaosEmeraldHandler {
+
+    //Cooldowns
+    private static final int AQUA_EMERALD_CD = 40;
+    private static final int BLUE_EMERALD_CD = 25;
+    private static final int GREEN_EMERALD_CD = 7;
+    private static final int GREY_EMERALD_CD = 30;
+    private static final int PURPLE_EMERALD_CD = 30;
+    private static final int RED_EMERALD_CD = 15;
+    private static final int YELLOW_EMERALD_CD = 10;
+
     public static void aquaEmeraldUse(Level pLevel, Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player)
@@ -98,7 +107,7 @@ public class ChaosEmeraldHandler {
 
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.chaosCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = 40;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = AQUA_EMERALD_CD;
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         player.getId(),chaosEmeraldCap
@@ -133,7 +142,7 @@ public class ChaosEmeraldHandler {
                 pLevel.addFreshEntity(iceHorizontalSpike);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.chaosCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = 25;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = BLUE_EMERALD_CD;
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         player.getId(),chaosEmeraldCap
@@ -222,7 +231,7 @@ public class ChaosEmeraldHandler {
                 else player.addEffect(chaosDashEffect);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = 7;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = GREEN_EMERALD_CD;
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         player.getId(),chaosEmeraldCap
@@ -344,7 +353,7 @@ public class ChaosEmeraldHandler {
                 else pPlayer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false),pPlayer);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.chaosCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = 15;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = RED_EMERALD_CD;
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         pPlayer.getId(),chaosEmeraldCap
@@ -381,7 +390,7 @@ public class ChaosEmeraldHandler {
                 pLevel.addFreshEntity(chaosSpear);
 
                 //Set Cooldown(in Seconds)
-                chaosEmeraldCap.chaosCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = 10;
+                chaosEmeraldCap.chaosCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = YELLOW_EMERALD_CD;
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                         pPlayer.getId(),chaosEmeraldCap
@@ -453,7 +462,7 @@ public class ChaosEmeraldHandler {
                 {
                     //Set Cooldown(in Seconds)
                     chaosEmeraldCap.greyChaosUse = -1;
-                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = 30;
+                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.GREY_EMERALD.ordinal()] = GREY_EMERALD_CD;
 
                     PacketHandler.sendToALLPlayers(new SyncDigPacketS2C(player.getId(),chaosEmeraldCap.greyChaosUse,player.getDeltaMovement()));
                 }
@@ -515,7 +524,7 @@ public class ChaosEmeraldHandler {
 
                     //Blast Cooldowns
                     chaosEmeraldCap.purpleChaosUse = -1;
-                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = 30;
+                    chaosEmeraldCap.chaosCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = PURPLE_EMERALD_CD;
                 }
 
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
