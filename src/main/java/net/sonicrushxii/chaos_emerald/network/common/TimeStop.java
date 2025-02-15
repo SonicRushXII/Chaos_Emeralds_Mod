@@ -34,7 +34,7 @@ public class TimeStop {
             ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
 
             //Activate Time Stop
-            if (chaosAbilities.timeStop == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0) {
+            if (chaosAbilities.timeStop == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.teleport == 0) {
                 chaosAbilities.timeStop = -ChaosEmeraldHandler.TIME_STOP_BUILDUP;
                 player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }

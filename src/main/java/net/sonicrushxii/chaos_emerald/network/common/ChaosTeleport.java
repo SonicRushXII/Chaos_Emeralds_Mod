@@ -27,7 +27,7 @@ public class ChaosTeleport
             ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
 
             //Activate Teleport
-            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0) {
+            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.timeStop == 0) {
                 chaosAbilities.teleport = -ChaosEmeraldHandler.TELEPORT_BUILDUP;
                 player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
