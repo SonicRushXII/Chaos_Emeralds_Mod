@@ -27,59 +27,65 @@ public class VirtualOverlay {
     private static final ResourceLocation CHAOS_OVERLAY_OUTER = new ResourceLocation(ChaosEmerald.MOD_ID,
             "textures/custom_gui/chaos_overlay_outer.png");
 
-    //Register the Main Overlay
-    public static final IGuiOverlay CHAOS_ABILITY_HUD = ((ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)-> {
+    // Register the Main Overlay
+    public static final IGuiOverlay CHAOS_ABILITY_HUD = ((ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight) -> {
         AbstractClientPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             ChaosUseDetails chaosAbility = chaosEmeraldCap.chaosUseDetails;
-            if(chaosAbility.useColor > -1 && (chaosAbility.timeStop > 0 || chaosAbility.teleport > 0))
-                renderChaosOverlay(player,gui,guiComponent,partialTick,screenWidth,screenHeight);
+            if (chaosAbility.useColor > -1 && (chaosAbility.timeStop > 0 || chaosAbility.teleport > 0)) {
+                renderChaosOverlay(player, gui, guiComponent, partialTick, screenWidth, screenHeight);
+            }
         });
     });
 
-    public static void renderChaosOverlay(AbstractClientPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight)
-    {
+    public static void renderChaosOverlay(AbstractClientPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight) {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             ChaosUseDetails chaosAbility = chaosEmeraldCap.chaosUseDetails;
 
-            //Calculate gradient based on the Time spent in Timestop
-            float overlayGradient = (
-                    (chaosAbility.teleport > 0)
+            // Calculate gradient based on the time spent in Timestop/Teleport
+            float overlayGradient = (chaosAbility.teleport > 0)
                     ? OVERLAY_MAX_DECAY_FRACTION - ((float) (chaosAbility.teleport) / (ChaosEmeraldHandler.TELEPORT_DURATION)) * OVERLAY_MAX_DECAY_FRACTION
-                    : OVERLAY_MAX_DECAY_FRACTION - ((float) (chaosAbility.timeStop) / (ChaosEmeraldHandler.TIME_STOP_DURATION)) * OVERLAY_MAX_DECAY_FRACTION
-            );
+                    : OVERLAY_MAX_DECAY_FRACTION - ((float) (chaosAbility.timeStop) / (ChaosEmeraldHandler.TIME_STOP_DURATION)) * OVERLAY_MAX_DECAY_FRACTION;
 
-            //Calculate Dimensions
-            final int[] textureDimensions = {screenWidth,screenHeight};
+            // Calculate Dimensions
+            final int[] textureDimensions = {screenWidth, screenHeight};
             int x = 0;
             int y = 0;
 
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            // Enable blending
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
 
-            //Modify the color based on the Current Chaos Color
+            // Modify shader color based on the current Chaos Color
             Vector3f colorComponent = Utilities.hexToVector3f(chaosAbility.useColor);
-            RenderSystem.setShaderColor(colorComponent.x, colorComponent.y, colorComponent.z, (1F- OVERLAY_MAX_DECAY_FRACTION)+overlayGradient);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(colorComponent.x, colorComponent.y, colorComponent.z, (1F - OVERLAY_MAX_DECAY_FRACTION) + overlayGradient);
 
-            //Draw Outer Overlay
+            // Draw Outer Overlay
             RenderSystem.setShaderTexture(0, CHAOS_OVERLAY_OUTER);
             guiComponent.blit(
                     CHAOS_OVERLAY_OUTER,
-                    x,y,0,0,
-                    textureDimensions[0],textureDimensions[1],textureDimensions[0],textureDimensions[1]
+                    x, y, 0, 0,
+                    textureDimensions[0], textureDimensions[1], textureDimensions[0], textureDimensions[1]
             );
 
-            //Return Render Color back to same
+            // Reset shader color before drawing next element
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            //Draw Inner Overlay
+            // Draw Inner Overlay
             RenderSystem.setShaderTexture(0, CHAOS_OVERLAY_INNER);
             guiComponent.blit(
                     CHAOS_OVERLAY_INNER,
-                    x,y,0,0,
-                    textureDimensions[0],textureDimensions[1],textureDimensions[0],textureDimensions[1]
+                    x, y, 0, 0,
+                    textureDimensions[0], textureDimensions[1], textureDimensions[0], textureDimensions[1]
             );
+
+            // Reset OpenGL states
+            RenderSystem.disableBlend();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS);
         });
     }
 

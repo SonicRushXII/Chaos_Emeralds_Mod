@@ -21,10 +21,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.models.FlatPlayerModel;
 import net.sonicrushxii.chaos_emerald.client.VirtualOverlay;
 import net.sonicrushxii.chaos_emerald.event_handler.DeathEventHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.PlayerTickHandler;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
-import net.sonicrushxii.chaos_emerald.modded.ModCreativeModeTabs;
-import net.sonicrushxii.chaos_emerald.modded.ModEffects;
-import net.sonicrushxii.chaos_emerald.modded.ModItems;
+import net.sonicrushxii.chaos_emerald.modded.*;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.timehandler.TimeHandler;
 import org.slf4j.Logger;
@@ -58,6 +55,7 @@ public class ChaosEmerald
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us

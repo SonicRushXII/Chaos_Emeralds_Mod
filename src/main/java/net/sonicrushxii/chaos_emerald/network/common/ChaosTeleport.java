@@ -12,6 +12,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -82,7 +83,7 @@ public class ChaosTeleport
             chaosAbilities.teleport = 0;
 
             //Particle Effects
-            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_DEACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
+            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_END.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
             //Particle
             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(

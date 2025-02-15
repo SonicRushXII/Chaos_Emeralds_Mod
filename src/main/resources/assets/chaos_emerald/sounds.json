@@ -1,0 +1,26 @@
+{
+  "chaos_control_teleport_start": {
+    "subtitles": "sounds.chaos_control.teleport_start",
+    "sounds": [
+      "chaos_emerald:chaos_control_sfx"
+    ]
+  },
+  "chaos_control_teleport_end": {
+    "subtitles": "sounds.chaos_control.teleport_end",
+    "sounds": [
+      "chaos_emerald:chaos_control_te_sfx"
+    ]
+  },
+  "chaos_control_time_stop": {
+    "subtitles": "sounds.chaos_control.time_stop",
+    "sounds": [
+      "chaos_emerald:chaos_control_ts_sfx"
+    ]
+  },
+  "chaos_control_time_resume": {
+    "subtitles": "sounds.chaos_control.time_resume",
+    "sounds": [
+      "chaos_emerald:chaos_control_tr_sfx"
+    ]
+  }
+}

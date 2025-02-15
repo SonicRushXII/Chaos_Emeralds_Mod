@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -23,12 +24,12 @@ public class ChaosEmeraldHandler
     //Time Stop
     public static final byte TIME_STOP_BUILDUP = 20; //In Ticks
     public static final byte TIME_STOP_DURATION = 15; // In Seconds
-    public static final byte TIME_STOP_COOLDOWN = 2; // In Seconds
+    public static final byte TIME_STOP_COOLDOWN = 20; // In Seconds
 
     //Teleport
     public static final byte TELEPORT_BUILDUP = 20; //In Ticks
-    public static final byte TELEPORT_DURATION = 15; // In Seconds
-    public static final byte TELEPORT_COOLDOWN = 1; // In Seconds
+    public static final byte TELEPORT_DURATION = 10; // In Seconds
+    public static final byte TELEPORT_COOLDOWN = 10; // In Seconds
 
     public static void serverTick(ServerPlayer player, int tick)
     {
@@ -90,7 +91,7 @@ public class ChaosEmeraldHandler
                         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, false, false));
 
                         //Play Sound
-                        world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 1.0f, 1.0f);
+                        world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TIME_STOP.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
                         //Set Data
                         chaosAbilities.timeStop = 1;
@@ -167,7 +168,7 @@ public class ChaosEmeraldHandler
                         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, false, false));
 
                         //Play Sound
-                        world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 1.0f, 1.0f);
+                        world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_START.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
                         //Set Data
                         chaosAbilities.teleport = 1;

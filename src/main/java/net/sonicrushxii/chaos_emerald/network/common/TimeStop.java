@@ -17,6 +17,7 @@ import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
+import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -107,7 +108,7 @@ public class TimeStop {
             chaosAbilities.timeStop = 0;
 
             //Particle Effects
-            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_DEACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
+            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TIME_STOP.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
             //Particle
             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
@@ -140,19 +141,33 @@ public class TimeStop {
             }
 
             //If there are no Timestoppers then return everyone to normal
-            if(noTimeStoppers.get())
-                for(LivingEntity targetPlayers: player.level().getEntitiesOfClass(Player.class,
-                        new AABB(player.getX()+128,player.getY()+128,player.getZ()+128,
-                                player.getX()-128,player.getY()-128,player.getZ()-128),(enemy)->!enemy.is(player)))
-                {
+            if(noTimeStoppers.get()) {
+                for (LivingEntity targetPlayers : player.level().getEntitiesOfClass(Player.class,
+                        new AABB(player.getX() + 128, player.getY() + 128, player.getZ() + 128,
+                                player.getX() - 128, player.getY() - 128, player.getZ() - 128), (enemy) -> !enemy.is(player))) {
                     //Check if any are Frozen, then Remove Effect
-                    if(targetPlayers.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
+                    if (targetPlayers.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
                         targetPlayers.removeEffect(ModEffects.PLAYER_TIME_FREEZE.get());
 
                     //Check if any are Blinded, then Remove Effect
-                    if(targetPlayers.hasEffect(MobEffects.BLINDNESS))
+                    if (targetPlayers.hasEffect(MobEffects.BLINDNESS))
                         targetPlayers.removeEffect(MobEffects.BLINDNESS);
                 }
+            }
+            else
+            {
+                MobEffectInstance freezeEffect = new MobEffectInstance(ModEffects.PLAYER_TIME_FREEZE.get(), ChaosEmeraldHandler.TIME_STOP_DURATION*20, 0, false, false, false);
+                if(player.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
+                    player.getEffect(ModEffects.PLAYER_TIME_FREEZE.get()).update(freezeEffect);
+                else
+                    player.addEffect(freezeEffect,player);
+
+                MobEffectInstance blindnessEffect = new MobEffectInstance(MobEffects.BLINDNESS, ChaosEmeraldHandler.TIME_STOP_DURATION*20, 3, false, false, false);
+                if(player.hasEffect(MobEffects.BLINDNESS))
+                    player.getEffect(MobEffects.BLINDNESS).update(blindnessEffect);
+                else
+                    player.addEffect(blindnessEffect,player);
+            }
 
             //Reset Color
             chaosAbilities.useColor = Integer.MIN_VALUE;
