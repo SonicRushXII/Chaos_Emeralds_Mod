@@ -108,7 +108,7 @@ public class TimeStop {
             chaosAbilities.timeStop = 0;
 
             //Particle Effects
-            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TIME_STOP.get(), SoundSource.MASTER, 1.0f, 1.0f);
+            player.level().playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TIME_RESUME.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
             //Particle
             PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(

@@ -144,7 +144,7 @@ public class ChaosEmeraldHandler
                     if(chaosAbilities.teleport == 1-TELEPORT_BUILDUP)
                     {
                         //Play Sound
-                        world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_ACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
+                        world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_START.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
                         //Slow Down Player
                         MobEffectInstance slowEffect = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, TELEPORT_BUILDUP-1, 2, false, false, false);
@@ -166,9 +166,6 @@ public class ChaosEmeraldHandler
                     {
                         //Blind
                         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, false, false));
-
-                        //Play Sound
-                        world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_START.get(), SoundSource.MASTER, 1.0f, 1.0f);
 
                         //Set Data
                         chaosAbilities.teleport = 1;
