@@ -43,6 +43,12 @@ public class ChaosTeleport
                 chaosAbilities.useColor = Integer.MIN_VALUE;
             }
 
+            //Time Stop Active
+            else if(chaosAbilities.timeStop > 0)
+            {
+                player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
+            }
+
             //Error Handling
             else
             {

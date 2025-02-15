@@ -47,6 +47,11 @@ public class TimeStop {
                 player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
                 chaosAbilities.useColor = Integer.MIN_VALUE;
             }
+            //Time Stop Active
+            else if(chaosAbilities.teleport > 0)
+            {
+                player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
+            }
             //Error Handling
             else
             {
