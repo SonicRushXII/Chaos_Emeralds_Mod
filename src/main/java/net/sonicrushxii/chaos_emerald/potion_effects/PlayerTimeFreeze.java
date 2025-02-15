@@ -2,6 +2,7 @@ package net.sonicrushxii.chaos_emerald.potion_effects;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -34,6 +35,8 @@ public class PlayerTimeFreeze extends MobEffect {
         //Remove The Effect
         if(pLivingEntity.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
             pLivingEntity.removeEffect(ModEffects.PLAYER_TIME_FREEZE.get());
+        if(pLivingEntity.hasEffect(MobEffects.BLINDNESS))
+            pLivingEntity.removeEffect(MobEffects.BLINDNESS);
     }
 
 

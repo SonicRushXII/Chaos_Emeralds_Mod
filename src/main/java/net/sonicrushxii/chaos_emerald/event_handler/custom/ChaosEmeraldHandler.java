@@ -24,12 +24,12 @@ public class ChaosEmeraldHandler
     //Time Stop
     public static final byte TIME_STOP_BUILDUP = 20; //In Ticks
     public static final byte TIME_STOP_DURATION = 15; // In Seconds
-    public static final byte TIME_STOP_COOLDOWN = 20; // In Seconds
+    public static final byte TIME_STOP_COOLDOWN = 2; // In Seconds
 
     //Teleport
     public static final byte TELEPORT_BUILDUP = 20; //In Ticks
     public static final byte TELEPORT_DURATION = 10; // In Seconds
-    public static final byte TELEPORT_COOLDOWN = 10; // In Seconds
+    public static final byte TELEPORT_COOLDOWN = 1; // In Seconds
 
     public static void serverTick(ServerPlayer player, int tick)
     {
