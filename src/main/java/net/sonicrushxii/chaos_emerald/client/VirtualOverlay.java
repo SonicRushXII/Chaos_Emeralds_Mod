@@ -17,7 +17,7 @@ import org.joml.Vector3f;
 
 public class VirtualOverlay {
 
-    private static final float OVERLAY_DECAY_RATE = 0.8F;
+    private static final float OVERLAY_MAX_DECAY_FRACTION = 0.95F;
 
     private static final ResourceLocation EMPTY_SLOT = new ResourceLocation(ChaosEmerald.MOD_ID,
             "textures/custom_gui/empty_slot.png");
@@ -47,8 +47,8 @@ public class VirtualOverlay {
             //Calculate gradient based on the Time spent in Timestop
             float overlayGradient = (
                     (chaosAbility.teleport > 0)
-                    ?OVERLAY_DECAY_RATE - ((float) (chaosAbility.teleport) / (ChaosEmeraldHandler.TELEPORT_DURATION)) * OVERLAY_DECAY_RATE
-                    :OVERLAY_DECAY_RATE - ((float) (chaosAbility.timeStop) / (ChaosEmeraldHandler.TIME_STOP_DURATION)) * OVERLAY_DECAY_RATE
+                    ? OVERLAY_MAX_DECAY_FRACTION - ((float) (chaosAbility.teleport) / (ChaosEmeraldHandler.TELEPORT_DURATION)) * OVERLAY_MAX_DECAY_FRACTION
+                    : OVERLAY_MAX_DECAY_FRACTION - ((float) (chaosAbility.timeStop) / (ChaosEmeraldHandler.TIME_STOP_DURATION)) * OVERLAY_MAX_DECAY_FRACTION
             );
 
             //Calculate Dimensions
@@ -60,7 +60,7 @@ public class VirtualOverlay {
 
             //Modify the color based on the Current Chaos Color
             Vector3f colorComponent = Utilities.hexToVector3f(chaosAbility.useColor);
-            RenderSystem.setShaderColor(colorComponent.x, colorComponent.y, colorComponent.z, (1F-OVERLAY_DECAY_RATE)+overlayGradient);
+            RenderSystem.setShaderColor(colorComponent.x, colorComponent.y, colorComponent.z, (1F- OVERLAY_MAX_DECAY_FRACTION)+overlayGradient);
 
             //Draw Outer Overlay
             RenderSystem.setShaderTexture(0, CHAOS_OVERLAY_OUTER);
