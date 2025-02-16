@@ -1,7 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +21,8 @@ import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.transformations.false_super.ActivateFalseSuper;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
+
+import java.util.Objects;
 
 public class FalseSuperHandler
 {
@@ -84,27 +85,27 @@ public class FalseSuperHandler
                     {
                         //Speed
                         if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.MOVEMENT_SPEED)).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
 
                         //Jump
                         if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-                        else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.JUMP)).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
 
                         //Haste
                         if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DIG_SPEED)).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
 
                         //Strength
                         if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DAMAGE_BOOST)).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
 
                         //Resistance
                         if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DAMAGE_RESISTANCE)).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
 
                         //Add Step Height
-                        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
+                        if (!Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
                     }
                 }
                 //Return Gravity After a Sec
@@ -114,7 +115,7 @@ public class FalseSuperHandler
                     chaosEmeraldCap.falseSuperTimer = 1;
 
                     //Return Gravity
-                    player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                    Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                 }
 
                 //False Super Dur
@@ -137,27 +138,27 @@ public class FalseSuperHandler
 
                         //Speed
                         if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.MOVEMENT_SPEED).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.MOVEMENT_SPEED)).update(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false));
 
                         //Jump
                         if(!player.hasEffect(MobEffects.JUMP)) player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
-                        else player.getEffect(MobEffects.JUMP).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.JUMP)).update(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false));
 
                         //Haste
                         if(!player.hasEffect(MobEffects.DIG_SPEED)) player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DIG_SPEED).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DIG_SPEED)).update(new MobEffectInstance(MobEffects.DIG_SPEED, -1, 1, false, false));
 
                         //Strength
                         if(!player.hasEffect(MobEffects.DAMAGE_BOOST)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_BOOST).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DAMAGE_BOOST)).update(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false));
 
                         //Resistance
                         if(!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
-                        else player.getEffect(MobEffects.DAMAGE_RESISTANCE).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.DAMAGE_RESISTANCE)).update(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 1, false, false));
 
                         //Add Step Height
-                        if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
+                        if (!Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).addTransientModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
                     }
 
                     //Chaos Spaz
@@ -212,7 +213,7 @@ public class FalseSuperHandler
                         //Reset Chaos Spaz
                         if(chaosEmeraldCap.falseChaosSpaz > 0)
                         {
-                            player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);  //Return Gravity
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);  //Return Gravity
                             chaosEmeraldCap.falseChaosSpaz = 0;                                     //Reset Timer
                             PacketHandler.sendToPlayer(player, new PlayerStopSoundPacketS2C(
                                             ModSounds.FALSE_CHAOS_SPAZ.get().getLocation()
@@ -221,8 +222,8 @@ public class FalseSuperHandler
                         }
 
                         //Return Step Height back to normal
-                        if (player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).removeModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
+                        if (Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).hasModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION))
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).removeModifier(AttributeMultipliers.FALSE_SUPER_STEP_ADDITION);
 
                         //Remove Effects
                         {
@@ -235,7 +236,7 @@ public class FalseSuperHandler
 
                         //Slowfalling
                         if(!player.hasEffect(MobEffects.SLOW_FALLING)) player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false));
-                        else player.getEffect(MobEffects.SLOW_FALLING).update(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false));
+                        else Objects.requireNonNull(player.getEffect(MobEffects.SLOW_FALLING)).update(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false));
                     }
                 }
             }
@@ -245,7 +246,7 @@ public class FalseSuperHandler
         });
     }
 
-    public static void clientTick(AbstractClientPlayer player, int clientTick)
+    public static void clientTick(AbstractClientPlayer player)
     {
         //Master Emerald - Key Press Use
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.

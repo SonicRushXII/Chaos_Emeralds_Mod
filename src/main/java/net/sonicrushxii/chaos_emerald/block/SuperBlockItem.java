@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.StringTokenizer;
 
@@ -21,7 +22,7 @@ public class SuperBlockItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
-    private static boolean useEmerald(String itemString, Level pLevel, Player pPlayer)
+    private static void useEmerald(String itemString, Level pLevel, Player pPlayer)
     {
         //Make String Tokenizer
         StringTokenizer sg = new StringTokenizer(itemString,"/");
@@ -31,8 +32,6 @@ public class SuperBlockItem extends BlockItem {
         Minecraft minecraft = Minecraft.getInstance();
         final boolean isCtrlDown = (InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_RCONTROL)
                 || InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_LCONTROL));
-        final boolean isShiftDown = (InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_RSHIFT)
-                || InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_LSHIFT));
 
 
         //Get Last Token
@@ -40,7 +39,7 @@ public class SuperBlockItem extends BlockItem {
         {
             case "aqua_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.aquaEmeraldUse(pPlayer);
                 break;
             case "blue_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
@@ -48,7 +47,7 @@ public class SuperBlockItem extends BlockItem {
                 break;
             case "green_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.greenEmeraldUse(pPlayer);
                 break;
             case "grey_emerald":
                 if (isCtrlDown)                 SuperEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
@@ -56,23 +55,22 @@ public class SuperBlockItem extends BlockItem {
                 break;
             case "purple_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.purpleEmeraldUse(pPlayer);
                 break;
             case "red_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.redEmeraldUse(pPlayer);
                 break;
             case "yellow_emerald":
                 if (isCtrlDown)                 ChaosEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
-                else                            SuperEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
+                else                            SuperEmeraldHandler.yellowEmeraldUse(pPlayer);
                 break;
-            default: return false;
+            default:
         }
-        return true;
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext)
+    public @NotNull InteractionResult useOn(UseOnContext pContext)
     {
         Level world = pContext.getLevel();
         Player player = pContext.getPlayer();
@@ -87,7 +85,7 @@ public class SuperBlockItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand)
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, InteractionHand pUsedHand)
     {
         //Use corresponding hand
         switch(pUsedHand)

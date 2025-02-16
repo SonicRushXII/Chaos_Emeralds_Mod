@@ -8,8 +8,8 @@ public class ChaosEmeraldCap {
     public FormProperties formProperties = new FormProperties();
     public float atkRotPhaseX = 0.0f;
     public float atkRotPhaseY = 0.0f;
-    public byte[] chaosCooldownKey = new byte[EmeraldType.values().length];
-    public byte[] superCooldownKey = new byte[EmeraldType.values().length];
+    public int[] chaosCooldownKey = new int[EmeraldType.values().length];
+    public int[] superCooldownKey = new int[EmeraldType.values().length];
 
     //Manuscript Key
     public byte manuscriptKey = 0;
@@ -67,7 +67,7 @@ public class ChaosEmeraldCap {
         this.atkRotPhaseY = source.atkRotPhaseY;
 
         //Chaos Emerald Usage
-        if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new byte[EmeraldType.values().length];
+        if(source.chaosCooldownKey.length == 0) this.chaosCooldownKey = new int[EmeraldType.values().length];
         else this.chaosCooldownKey = source.chaosCooldownKey;
         this.greyChaosUse = source.greyChaosUse;
         this.purpleChaosUse = source.purpleChaosUse;
@@ -92,7 +92,7 @@ public class ChaosEmeraldCap {
         else this.greySuperPos = source.greySuperPos;
         this.currentDimension = source.currentDimension;
 
-        if(source.superCooldownKey.length == 0) this.superCooldownKey = new byte[EmeraldType.values().length];
+        if(source.superCooldownKey.length == 0) this.superCooldownKey = new int[EmeraldType.values().length];
         else this.superCooldownKey = source.superCooldownKey;
 
         //Hyper Form Timer
@@ -106,8 +106,8 @@ public class ChaosEmeraldCap {
         nbt.putFloat("AtkRotPhaseY",this.atkRotPhaseY);
 
         //Copy Chaos Cooldown
-        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
-        nbt.putByteArray("ChaosEmeraldCooldown", chaosCooldownKey);
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new int[EmeraldType.values().length];
+        nbt.putIntArray("ChaosEmeraldCooldown", chaosCooldownKey);
 
         //Chaos Emerald Times
         nbt.putByte("DigTimer",this.greyChaosUse);
@@ -124,8 +124,8 @@ public class ChaosEmeraldCap {
         nbt.put("FormAbilities", formProperties.serialize());
 
         //Copy Super Cooldown
-        if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
-        nbt.putByteArray("SuperEmeraldCooldown", superCooldownKey);
+        if(superCooldownKey.length == 0) superCooldownKey = new int[EmeraldType.values().length];
+        nbt.putIntArray("SuperEmeraldCooldown", superCooldownKey);
 
         //Super Emerald Times
         nbt.putByte("BubbleBoost",this.aquaSuperUse);
@@ -153,12 +153,12 @@ public class ChaosEmeraldCap {
         this.atkRotPhaseY = nbt.getFloat("AtkRotPhaseY");
 
         //Load Chaos Emerald Cooldown
-        chaosCooldownKey = nbt.getByteArray("ChaosEmeraldCooldown");
-        if(chaosCooldownKey.length == 0) chaosCooldownKey = new byte[EmeraldType.values().length];
+        chaosCooldownKey = nbt.getIntArray("ChaosEmeraldCooldown");
+        if(chaosCooldownKey.length == 0) chaosCooldownKey = new int[EmeraldType.values().length];
 
         //Load Super Emerald Cooldown
-        superCooldownKey = nbt.getByteArray("SuperEmeraldCooldown");
-        if(superCooldownKey.length == 0) superCooldownKey = new byte[EmeraldType.values().length];
+        superCooldownKey = nbt.getIntArray("SuperEmeraldCooldown");
+        if(superCooldownKey.length == 0) superCooldownKey = new int[EmeraldType.values().length];
 
         //Chaos Emerald Times
         greyChaosUse = nbt.getByte("DigTimer");

@@ -1,7 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.client_specific;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.*;
 
@@ -21,16 +20,16 @@ public class ClientTickHandler {
             ChaosEmeraldHandler.clientTick(player,clientTick);
 
             //False Super Form
-            FalseSuperHandler.clientTick(player,clientTick);
+            FalseSuperHandler.clientTick(player);
 
             //Handle Super Emeralds
             SuperEmeraldHandler.clientTick(player,clientTick);
 
             //Super Form
-            SuperFormHandler.clientTick(player,clientTick);
+            SuperFormHandler.clientTick(player);
 
             //Hyper Form
-            HyperFormHandler.clientTick(player,clientTick);
+            HyperFormHandler.clientTick(player);
         }
     }
 }

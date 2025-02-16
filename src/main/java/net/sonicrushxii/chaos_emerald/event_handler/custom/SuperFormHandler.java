@@ -1,7 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -28,6 +27,8 @@ import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.Deactiv
 import net.sonicrushxii.chaos_emerald.network.transformations.form_super.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
+
+import java.util.Objects;
 
 import static net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm.spawnItem;
 
@@ -83,7 +84,7 @@ public class SuperFormHandler
                     }
 
                     //Return Gravity
-                    player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                    Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                 }
 
                 //Activate Super Form
@@ -135,13 +136,12 @@ public class SuperFormHandler
                         if (player.isSprinting() && !player.isInWater())
                         {
                             try {
-                                if (ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
+                                if (Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
                                     //Get Motion
                                     Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
 
-                                    if (chaosEmeraldCap.isWaterBoosting == false) {
-                                        player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                                    if (!chaosEmeraldCap.isWaterBoosting) {
+                                        Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
                                         chaosEmeraldCap.isWaterBoosting = true;
 
                                         //Slight upward
@@ -170,12 +170,12 @@ public class SuperFormHandler
 
                     //Sprint Boost
                     if(player.isSprinting()) {
-                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
+                        if (!Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
                     }
                     else {
-                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
+                        if(Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.SUPER_BOOST_SPEED))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(AttributeMultipliers.SUPER_BOOST_SPEED);
                     }
 
                 }
@@ -228,7 +228,7 @@ public class SuperFormHandler
         });
     }
 
-    public static void clientTick(AbstractClientPlayer player, int clientTick)
+    public static void clientTick(AbstractClientPlayer player)
     {
         //Sends a Packet To Activate Super form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {

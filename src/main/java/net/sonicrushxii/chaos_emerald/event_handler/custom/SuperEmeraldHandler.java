@@ -1,7 +1,6 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,30 +51,30 @@ import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class SuperEmeraldHandler {
 
     public static byte BUBBLE_BOOST_TIME = 100;                         //Time in Ticks
-    public static byte BUBBLE_BOOST_CD = 1;
+    public static int AQUA_SUPER_EMERALD_CD = 40;
 
-    public static byte ICE_SPIKE_CD = 1;
+    public static byte BLUE_EMERALD_CD = 60;
 
     public static byte CHAOS_DIVE_TIME = 115;                           //Time in Ticks
-    public static byte CHAOS_DIVE_CD = 1;
-
-    public static byte CHAOS_GAMBIT_TIME = 50;                         //Time in Ticks
-    public static byte CHAOS_GAMBIT_CD = 1;
-
-    public static byte CHAOS_SLICER_CD = 1;
-
-    public static int CHAOS_INFERNO_TIME = 300;                         //Time in Ticks
-    public static byte CHAOS_INFERNO_CD = 1;
+    public static int GREEN_SUPER_EMERALD_CD = 40;
 
     public static int CHAOS_REPRIEVE_TIME = 600;                        //Time in Seconds
-    public static int CHAOS_REPRIEVE_CD = 1;
+    public static int GREY_SUPER_EMERALD_CD = 1200;
 
+    public static int PURPLE_SUPER_EMERALD_CD = 45;
 
-    public static void aquaEmeraldUse(Level pLevel, Player pPlayer)
+    public static int CHAOS_INFERNO_TIME = 300;                         //Time in Ticks
+    public static int RED_SUPER_EMERALD_CD = 120;
+
+    public static byte CHAOS_GAMBIT_TIME = 50;                         //Time in Ticks
+    public static int YELLOW_SUPER_EMERALD_CD = 1200;
+
+    public static void aquaEmeraldUse(Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player)
         {
@@ -94,12 +93,12 @@ public class SuperEmeraldHandler {
                 player.addEffect(new MobEffectInstance(MobEffects.SATURATION,6,0,false,false,false),player);
 
                 //Add Step Height
-                if (!player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
-                    player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_STEP);
+                if (!Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
+                    Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_STEP);
 
                 //Add Speed
-                if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
-                    player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED);
+                if (!Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
+                    Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED);
 
                 //Sync To Client
                 PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
@@ -123,7 +122,7 @@ public class SuperEmeraldHandler {
                         return;
                     }
 
-                    chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = ICE_SPIKE_CD;
+                    chaosEmeraldCap.superCooldownKey[EmeraldType.BLUE_EMERALD.ordinal()] = BLUE_EMERALD_CD;
 
                     //If Looking Down don't scale further
                     if (player.getXRot() >= 85.0 && player.getXRot() <= 90.0) {
@@ -143,7 +142,7 @@ public class SuperEmeraldHandler {
                         //Give Padding Effect
                         Scheduler.scheduleTask(()->{
                             MobEffectInstance iceLaunchEffect = new MobEffectInstance(ModEffects.SUPER_ICE_LAUNCH.get(), 200, 0, false, false, false);
-                            if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    player.getEffect(ModEffects.SUPER_ICE_LAUNCH.get()).update(iceLaunchEffect);
+                            if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    Objects.requireNonNull(player.getEffect(ModEffects.SUPER_ICE_LAUNCH.get())).update(iceLaunchEffect);
                             else                                                        player.addEffect(iceLaunchEffect, player);
                             player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(),iceLaunchEffect));
                         },2);
@@ -225,7 +224,7 @@ public class SuperEmeraldHandler {
         }
     }
 
-    public static void greenEmeraldUse(Level pLevel, Player pPlayer)
+    public static void greenEmeraldUse(Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
@@ -247,7 +246,7 @@ public class SuperEmeraldHandler {
 
                 //Give Effect
                 MobEffectInstance diveEffect = new MobEffectInstance(ModEffects.SUPER_CHAOS_DIVE.get(), 120, 0, false, false, false);
-                if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get()).update(diveEffect);
+                if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))    Objects.requireNonNull(player.getEffect(ModEffects.SUPER_CHAOS_DIVE.get())).update(diveEffect);
                 else                                                        player.addEffect(diveEffect, player);
 
                 Vec3 launchVec = Utilities.calculateViewVector(-65f, player.getYRot()).scale(1.05);
@@ -271,7 +270,7 @@ public class SuperEmeraldHandler {
                     return;
                 }
 
-                ServerLevel destinationWorld = pLevel.getServer().getLevel(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY); // Target Dimension
+                ServerLevel destinationWorld = Objects.requireNonNull(pLevel.getServer()).getLevel(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY); // Target Dimension
 
                 // Optional: play teleport sound
                 if (!pLevel.dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
@@ -293,6 +292,7 @@ public class SuperEmeraldHandler {
                     chaosEmeraldCap.greySuperUse = 1;
 
                     //Change Dimensions
+                    assert destinationWorld != null;
                     player.changeDimension(destinationWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
                     player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
@@ -311,10 +311,11 @@ public class SuperEmeraldHandler {
                 else
                 {
                     //Get Original Dimensions
-                    ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                    ServerLevel originalWorld = Objects.requireNonNull(player.getServer()).getLevel(ResourceKey.create(Registries.DIMENSION,
                             new ResourceLocation(chaosEmeraldCap.currentDimension)));
 
                     //Change back to the original world
+                    assert originalWorld != null;
                     player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
                     player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
@@ -322,7 +323,7 @@ public class SuperEmeraldHandler {
                     player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
 
                     //Cooldown
-                    chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+                    chaosEmeraldCap.greySuperUse = -GREY_SUPER_EMERALD_CD;
 
                     //Teleport to the Position
                     player.teleportTo(originalWorld,
@@ -337,7 +338,7 @@ public class SuperEmeraldHandler {
         }
     }
 
-    public static void purpleEmeraldUse(Level pLevel, Player pPlayer)
+    public static void purpleEmeraldUse(Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
@@ -357,7 +358,7 @@ public class SuperEmeraldHandler {
         }
     }
 
-    public static void redEmeraldUse(Level pLevel, Player pPlayer)
+    public static void redEmeraldUse(Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
@@ -377,7 +378,7 @@ public class SuperEmeraldHandler {
         }
     }
 
-    public static void yellowEmeraldUse(Level pLevel, Player pPlayer)
+    public static void yellowEmeraldUse(Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player) {
             player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
@@ -392,8 +393,8 @@ public class SuperEmeraldHandler {
                 chaosEmeraldCap.yellowSuperUse = 1;
 
                 //Add Slowness
-                if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
-                    player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.GAMBIT_SLOW);
+                if (!Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
+                    Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(AttributeMultipliers.GAMBIT_SLOW);
 
                 PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
                         pPlayer.getId(),chaosEmeraldCap
@@ -450,13 +451,12 @@ public class SuperEmeraldHandler {
                             if (!player.isInWater())
                             {
                                 try {
-                                    if (ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                            .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
+                                    if (Objects.equals(ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
                                         //Get Motion
                                         Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
 
-                                        if (chaosEmeraldCap.isWaterBoosting == false) {
-                                            player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                                        if (!chaosEmeraldCap.isWaterBoosting) {
+                                            Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
                                             chaosEmeraldCap.isWaterBoosting = true;
 
                                             //Slight upward
@@ -476,15 +476,14 @@ public class SuperEmeraldHandler {
                     //Undo Water Boost
                     try {
                         if (chaosEmeraldCap.isWaterBoosting)
-                            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                    .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER))
+                            if (!Objects.equals(ForgeRegistries.BLOCKS.getKey(world.getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER))
                                     ||
                                     !(chaosEmeraldCap.aquaSuperUse > 0)
                                     ||
                                     (player.getDeltaMovement().x < 0.5 && player.getDeltaMovement().y < 0.5 && player.getDeltaMovement().z < 0.5)
                                     ||
                                     player.isInWater()) {
-                                player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                                Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                                 chaosEmeraldCap.isWaterBoosting = false;
                             }
                     } catch (NullPointerException ignored) {
@@ -495,15 +494,15 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.aquaSuperUse = 0;
 
                         //Remove Step Height
-                        if (player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
-                            player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).removeModifier(AttributeMultipliers.BUBBLE_BOOST_STEP.getId());
+                        if (Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).hasModifier(AttributeMultipliers.BUBBLE_BOOST_STEP))
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get())).removeModifier(AttributeMultipliers.BUBBLE_BOOST_STEP.getId());
 
                         //Remove Speed
-                        if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED.getId());
+                        if (Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(AttributeMultipliers.BUBBLE_BOOST_SPEED.getId());
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = BUBBLE_BOOST_CD;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.AQUA_EMERALD.ordinal()] = AQUA_SUPER_EMERALD_CD;
                     }
                 }
 
@@ -571,7 +570,7 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.greenSuperUse = 0;
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = CHAOS_DIVE_CD;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.GREEN_EMERALD.ordinal()] = GREEN_SUPER_EMERALD_CD;
 
                         //Remove Effect
                         if (player.hasEffect(ModEffects.SUPER_CHAOS_DIVE.get()))
@@ -657,24 +656,24 @@ public class SuperEmeraldHandler {
                         chaosEmeraldCap.yellowSuperUse = 0;
 
                         //Remove Slowness
-                        if (player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.GAMBIT_SLOW.getId());
+                        if (Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.GAMBIT_SLOW))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(AttributeMultipliers.GAMBIT_SLOW.getId());
 
                         //Apply Tired Effects
                         MobEffectInstance blindnessEffect = new MobEffectInstance(MobEffects.BLINDNESS, 20, 4, false, false, false);
-                        if (player.hasEffect(MobEffects.BLINDNESS))    player.getEffect(MobEffects.BLINDNESS).update(blindnessEffect);
+                        if (player.hasEffect(MobEffects.BLINDNESS))    Objects.requireNonNull(player.getEffect(MobEffects.BLINDNESS)).update(blindnessEffect);
                         else                                           player.addEffect(blindnessEffect, player);
 
                         MobEffectInstance weaknessEffect = new MobEffectInstance(MobEffects.WEAKNESS, 20, 4, false, false, false);
-                        if (player.hasEffect(MobEffects.WEAKNESS))    player.getEffect(MobEffects.WEAKNESS).update(weaknessEffect);
+                        if (player.hasEffect(MobEffects.WEAKNESS))    Objects.requireNonNull(player.getEffect(MobEffects.WEAKNESS)).update(weaknessEffect);
                         else                                           player.addEffect(weaknessEffect, player);
 
                         MobEffectInstance slownessEffect = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 4, false, false, false);
-                        if (player.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))    player.getEffect(MobEffects.MOVEMENT_SLOWDOWN).update(slownessEffect);
+                        if (player.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))    Objects.requireNonNull(player.getEffect(MobEffects.MOVEMENT_SLOWDOWN)).update(slownessEffect);
                         else                                           player.addEffect(slownessEffect, player);
 
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = CHAOS_GAMBIT_CD;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.YELLOW_EMERALD.ordinal()] = YELLOW_SUPER_EMERALD_CD;
                     }
                 }
 
@@ -713,7 +712,7 @@ public class SuperEmeraldHandler {
                         if(chaosEmeraldCap.purpleSuperUse > 15) {
                             chaosEmeraldCap.purpleSuperUse = 0;
                             //Set Cooldown(in Seconds)
-                            chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = CHAOS_SLICER_CD;
+                            chaosEmeraldCap.superCooldownKey[EmeraldType.PURPLE_EMERALD.ordinal()] = PURPLE_SUPER_EMERALD_CD;
                         }
                     }
                 }
@@ -751,7 +750,7 @@ public class SuperEmeraldHandler {
                     if(chaosEmeraldCap.redSuperUse > CHAOS_INFERNO_TIME) {
                         chaosEmeraldCap.redSuperUse = 0;
                         //Set Cooldown(in Seconds)
-                        chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = CHAOS_INFERNO_CD;
+                        chaosEmeraldCap.superCooldownKey[EmeraldType.RED_EMERALD.ordinal()] = RED_SUPER_EMERALD_CD;
                     }
                 }
 
@@ -768,10 +767,11 @@ public class SuperEmeraldHandler {
                                 player.serverLevel().dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
                         {
                             //Get Original Dimensions
-                            ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                            ServerLevel originalWorld = Objects.requireNonNull(player.getServer()).getLevel(ResourceKey.create(Registries.DIMENSION,
                                     new ResourceLocation(chaosEmeraldCap.currentDimension)));
 
                             //Change back to the original world
+                            assert originalWorld != null;
                             player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
                             player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
@@ -779,7 +779,7 @@ public class SuperEmeraldHandler {
                             player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);
 
                             //Cooldown
-                            chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+                            chaosEmeraldCap.greySuperUse = -GREY_SUPER_EMERALD_CD;
 
                             //Teleport to the Position
                             player.teleportTo(originalWorld,
@@ -797,15 +797,16 @@ public class SuperEmeraldHandler {
                             player.serverLevel().dimension().equals(ModDimensions.CHAOS_REPRIEVE_LEVEL_KEY))
                     {
                         //Get Original Dimensions
-                        ServerLevel originalWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                        ServerLevel originalWorld = Objects.requireNonNull(player.getServer()).getLevel(ResourceKey.create(Registries.DIMENSION,
                                 new ResourceLocation(chaosEmeraldCap.currentDimension)));
 
                         //Change back to the original world
+                        assert originalWorld != null;
                         player.changeDimension(originalWorld, new ModTeleporter(WorldLoadHandler.reprieveTargetPos, false));
                         player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
                         //Cooldown
-                        chaosEmeraldCap.greySuperUse = -CHAOS_REPRIEVE_CD;
+                        chaosEmeraldCap.greySuperUse = -GREY_SUPER_EMERALD_CD;
 
                         //Get Slowfalling
                         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20,0,false,false,false),player);

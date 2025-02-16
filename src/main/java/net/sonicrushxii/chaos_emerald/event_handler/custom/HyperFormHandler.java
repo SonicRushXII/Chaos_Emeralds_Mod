@@ -1,31 +1,22 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.hyperform.HyperFormProperties;
-import net.sonicrushxii.chaos_emerald.modded.ModBlocks;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
@@ -34,7 +25,7 @@ import net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.*;
 import net.sonicrushxii.chaos_emerald.potion_effects.AttributeMultipliers;
 import org.joml.Vector3f;
 
-import static net.sonicrushxii.chaos_emerald.network.transformations.form_hyper.DeactivateHyperForm.spawnItem;
+import java.util.Objects;
 
 public class HyperFormHandler
 {
@@ -88,7 +79,7 @@ public class HyperFormHandler
                     }
 
                     //Return Gravity
-                    player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
+                    Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                 }
 
                 //Activate Hyper Form
@@ -143,14 +134,13 @@ public class HyperFormHandler
                         if (player.isSprinting() && !player.isInWater())
                         {
                             try {
-                                if (ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.WATER)) || ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock())
-                                        .equals(ForgeRegistries.BLOCKS.getKey(Blocks.LAVA))) {
+                                if (Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER)) ||
+                                        Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.LAVA))) {
                                     //Get Motion
                                     Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
 
-                                    if (chaosEmeraldCap.isWaterBoosting == false) {
-                                        player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
+                                    if (!chaosEmeraldCap.isWaterBoosting) {
+                                        Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
                                         chaosEmeraldCap.isWaterBoosting = true;
 
                                         //Slight upward
@@ -189,8 +179,6 @@ public class HyperFormHandler
                         //Perform Blast
                         if(hyperFormProperties.chaosBlastEXTimer == 20)
                         {
-                            Vec3 playerPos = new Vec3(player.getX(),player.getY(),player.getZ());
-
                             //Perform 9 Blasts all around The Player
                             SuperChaosBlastEX.singularChaosBlast(player,new Vec3(0,1,0));
 
@@ -229,12 +217,12 @@ public class HyperFormHandler
 
                     //Sprint Boost
                     if(player.isSprinting()) {
-                        if (!player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
+                        if (!Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
                     }
                     else {
-                        if(player.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
-                            player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
+                        if(Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).hasModifier(AttributeMultipliers.HYPER_BOOST_SPEED))
+                            Objects.requireNonNull(player.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(AttributeMultipliers.HYPER_BOOST_SPEED);
                     }
 
                 }
@@ -273,7 +261,7 @@ public class HyperFormHandler
         });
     }
 
-    public static void clientTick(AbstractClientPlayer player, int clientTick)
+    public static void clientTick(AbstractClientPlayer player)
     {
         //Sends a Packet To Activate Hyper form if you have all Seven Emeralds.
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {

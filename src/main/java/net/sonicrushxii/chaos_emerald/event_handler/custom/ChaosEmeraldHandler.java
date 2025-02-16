@@ -42,6 +42,7 @@ import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ChaosEmeraldHandler {
 
@@ -97,7 +98,7 @@ public class ChaosEmeraldHandler {
                 )
                 {
                     MobEffectInstance bindEffect = new MobEffectInstance(ModEffects.CHAOS_BIND.get(), 200, 0, false, false, false);
-                    if(target.hasEffect(ModEffects.CHAOS_BIND.get()))   target.getEffect(ModEffects.CHAOS_BIND.get()).update(bindEffect);
+                    if(target.hasEffect(ModEffects.CHAOS_BIND.get()))   Objects.requireNonNull(target.getEffect(ModEffects.CHAOS_BIND.get())).update(bindEffect);
                     else                                                target.addEffect(bindEffect,target);
                     player.connection.send(new ClientboundUpdateMobEffectPacket(target.getId(),bindEffect));
 
@@ -227,7 +228,7 @@ public class ChaosEmeraldHandler {
 
                 //Grant Immunity to Fall
                 MobEffectInstance chaosDashEffect = new MobEffectInstance(ModEffects.CHAOS_DASH_ATTACK.get(),40,0,false,false,false);
-                if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get())) player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get()).update(chaosDashEffect);
+                if(player.hasEffect(ModEffects.CHAOS_DASH_ATTACK.get())) Objects.requireNonNull(player.getEffect(ModEffects.CHAOS_DASH_ATTACK.get())).update(chaosDashEffect);
                 else player.addEffect(chaosDashEffect);
 
                 //Set Cooldown(in Seconds)
@@ -272,8 +273,8 @@ public class ChaosEmeraldHandler {
                 }
 
                 //Launch up
-                pPlayer.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.0);
-                pPlayer.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
+                Objects.requireNonNull(pPlayer.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
+                Objects.requireNonNull(pPlayer.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).setBaseValue(1.0);
                 pPlayer.setDeltaMovement(0,0.17,0);
                 PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),pPlayer.getDeltaMovement()));
 
@@ -345,11 +346,11 @@ public class ChaosEmeraldHandler {
 
                 //Prevent Fall Damage
                 MobEffectInstance chaosFlameJumpEffect = new MobEffectInstance(ModEffects.CHAOS_FLAME_JUMP.get(),40,0,false,false,false);
-                if(pPlayer.hasEffect(ModEffects.CHAOS_FLAME_JUMP.get())) pPlayer.getEffect(ModEffects.CHAOS_FLAME_JUMP.get()).update(chaosFlameJumpEffect);
+                if(pPlayer.hasEffect(ModEffects.CHAOS_FLAME_JUMP.get())) Objects.requireNonNull(pPlayer.getEffect(ModEffects.CHAOS_FLAME_JUMP.get())).update(chaosFlameJumpEffect);
                 else pPlayer.addEffect(chaosFlameJumpEffect,pPlayer);
 
                 //Grant Fire Resistance
-                if(pPlayer.hasEffect(MobEffects.FIRE_RESISTANCE)) pPlayer.getEffect(MobEffects.FIRE_RESISTANCE).update(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false));
+                if(pPlayer.hasEffect(MobEffects.FIRE_RESISTANCE)) Objects.requireNonNull(pPlayer.getEffect(MobEffects.FIRE_RESISTANCE)).update(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false));
                 else pPlayer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,200,0,false,false,false),pPlayer);
 
                 //Set Cooldown(in Seconds)
@@ -519,8 +520,8 @@ public class ChaosEmeraldHandler {
                 if(chaosEmeraldCap.purpleChaosUse > 30)
                 {
                     //Reset Gravity
-                    player.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08);
-                    player.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0);
+                    Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
+                    Objects.requireNonNull(player.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).setBaseValue(0.0);
 
                     //Blast Cooldowns
                     chaosEmeraldCap.purpleChaosUse = -1;
