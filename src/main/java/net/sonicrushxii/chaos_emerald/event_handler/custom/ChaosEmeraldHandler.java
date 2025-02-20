@@ -23,6 +23,7 @@ import net.sonicrushxii.chaos_emerald.modded.ModTeleporter;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
 
@@ -42,7 +43,7 @@ public class ChaosEmeraldHandler
     public static final byte TELEPORT_COOLDOWN = 1; // In Seconds
 
     //Dimension Teleport
-    public static final byte DIMENSION_TP_BUILDUP = 20; //In Ticks
+    public static final byte DIMENSION_TP_BUILDUP = 10; //In Ticks
     public static final byte DIMENSION_TP_COOLDOWN = 5; // In Seconds
 
     public static void serverTick(ServerPlayer player, int tick)
@@ -211,6 +212,10 @@ public class ChaosEmeraldHandler
                 if(chaosAbilities.dimTeleport > 0)
                     chaosAbilities.dimTeleport += 1;
 
+                //Play Sound
+                if(chaosAbilities.dimTeleport == 2)
+                    world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_START.get(), SoundSource.MASTER, 1.0f, 0.9f);
+
                 //Once Built Up Teleport to the Nether
                 if(chaosAbilities.dimTeleport > DIMENSION_TP_BUILDUP)
                 {
@@ -218,50 +223,8 @@ public class ChaosEmeraldHandler
                     chaosAbilities.dimTeleport = 0;
                     chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] = DIMENSION_TP_COOLDOWN;
 
-                    //Actual Teleportation
-                    {
-                        //Set Target Dimension and Coordinates
-                        ServerLevel destinationWorld = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
-                                new ResourceLocation(chaosAbilities.targetDimension)));
-
-                        int[] currentDimPositions = chaosAbilities.previousDimensionPos.clone();
-
-                        chaosAbilities.targetDimension = String.valueOf(player.level().dimension().location());
-                        chaosAbilities.previousDimensionPos[0] = player.getBlockX();
-                        chaosAbilities.previousDimensionPos[1] = player.getBlockY();
-                        chaosAbilities.previousDimensionPos[2] = player.getBlockZ();
-                        chaosAbilities.previousDimensionPos[3] = (int) player.getYRot();
-                        chaosAbilities.previousDimensionPos[4] = (int) player.getXRot();
-
-                        //Change Dimensions
-                        assert destinationWorld != null;
-                        player.changeDimension(destinationWorld, new ModTeleporter(new BlockPos(0,0,0), false));
-                        player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
-
-                        //Get Slowfalling
-                        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20, 0, false, false, false), player);
-
-                        //Teleport to the Position(if one was specified)
-                        if(!Arrays.equals(currentDimPositions,new int[]{0,0,0,0,0}))
-                        {
-                            player.teleportTo(
-                                    destinationWorld,
-                                    currentDimPositions[0],
-                                    currentDimPositions[1],
-                                    currentDimPositions[2],
-                                    Collections.emptySet(),
-                                    currentDimPositions[3],
-                                    currentDimPositions[4]
-                            );
-                            player.connection.send(new ClientboundTeleportEntityPacket(player));
-                        }
-                        else
-                        {
-                            String command = "spreadplayers 0 0 10 50 under 120 false " + player.getScoreboardName();
-                            player.server.getCommands().performPrefixedCommand(player.createCommandSourceStack().withSuppressedOutput(), command);
-                        }
-                    }
-
+                    //Change Dimensions
+                    ChaosDimensionChange.performDimensionChange(player);
                 }
             }
 

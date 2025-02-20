@@ -26,7 +26,7 @@ public class ChaosTeleport
             ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Activate Teleport
-            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.timeStop == 0) {
+            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && !chaosAbilities.abilityInUse()) {
                 chaosAbilities.teleport = -ChaosEmeraldHandler.TELEPORT_BUILDUP;
                 player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
@@ -42,8 +42,8 @@ public class ChaosTeleport
                 chaosAbilities.useColor = Integer.MIN_VALUE;
             }
 
-            //Time Stop Active
-            else if(chaosAbilities.timeStop > 0)
+            //Other Ability Active
+            else if(chaosAbilities.abilityInUse())
             {
                 player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }

@@ -55,9 +55,7 @@ public class KeyPress {
                             else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && player.isShiftKeyDown())
                                 ChaosDimensionChange.keyPress(player);
 
-
-
-                                //Put Color back to normal
+                            //Put Color back to normal
                             else chaosAbilities.useColor = Integer.MIN_VALUE;
 
                             //Sync with all Clients

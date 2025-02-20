@@ -33,7 +33,7 @@ public class TimeStop {
             ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Activate Time Stop
-            if (chaosAbilities.timeStop == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.teleport == 0) {
+            if (chaosAbilities.timeStop == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && !chaosAbilities.abilityInUse()) {
                 chaosAbilities.timeStop = -ChaosEmeraldHandler.TIME_STOP_BUILDUP;
                 player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
@@ -46,8 +46,8 @@ public class TimeStop {
                 player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
                 chaosAbilities.useColor = Integer.MIN_VALUE;
             }
-            //Time Stop Active
-            else if(chaosAbilities.teleport > 0)
+            //Other Ability Active
+            else if(chaosAbilities.abilityInUse())
             {
                 player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
