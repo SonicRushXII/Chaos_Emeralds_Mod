@@ -3,11 +3,6 @@ package net.sonicrushxii.chaos_emerald.event_handler.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,10 +14,10 @@ import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
-import net.sonicrushxii.chaos_emerald.modded.ModTeleporter;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosBoost;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
@@ -36,6 +31,10 @@ public class ChaosEmeraldHandler
     public static final byte TIME_STOP_BUILDUP = 20; //In Ticks
     public static final byte TIME_STOP_DURATION = 15; // In Seconds
     public static final byte TIME_STOP_COOLDOWN = 2; // In Seconds
+
+    //Chaos Boost
+    public static final byte CHAOS_BOOST_BUILDUP = 10; //In Ticks
+    public static final byte CHAOS_BOOST_COOLDOWN = 5; // In Seconds
 
     //Teleport
     public static final byte TELEPORT_BUILDUP = 20; //In Ticks
@@ -79,7 +78,7 @@ public class ChaosEmeraldHandler
                     }
 
                     //On Use
-                    if(chaosAbilities.timeStop == 1- TIME_STOP_BUILDUP)
+                    if(chaosAbilities.timeStop == 1-TIME_STOP_BUILDUP)
                     {
                         //Play Sound
                         world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_ACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
@@ -130,6 +129,52 @@ public class ChaosEmeraldHandler
                     if (chaosAbilities.timeStop > TIME_STOP_DURATION)
                         TimeStop.endTimeStop(player);
                 }
+            }
+
+            //Chaos Boost
+            {
+                //Duration
+                if(chaosAbilities.buffBoost > 0)
+                {
+                    chaosAbilities.buffBoost += 1;
+
+                    //Particle
+                    {
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.ELECTRIC_SPARK,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.55F, player.getEyeHeight() / 2, 0.55F,
+                                5, false));
+                        //Particle
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(Utilities.hexToVector3f(chaosAbilities.useColor), 1.5f),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.55F, player.getEyeHeight() / 2, 0.55F,
+                                1, true)
+                        );
+                    }
+                }
+
+
+                //Play Sound
+                if(chaosAbilities.buffBoost == 2)
+                    world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BEACON_ACTIVATE, SoundSource.MASTER, 1.0f, 1.0f);
+
+
+                //Ending
+                if(chaosAbilities.buffBoost > CHAOS_BOOST_BUILDUP)
+                {
+                    //Reset Counter
+                    chaosAbilities.buffBoost = 0;
+                    chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] = CHAOS_BOOST_COOLDOWN;
+
+                    //Apply the Buffs
+                    ChaosBoost.applyBuffs(player);
+
+                    //Play Sound
+                    world.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.MASTER, 1.0f, 1.0f);
+                }
+
             }
 
             //Teleport
@@ -208,15 +253,32 @@ public class ChaosEmeraldHandler
 
             //Dimension Teleport
             {
-                //Increment Counter
+                //Ability Duration
                 if(chaosAbilities.dimTeleport > 0)
+                {
                     chaosAbilities.dimTeleport += 1;
 
+                    //Particle
+                    {
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                ParticleTypes.ELECTRIC_SPARK,
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.55F, player.getEyeHeight() / 2, 0.55F,
+                                5, false));
+                        //Particle
+                        PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                                new DustParticleOptions(Utilities.hexToVector3f(chaosAbilities.useColor), 1.5f),
+                                player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(),
+                                0.001, 0.55F, player.getEyeHeight() / 2, 0.55F,
+                                1, true)
+                        );
+                    }
+                }
                 //Play Sound
                 if(chaosAbilities.dimTeleport == 2)
                     world.playSound(null,player.getX(),player.getY(),player.getZ(), ModSounds.CHAOS_CONTROL_TELEPORT_START.get(), SoundSource.MASTER, 1.0f, 0.9f);
 
-                //Once Built Up Teleport to the Nether
+                //End Ability
                 if(chaosAbilities.dimTeleport > DIMENSION_TP_BUILDUP)
                 {
                     //Set Data

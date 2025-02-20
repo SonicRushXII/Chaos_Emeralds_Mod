@@ -9,6 +9,7 @@ import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosBoost;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
@@ -44,8 +45,12 @@ public class KeyPress {
                             chaosAbilities.useColor = ChaosBlockItem.getEmeraldColorInHand(player);
 
                             //Time Stop
-                            if (this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue())
+                            if (this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue() && !player.isShiftKeyDown())
                                 TimeStop.keyPress(player);
+
+                            //Chaos Boost
+                            else if(this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue() && player.isShiftKeyDown())
+                                ChaosBoost.keyPress(player);
 
                             //Teleport
                             else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && !player.isShiftKeyDown())

@@ -40,7 +40,7 @@ public class ChaosDimensionChange
             //Activate Teleport
             if (chaosAbilities.dimTeleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && !chaosAbilities.abilityInUse()) {
                 chaosAbilities.dimTeleport = 1;
-                player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
+                player.displayClientMessage(Component.translatable("Chaos Control!!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
 
             //Cooldown not set
