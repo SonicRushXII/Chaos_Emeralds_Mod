@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
@@ -31,7 +30,7 @@ public class TimeStop {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
             //Fetch Ability Properties
-            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Activate Time Stop
             if (chaosAbilities.timeStop == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.teleport == 0) {
@@ -83,7 +82,7 @@ public class TimeStop {
         {
             targetPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
             {
-                ChaosUseDetails chaosAbility = chaosEmeraldCap.chaosUseDetails;
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
                 //If they are using a Chaos Ability don't freeze or blind them
                 if(chaosAbility.teleport > 0 || chaosAbility.timeStop > 0) return;
 
@@ -107,7 +106,7 @@ public class TimeStop {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
             //Fetch Ability Properties
-            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Reset Data
             chaosAbilities.timeStop = 0;
@@ -134,9 +133,9 @@ public class TimeStop {
             {
                 targetPlayer.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap1 ->
                 {
-                    ChaosUseDetails chaosAbility = chaosEmeraldCap1.chaosUseDetails;
+                    ChaosAbilityDetails chaosAbility = chaosEmeraldCap1.chaosAbilityDetails;
                     //If they are using a Chaos Ability don't freeze or blind them
-                    if(chaosAbility.teleport > 0 || chaosAbility.timeStop > 0) {
+                    if(chaosAbility.stoppingTime()) {
                         noTimeStoppers.set(false);
                     }
                 });

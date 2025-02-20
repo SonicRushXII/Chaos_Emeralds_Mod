@@ -7,8 +7,9 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
 
@@ -39,7 +40,7 @@ public class KeyPress {
 
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                             //Set Color
-                            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+                            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
                             chaosAbilities.useColor = ChaosBlockItem.getEmeraldColorInHand(player);
 
                             //Time Stop
@@ -47,10 +48,16 @@ public class KeyPress {
                                 TimeStop.keyPress(player);
 
                             //Teleport
-                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue())
+                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && !player.isShiftKeyDown())
                                 ChaosTeleport.keyPress(player);
 
-                            //Put Color back to normal
+                            //Dimension Teleport
+                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && player.isShiftKeyDown())
+                                ChaosDimensionChange.keyPress(player);
+
+
+
+                                //Put Color back to normal
                             else chaosAbilities.useColor = Integer.MIN_VALUE;
 
                             //Sync with all Clients
